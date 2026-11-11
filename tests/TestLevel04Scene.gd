@@ -27,11 +27,24 @@ func _init() -> void:
 	s.btn_reset.pressed.emit()
 	await process_frame
 
-	var tour: Array = s.Logic.find_tour()
-	for i in range(1, 64):
-		s.cell_buttons[tour[i]].pressed.emit()
+	check(s.btn_solve != null and not s.btn_solve.disabled, "Auto-solve button exists and enabled")
+	s.auto_solve_delay = 0.005
+	s.btn_solve.pressed.emit()
+	await create_timer(0.05).timeout
+	check(s.is_auto_solving and s.logic.visited_count() > 1, "Auto-solver makes moves automatically")
+	s.btn_solve.pressed.emit() # Stop it
+	await process_frame
+	check(not s.is_auto_solving, "Auto-solver stops when toggled")
+	var paused_count: int = s.logic.visited_count()
+	await create_timer(0.05).timeout
+	check(s.logic.visited_count() == paused_count, "Knight pauses when solver is stopped")
+
+	# Resume solver to complete the tour
+	s.btn_solve.pressed.emit()
+	while not s.logic.is_solved and s.is_auto_solving:
 		await process_frame
-	check(s.logic.is_solved, "Full tour solves the puzzle")
+	check(s.logic.is_solved, "Auto-solver completed full tour")
 	check(s.banner.visible and s.banner_label.text.contains("SOLVED"), "Victory banner shown")
+	check(s.btn_solve.disabled, "Solve button disabled after puzzle is solved")
 	print("checks failed: ", checks_failed)
 	quit(1 if checks_failed > 0 else 0)

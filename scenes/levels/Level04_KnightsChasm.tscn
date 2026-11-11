@@ -109,9 +109,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -400.0
-offset_top = -260.0
+offset_top = -280.0
 offset_right = -20.0
-offset_bottom = 260.0
+offset_bottom = 280.0
 grow_horizontal = 0
 grow_vertical = 2
 
@@ -141,6 +141,11 @@ text = "Undo Last Jump"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reset"
+
+[node name="BtnSolve" type="Button" parent="UI/RootControl/SidePanel/SideBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Auto-Solve (Debug)"
 
 [node name="Banner" type="PanelContainer" parent="UI/RootControl"]
 unique_name_in_owner = true

@@ -102,11 +102,27 @@ func undo() -> bool:
 ## Warnsdorff-guided backtracking search: a complete tour starting at `start`, or [] if none.
 static func find_tour(start: Vector2i = START) -> Array[Vector2i]:
 	var tour: Array[Vector2i] = [start]
-	if _extend(tour):
+	var budget: Array[int] = [100000]
+	if _extend(tour, budget):
 		return tour
 	return []
 
-static func _extend(tour: Array[Vector2i]) -> bool:
+## Find remaining steps to complete a tour from the given path (or [] if none).
+static func find_tour_from_path(existing_path: Array) -> Array[Vector2i]:
+	var tour: Array[Vector2i] = []
+	for p in existing_path:
+		tour.append(p)
+	if tour.is_empty():
+		tour = [START]
+	var budget: Array[int] = [100000]
+	if _extend(tour, budget):
+		return tour
+	return []
+
+static func _extend(tour: Array[Vector2i], budget: Array[int] = [100000]) -> bool:
+	if budget[0] <= 0:
+		return false
+	budget[0] -= 1
 	if tour.size() == BOARD_SIZE * BOARD_SIZE:
 		return true
 	var options := moves_from(tour[-1], tour)
@@ -115,7 +131,7 @@ static func _extend(tour: Array[Vector2i]) -> bool:
 		return moves_from(a, tour).size() < moves_from(b, tour).size())
 	for c in options:
 		tour.append(c)
-		if _extend(tour):
+		if _extend(tour, budget):
 			return true
 		tour.pop_back()
 	return false

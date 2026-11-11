@@ -11,6 +11,7 @@ const Logic = preload("res://scripts/logic/KnightsTourLogic.gd")
 @onready var cell_grid: GridContainer = %CellGrid
 @onready var btn_undo: Button = %BtnUndo
 @onready var btn_reset: Button = %BtnReset
+@onready var btn_solve: Button = %BtnSolve
 @onready var status_label: Label = %StatusLabel
 @onready var count_label: Label = %VisitCountLabel
 @onready var banner: PanelContainer = %Banner
@@ -19,6 +20,7 @@ const Logic = preload("res://scripts/logic/KnightsTourLogic.gd")
 const CELL_SIZE: float = 1.0
 const SINK_DEPTH: float = 3.0
 const NEXT_LEVEL_SCENE: String = ""  # Level 5 does not exist yet.
+@export var auto_solve_delay: float = 0.22
 
 const COLOR_IDLE := Color(0.45, 0.4, 0.38)
 const COLOR_CURRENT := Color(1.0, 0.82, 0.25)
@@ -31,6 +33,7 @@ var tile_materials: Dictionary = {}  # Vector2i -> StandardMaterial3D
 var tile_sunk: Dictionary = {}       # Vector2i -> bool
 var cell_buttons: Dictionary = {}    # Vector2i -> Button
 var knight_tween: Tween
+var is_auto_solving: bool = false
 
 func _ready() -> void:
 	logic = Logic.new()
@@ -41,8 +44,9 @@ func _ready() -> void:
 	logic.puzzle_solved.connect(_on_puzzle_solved)
 	_build_tiles()
 	_build_buttons()
-	btn_undo.pressed.connect(func(): logic.undo(); banner.visible = false)
+	btn_undo.pressed.connect(_on_undo_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
+	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl)
 	_build_knight()
 	_on_state_changed(logic.current, logic.path.duplicate())
@@ -96,12 +100,59 @@ func _build_knight() -> void:
 	knight.add_child(head)
 
 func _on_cell_pressed(cell: Vector2i) -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	logic.move_to(cell)
 
+func _on_undo_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+	logic.undo()
+	banner.visible = false
+
 func _on_reset_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	logic.reset()
 	banner.visible = false
 	status_label.text = "The tiles rise from the lava. Start again from A1."
+
+func _on_solve_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+		return
+	if logic.is_solved:
+		return
+	start_auto_solve()
+
+func start_auto_solve() -> void:
+	is_auto_solving = true
+	btn_solve.text = "Stop Solver"
+	banner.visible = false
+	status_label.text = "Solving Knight's Tour automatically..."
+	
+	# If failed or current path cannot be completed, restart from A1.
+	var full_tour: Array[Vector2i] = []
+	if not logic.is_failed:
+		full_tour = Logic.find_tour_from_path(logic.path)
+	if full_tour.is_empty():
+		logic.reset()
+		full_tour = Logic.find_tour(Logic.START)
+	
+	var start_idx: int = logic.path.size()
+	for i in range(start_idx, full_tour.size()):
+		if not is_auto_solving or logic.is_solved:
+			break
+		logic.move_to(full_tour[i])
+		await get_tree().create_timer(auto_solve_delay).timeout
+	
+	stop_auto_solve()
+
+func stop_auto_solve() -> void:
+	is_auto_solving = false
+	if is_instance_valid(btn_solve):
+		btn_solve.text = "Auto-Solve (Debug)"
+		btn_solve.disabled = logic != null and logic.is_solved
 
 func _on_state_changed(current: Vector2i, path: Array) -> void:
 	# Visited tiles (except the one under the knight) sink; others re-emerge.
@@ -129,6 +180,8 @@ func _on_state_changed(current: Vector2i, path: Array) -> void:
 		b.modulate = Color(0.6, 0.8, 1.0) if cell in valid else Color(1, 1, 1)
 	count_label.text = "Visits: %d / %d" % [path.size(), Logic.BOARD_SIZE * Logic.BOARD_SIZE]
 	btn_undo.disabled = path.size() <= 1 or (logic != null and logic.is_solved)
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = logic != null and logic.is_solved
 
 func _set_tile_sunk(cell: Vector2i, sunk: bool) -> void:
 	if tile_sunk[cell] == sunk:
@@ -148,8 +201,8 @@ func _move_knight(cell: Vector2i) -> void:
 		knight_tween.kill()
 	var mid := (knight.global_position + target) / 2.0 + Vector3(0, 1.0, 0)
 	knight_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	knight_tween.tween_property(knight, "global_position", mid, 0.15)
-	knight_tween.tween_property(knight, "global_position", target, 0.15)
+	knight_tween.tween_property(knight, "global_position", mid, 0.10)
+	knight_tween.tween_property(knight, "global_position", target, 0.10)
 
 func _on_puzzle_failed(reason: String) -> void:
 	banner.visible = true
@@ -157,6 +210,10 @@ func _on_puzzle_failed(reason: String) -> void:
 	banner_label.modulate = Color(1.0, 0.35, 0.35)
 
 func _on_puzzle_solved() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = true
 	banner.visible = true
 	banner_label.text = "PUZZLE SOLVED!\nAll 64 runes lock into a radiant bridge\nto the gates of Dreadbury Manor!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
