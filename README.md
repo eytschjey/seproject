@@ -15,7 +15,8 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 29 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)), Auto-Solve debug button, and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
 - [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)) with high-contrast navy/cyan/gold HUD styling against the black & orange lava background, Auto-Solve debug button, and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
 - [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 39 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)), 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)), Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
-- [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with Levels 1–5 unlocked and a "< Menu" button in each level.
+- [x] **Level 6 (The Cat Sanctuary):** 3D model showcase scene ([`Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn)) presenting the imported [`cat.glb`](assets/models/characters/cat.glb) asset and prefab ([`Cat.tscn`](scenes/props/Cat.tscn)) with turntable spin, skeletal animation playback, 3D mouse picking, and [`TestLevel06Scene.gd`](tests/TestLevel06Scene.gd).
+- [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with Levels 1–6 unlocked and a "< Menu" button in each level.
 - [ ] **Next Up:** 3D asset integration (replacing CSG greyboxes with glTF models), first-person character navigation, journal UI, Bonus Chamber (The Midnight Bridge).
 
 ---
@@ -35,6 +36,7 @@ Rather than solving abstract logic puzzles on paper or through 2D menus, players
 | **Level 3: The Sun Courtyard** | *The 8-Queens Problem* (Ch. 4, §4.8.1) | Romanesque Checkered Courtyard | **Spatial Placement & Optics:** Moving 8 queen statues that project light beams. Conflicting beams glow red until a non-attacking configuration is reached. | **Playable Prototype** |
 | **Level 4: The Knight's Chasm** | *The Knight's Tour* (Ch. 5, §5.6.2) | Subterranean Lava Cavern | **Platforming & Pathfinding:** Leaping across an $8 \times 8$ grid of floating stone runes using only chess knight ($L$-shaped) moves; visited tiles crumble. | **Playable Prototype** |
 | **Level 5: Dreadbury Manor** | *Who Killed Aunt Agatha?* (Ch. 6, §6.5.2) | Stormy Victorian Mansion | **Detective Investigation:** Interrogating suspects (Charles & the Butler), collecting written clues, and proving the truth at an accusation altar. | **Playable Prototype** |
+| **Level 6: The Cat Sanctuary** | *3D Asset Exhibit & Demo* | Marble Gallery Pavilion | **3D Inspection & Interaction:** Turntable orbit, animation playback ('Take 001'), and direct 3D mouse petting. | **Playable Exhibit** |
 | **Bonus: The Midnight Bridge** | *Bridge & Torch Problem* (Ch. 5, Ex. 25) | Dark Ravine Rope Bridge | **Resource & Time Management:** Guiding 4 characters of differing speeds across a swaying bridge before a 15-minute torch burns out. | Planned |
 
 Full game design specifications and exact riddle texts are located in [`story/level_progression.md`](story/level_progression.md).
@@ -50,15 +52,24 @@ seproject/
 │   ├── logical_riddles.md         # Full catalog of 21 extracted logic puzzles & mathematical formulas
 │   └── level_progression.md       # Detailed Game Design Document (GDD) with Godot 3D mechanics
 │
+├── assets/
+│   └── models/
+│       └── characters/
+│           ├── cat.glb            # glTF 2.0 binary 3D model
+│           └── cat_0.png          # PBR texture
+│
 ├── scenes/
 │   ├── ui/
 │   │   └── MainMenu.tscn          # Level select (startup scene)
+│   ├── props/
+│   │   └── Cat.tscn               # Reusable inherited prefab with collision picking
 │   └── levels/
 │       ├── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 
 │       ├── Level02_NinePortals.tscn # Playable 3D greybox scene for Level 2
 │       ├── Level03_SunCourtyard.tscn # Playable 3D greybox scene for Level 3
 │       ├── Level04_KnightsChasm.tscn # Playable 3D greybox scene for Level 4
-│       └── Level05_DreadburyManor.tscn # Playable 3D greybox scene for Level 5
+│       ├── Level05_DreadburyManor.tscn # Playable 3D greybox scene for Level 5
+│       └── Level06_Cat.tscn       # Playable 3D exhibit scene for Level 6
 │
 ├── scripts/
 │   ├── core/
@@ -70,7 +81,8 @@ seproject/
 │   │   ├── Level02Controller.gd   # 3D visuals & UI controller for Level 2
 │   │   ├── Level03Controller.gd   # 3D visuals & UI controller for Level 3
 │   │   ├── Level04Controller.gd   # 3D visuals & UI controller for Level 4
-│   │   └── Level05Controller.gd   # 3D visuals & UI controller for Level 5
+│   │   ├── Level05Controller.gd   # 3D visuals & UI controller for Level 5
+│   │   └── Level06Controller.gd   # 3D visuals & UI controller for Level 6
 │   └── logic/
 │       ├── RiverCrossingLogic.gd  # Headless rules validator for Wolf, Goat & Cabbage
 │       ├── NinePortalsLogic.gd    # Headless rules & solver for the Nine Portals
@@ -90,7 +102,9 @@ seproject/
 │   ├── TestKnightsTour.gd         # Unit tests for Knight's Tour logic (26 assertions)
 │   ├── TestLevel04Scene.gd        # Integration test for Level 4 UI
 │   ├── TestDreadbury.gd           # Unit tests for Dreadbury Manor logic (39 assertions)
-│   └── TestLevel05Scene.gd        # Integration test for Level 5 UI
+│   ├── TestLevel05Scene.gd        # Integration test for Level 5 UI
+│   ├── TestLevel06Scene.gd        # Integration test for Level 6 Cat Showcase UI
+│   └── TestMainMenu.gd            # Menu lists levels, loads them, back button works
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon
@@ -134,6 +148,7 @@ godot --headless -s res://tests/TestLevel02Scene.gd      # Level 2 Doors, Banner
 godot --headless -s res://tests/TestLevel03Scene.gd      # Level 3 UI & Auto-Solve
 godot --headless -s res://tests/TestLevel04Scene.gd      # Level 4 UI & Auto-Solve
 godot --headless -s res://tests/TestLevel05Scene.gd      # Level 5 UI & Auto-Solve
+godot --headless -s res://tests/TestLevel06Scene.gd      # Level 6 Cat Showcase UI & Petting
 godot --headless -s res://tests/TestMainMenu.gd          # Level Select & Navigation
 ```
 

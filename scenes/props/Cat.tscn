@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/characters/cat.glb" id="1_cat"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cat"]
+size = Vector3(30, 42, 75)
+
+[node name="Cat" instance=ExtResource("1_cat")]
+
+[node name="ClickArea" type="Area3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18, -8)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ClickArea" index="0"]
+shape = SubResource("BoxShape3D_cat")

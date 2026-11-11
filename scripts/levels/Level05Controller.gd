@@ -26,6 +26,8 @@ const Logic = preload("res://scripts/logic/DreadburyLogic.gd")
 @onready var banner: PanelContainer = %Banner
 @onready var banner_label: Label = %BannerLabel
 
+const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level06_Cat.tscn"
+const NEXT_LEVEL_DELAY: float = 4.0
 @export var auto_solve_delay: float = 0.22
 
 const COLOR_CLUE_UNREAD := Color(0.35, 0.55, 0.95)
@@ -364,3 +366,6 @@ func _on_puzzle_solved() -> void:
 	)
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
 	status_label.text = "Victory! The curse of Dreadbury Manor is broken."
+	await get_tree().create_timer(NEXT_LEVEL_DELAY).timeout
+	if is_inside_tree() and logic.is_solved:
+		get_tree().change_scene_to_file(NEXT_LEVEL_SCENE)

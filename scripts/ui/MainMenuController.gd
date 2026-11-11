@@ -9,6 +9,7 @@ const LEVELS: Array[Dictionary] = [
 	{"title": "Level 3: The Sun Courtyard", "scene": "res://scenes/levels/Level03_SunCourtyard.tscn"},
 	{"title": "Level 4: The Knight's Chasm", "scene": "res://scenes/levels/Level04_KnightsChasm.tscn"},
 	{"title": "Level 5: Dreadbury Manor", "scene": "res://scenes/levels/Level05_DreadburyManor.tscn"},
+	{"title": "Level 6: The Cat (Showcase)", "scene": "res://scenes/levels/Level06_Cat.tscn"},
 ]
 
 @onready var level_list: VBoxContainer = %LevelList

@@ -50,9 +50,16 @@
 
 8. **Main Menu & Level Progression Architecture:**
    * Startup scene set to [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn), managed by [`MainMenuController.gd`](scripts/ui/MainMenuController.gd).
-   * Levels 1–5 are unlocked and selectable.
+   * Levels 1–6 are unlocked and selectable.
    * All level scenes feature a consistent `< Menu` return button attached via [`BackToMenuButton.gd`](scripts/core/BackToMenuButton.gd).
-   * Linear play progression: Level 1 auto-advances to Level 2 (3s delay), Level 2 to Level 3 (4s delay), Level 3 to Level 4 (4s delay), and Level 4 to Level 5 (4s delay).
+   * Linear play progression: Level 1 auto-advances to Level 2 (3s delay), Level 2 to Level 3 (4s delay), Level 3 to Level 4 (4s delay), Level 4 to Level 5 (4s delay), and Level 5 to Level 6 (4s delay).
+
+9. **Level 6 (The Cat Sanctuary — 3D Model Exhibit):**
+   * **Asset Location & Pipeline:** Moved model from workspace root into the standard asset pipeline at [`assets/models/characters/cat.glb`](assets/models/characters/cat.glb) along with its PBR texture [`cat_0.png`](assets/models/characters/cat_0.png).
+   * **Inherited Prefab:** Created [`scenes/props/Cat.tscn`](scenes/props/Cat.tscn) with attached `Area3D` (`ClickArea`) and `CollisionShape3D` (`BoxShape3D`) for 3D physics raycast picking.
+   * **3D Scene & Controller:** Created [`scenes/levels/Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn) and [`scripts/levels/Level06Controller.gd`](scripts/levels/Level06Controller.gd) featuring turntable orbit spin (`cat_pivot.rotate_y`), animation playback toggle for `"Take 001"`, `< Menu` button, and interactive mouse petting with hop tweens and "PURR-FECTION ACHIEVED" banner.
+   * **Automated Integration Test:** [`tests/TestLevel06Scene.gd`](tests/TestLevel06Scene.gd) (17 checks passing) verifying scene hierarchy, spin toggles, animation playback, pet count increments, banner visibility, and reset.
+   * **Menu & Progression:** Added to [`MainMenuController.gd`](scripts/ui/MainMenuController.gd) and linked as `NEXT_LEVEL_SCENE` in [`Level05Controller.gd`](scripts/levels/Level05Controller.gd).
 
 ---
 
@@ -160,18 +167,23 @@ godot --headless -s res://tests/TestLevel04Scene.gd
 godot --headless -s res://tests/TestDreadbury.gd
 godot --headless -s res://tests/TestLevel05Scene.gd
 
-# 6. Global Navigation & UI
+# 6. Level 6: The Cat (3D Model Showcase)
+godot --headless -s res://tests/TestLevel06Scene.gd
+
+# 7. Global Navigation & UI
 godot --headless -s res://tests/TestMainMenu.gd
 
-# 7. Validate scene syntax without opening GUI
+# 8. Validate scene syntax without opening GUI
 godot --headless --validate --quit scenes/ui/MainMenu.tscn
+godot --headless --validate --quit scenes/props/Cat.tscn
 godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
 godot --headless --validate --quit scenes/levels/Level02_NinePortals.tscn
 godot --headless --validate --quit scenes/levels/Level03_SunCourtyard.tscn
 godot --headless --validate --quit scenes/levels/Level04_KnightsChasm.tscn
 godot --headless --validate --quit scenes/levels/Level05_DreadburyManor.tscn
+godot --headless --validate --quit scenes/levels/Level06_Cat.tscn
 
-# 8. Launch Godot game directly to test interactively
+# 9. Launch Godot game directly to test interactively
 godot
 ```
 

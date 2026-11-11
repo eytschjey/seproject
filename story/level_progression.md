@@ -31,6 +31,8 @@ Instead of answering text questions in static pop-up menus, the player solves th
                ↓
 [Level 5: Dreadbury Manor]          --> Narrative Climax & Detective Investigation
                ↓
+[Level 6: The Cat Sanctuary]        --> Atmospheric 3D Model Exhibit & Interactive Sanctuary
+               ↓
 [Bonus Chamber: The Midnight Bridge]--> Time-Critical Resource Management
 ```
 
@@ -206,6 +208,18 @@ Instead of answering text questions in static pop-up menus, the player solves th
     The killer cannot be richer than Agatha, so the butler is not richer than Agatha. Thus, the butler hates himself. The butler also hates everyone Agatha hates (which includes herself and Charles). That means the butler hates Agatha, Charles, and himself—he hates everyone! But no one hates everyone—**Contradiction!**
   * *The Truth:* **Aunt Agatha committed suicide (killed herself).**
 * **Ending Cinematic:** Placing the dagger on Agatha's bust reveals the final hidden suicide note behind her portrait. The storm clears, morning sunlight breaks through the windows, and the mansion doors swing open to the outer world.
+
+---
+
+# Level 6: The Cat Sanctuary (3D Model Exhibit)
+
+* **Theme / Setting:** A serene, minimalist gallery pavilion with a polished marble pedestal set against open ambient skies.
+* **Featured Asset:** `assets/models/characters/cat.glb` (`scenes/props/Cat.tscn`).
+* **Objective:** An interactive showcase level demonstrating Godot 4 glTF 2.0 asset import, turntable inspection, animation playback (`Take 001`), and physical 3D raycast picking.
+* **Mechanics:**
+  * **Interactive Turntable:** Toggleable smooth orbital rotation around the cat's vertical axis.
+  * **Animation Playback:** Play/pause toggle for the embedded Skeletal/Keyframe animation track.
+  * **3D Mouse Picking:** Direct left-click on the cat triggers a physical hop tween and purr counter. Reaching 5 pets unlocks the "PURR-FECTION ACHIEVED" banner.
 
 ---
 

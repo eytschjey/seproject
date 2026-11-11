@@ -9,7 +9,7 @@ func _init() -> void:
 	var ok := true
 	ok = ok and m.level_buttons.size() == m.LEVELS.size()
 	ok = ok and not m.level_buttons[0].disabled and not m.level_buttons[1].disabled
-	ok = ok and not m.level_buttons[2].disabled and not m.level_buttons[3].disabled and not m.level_buttons[4].disabled
+	ok = ok and not m.level_buttons[2].disabled and not m.level_buttons[3].disabled and not m.level_buttons[4].disabled and not m.level_buttons[5].disabled
 	print("buttons ok: ", ok)
 	m.level_buttons[1].pressed.emit()
 	await create_timer(0.5).timeout
