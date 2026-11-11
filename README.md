@@ -12,8 +12,9 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 1 3D Prototype:** Functional 3D greybox scene ([`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn)) with dynamic lighting, smooth item hops, raft movement tweening, and full interactive UI.
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence and visual tracking.
 - [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)), 25 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
+- [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 27 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)) and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with a "< Menu" button in each level.
-- [ ] **Next Up:** First-person character navigation, journal UI, Level 3 (8-Queens).
+- [ ] **Next Up:** First-person character navigation, journal UI, Level 4 (Knight's Tour).
 
 ---
 
@@ -29,7 +30,7 @@ Rather than solving abstract logic puzzles on paper or through 2D menus, players
 | :--- | :--- | :--- | :--- | :--- |
 | **Level 1: The Ferryman's Crossing** | *Wolf, Goat & Cabbage* (Ch. 5, Ex. 19) | Misty Riverbank & Dock | **Tutorial & Raft Physics:** Transporting items one by one across a river, checking state constraints to prevent items from being eaten. | **Playable Prototype** |
 | **Level 2: The Hall of Nine Portals** | *Smullyan’s Princess & Tiger* (Ch. 4, Ex. 13) | Palace Throne Corridor | **Propositional Deduction:** 9 doors with etched inscriptions. Avoid lethal tiger traps by reasoning about truth and deception. | **Playable Prototype** |
-| **Level 3: The Sun Courtyard** | *The 8-Queens Problem* (Ch. 4, §4.8.1) | Romanesque Checkered Courtyard | **Spatial Placement & Optics:** Moving 8 queen statues that project light beams. Conflicting beams glow red until a non-attacking configuration is reached. | Planned |
+| **Level 3: The Sun Courtyard** | *The 8-Queens Problem* (Ch. 4, §4.8.1) | Romanesque Checkered Courtyard | **Spatial Placement & Optics:** Moving 8 queen statues that project light beams. Conflicting beams glow red until a non-attacking configuration is reached. | **Playable Prototype** |
 | **Level 4: The Knight's Chasm** | *The Knight's Tour* (Ch. 5, §5.6.2) | Subterranean Lava Cavern | **Platforming & Pathfinding:** Leaping across an $8 \times 8$ grid of floating stone runes using only chess knight ($L$-shaped) moves; visited tiles crumble. | Planned |
 | **Level 5: Dreadbury Manor** | *Who Killed Aunt Agatha?* (Ch. 6, §6.5.2) | Stormy Victorian Mansion | **Detective Investigation:** Interrogating suspects (Charles & the Butler), collecting written clues, and proving the truth at an accusation altar. | Planned |
 | **Bonus: The Midnight Bridge** | *Bridge & Torch Problem* (Ch. 5, Ex. 25) | Dark Ravine Rope Bridge | **Resource & Time Management:** Guiding 4 characters of differing speeds across a swaying bridge before a 15-minute torch burns out. | Planned |
@@ -52,7 +53,8 @@ seproject/
 │   │   └── MainMenu.tscn          # Level select (startup scene)
 │   └── levels/
 │       ├── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 
-│       └── Level02_NinePortals.tscn # Playable 3D greybox scene for Level 2
+│       ├── Level02_NinePortals.tscn # Playable 3D greybox scene for Level 2
+│       └── Level03_SunCourtyard.tscn # Playable 3D greybox scene for Level 3
 │
 ├── scripts/
 │   ├── core/
@@ -61,10 +63,12 @@ seproject/
 │   │   └── MainMenuController.gd  # Level select logic
 │   ├── levels/
 │   │   ├── Level01Controller.gd   # 3D visuals & UI controller for Level 1
-│   │   └── Level02Controller.gd   # 3D visuals & UI controller for Level 2
+│   │   ├── Level02Controller.gd   # 3D visuals & UI controller for Level 2
+│   │   └── Level03Controller.gd   # 3D visuals & UI controller for Level 3
 │   └── logic/
 │       ├── RiverCrossingLogic.gd  # Headless rules validator for Wolf, Goat & Cabbage
-│       └── NinePortalsLogic.gd    # Headless rules & solver for the Nine Portals
+│       ├── NinePortalsLogic.gd    # Headless rules & solver for the Nine Portals
+│       └── QueensLogic.gd         # Headless rules & solver for 8-Queens
 │
 ├── tests/
 │   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (41 assertions)
@@ -72,7 +76,9 @@ seproject/
 │   ├── TestMainMenu.gd            # Menu lists levels, loads them, back button works
 │   ├── TestLevel01Transition.gd   # Level 1 win auto-advances to Level 2
 │   ├── TestNinePortals.gd         # Unit tests for Nine Portals logic (25 assertions)
-│   └── TestLevel02Scene.gd        # Integration test for Level 2 UI
+│   ├── TestLevel02Scene.gd        # Integration test for Level 2 UI
+│   ├── TestQueens.gd              # Unit tests for 8-Queens logic (27 assertions)
+│   └── TestLevel03Scene.gd        # Integration test for Level 3 UI
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon

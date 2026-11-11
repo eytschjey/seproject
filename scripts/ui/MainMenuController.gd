@@ -6,7 +6,7 @@ extends Control
 const LEVELS: Array[Dictionary] = [
 	{"title": "Level 1: The Ferryman's Crossing", "scene": "res://scenes/levels/Level01_Tutorial.tscn"},
 	{"title": "Level 2: The Hall of Nine Portals", "scene": "res://scenes/levels/Level02_NinePortals.tscn"},
-	{"title": "Level 3: The Sun Courtyard", "scene": ""},
+	{"title": "Level 3: The Sun Courtyard", "scene": "res://scenes/levels/Level03_SunCourtyard.tscn"},
 	{"title": "Level 4: The Knight's Chasm", "scene": ""},
 	{"title": "Level 5: Dreadbury Manor", "scene": ""},
 ]

@@ -15,6 +15,8 @@ const Logic = preload("res://scripts/logic/NinePortalsLogic.gd")
 
 const DOOR_OPEN_ANGLE: float = -105.0 # degrees; swings toward the viewer
 const DOOR_TWEEN_DURATION: float = 0.8
+const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level03_SunCourtyard.tscn"
+const NEXT_LEVEL_DELAY: float = 4.0
 
 var logic: RefCounted
 var door_buttons: Array[Button] = []
@@ -147,6 +149,14 @@ func _on_puzzle_solved() -> void:
 	banner.visible = true
 	banner_label.text = "PUZZLE SOLVED!\nThe Princess is behind Door 5. The Royal Sigil is yours!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
+	_proceed_to_next_level()
+
+## Auto-advance to Level 3 a few seconds after victory so the player can see the result.
+func _proceed_to_next_level() -> void:
+	banner_label.text += "\nProceeding to the Sun Courtyard..."
+	await get_tree().create_timer(NEXT_LEVEL_DELAY).timeout
+	if is_inside_tree():
+		get_tree().change_scene_to_file(NEXT_LEVEL_SCENE)
 
 func _update_ui() -> void:
 	var game_over: bool = logic.is_failed or logic.is_solved

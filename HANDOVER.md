@@ -27,6 +27,13 @@
    * **Unit Tests:** [`tests/TestNinePortals.gd`](tests/TestNinePortals.gd) (25 assertions) proves the Princess is uniquely in Room 5.
    * **Scene:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): select a door (shows its plaque), then "Open". Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd).
 
+5. **Level 3 (The Sun Courtyard - 8 Queens):**
+   * **Headless Logic:** [`scripts/logic/QueensLogic.gd`](scripts/logic/QueensLogic.gd) - place/remove/toggle queens (max 8, conflicts allowed but reported), conflict pairs, win check, and a backtracking solver.
+   * **Unit Tests:** [`tests/TestQueens.gd`](tests/TestQueens.gd) (27 assertions) incl. exactly 92 solutions.
+   * **Scene:** [`scenes/levels/Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn) + [`scripts/levels/Level03Controller.gd`](scripts/levels/Level03Controller.gd): 3D marble board built from a `BoardOrigin` marker, an 8x8 HUD button grid toggles queens, statues are gold when safe / red when attacked, crimson beams link attacking pairs. Test: [`tests/TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
+   * Level 2 victory auto-advances to Level 3 after 4 s. Level 3 has no next level yet (`NEXT_LEVEL_SCENE` is empty): set it and add the auto-advance when Level 4 exists.
+   * Follow-ups: pushable statues on a grid (needs the player controller), sun-crystal / drawbridge victory animation, beams along all 8 directions.
+
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
@@ -60,8 +67,8 @@
   - Automatically logs discovered door inscriptions and NPC dialogue clues.
   - Optional: A grid/matrix scratchpad so players can manually cross off deductions without pen and paper.
 
-### Task 4: Level 3 — The Sun Courtyard (8-Queens) (Future)
-* **Source:** 8-Queens puzzle with physical movable statues projecting light/laser beams across an $8 \times 8$ marble courtyard. Conflicting beams turn red until a valid non-attacking configuration is reached.
+### Task 4: Level 4 — The Knight's Chasm (Knight's Tour) (Future)
+* See [`story/level_progression.md`](story/level_progression.md). Mirror the Level 3 pattern: headless logic + solver test, button-driven scene, then wire `NEXT_LEVEL_SCENE` in `Level03Controller.gd` and add it to the menu `LEVELS`.
 
 ---
 
@@ -78,7 +85,13 @@ godot --headless -s res://tests/TestRiverCrossing.gd
 # 2. Run Level 1 UI integration test (full solution sequence)
 godot --headless -s res://tests/TestLevel01Scene.gd
 
-# 3. Validate scene syntax without opening GUI
+# 3. Level 2 / Level 3 tests
+godot --headless -s res://tests/TestNinePortals.gd
+godot --headless -s res://tests/TestLevel02Scene.gd
+godot --headless -s res://tests/TestQueens.gd
+godot --headless -s res://tests/TestLevel03Scene.gd
+
+# 4. Validate scene syntax without opening GUI
 godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
 
 # 4. Launch Godot game directly to test interactively
