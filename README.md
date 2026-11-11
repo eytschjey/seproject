@@ -11,7 +11,8 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 1 Logic Engine:** Headless state machine ([`scripts/logic/RiverCrossingLogic.gd`](scripts/logic/RiverCrossingLogic.gd)) verifying state constraints and transitions (41 automated assertions passing).
 - [x] **Level 1 3D Prototype:** Functional 3D greybox scene ([`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn)) with dynamic lighting, smooth item hops, raft movement tweening, and full interactive UI.
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence and visual tracking.
-- [ ] **Next Up:** Level 2 (*The Hall of Nine Portals* — Smullyan's Princess & Tiger doors) and first-person character navigation.
+- [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)), 25 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
+- [ ] **Next Up:** First-person character navigation, journal UI, Level 3 (8-Queens).
 
 ---
 
@@ -26,7 +27,7 @@ Rather than solving abstract logic puzzles on paper or through 2D menus, players
 | Level | Puzzle Source | Setting | Core Gameplay Mechanic | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Level 1: The Ferryman's Crossing** | *Wolf, Goat & Cabbage* (Ch. 5, Ex. 19) | Misty Riverbank & Dock | **Tutorial & Raft Physics:** Transporting items one by one across a river, checking state constraints to prevent items from being eaten. | **Playable Prototype** |
-| **Level 2: The Hall of Nine Portals** | *Smullyan’s Princess & Tiger* (Ch. 4, Ex. 13) | Palace Throne Corridor | **Propositional Deduction:** 9 doors with etched inscriptions. Avoid lethal tiger traps by reasoning about truth and deception. | Planned |
+| **Level 2: The Hall of Nine Portals** | *Smullyan’s Princess & Tiger* (Ch. 4, Ex. 13) | Palace Throne Corridor | **Propositional Deduction:** 9 doors with etched inscriptions. Avoid lethal tiger traps by reasoning about truth and deception. | **Playable Prototype** |
 | **Level 3: The Sun Courtyard** | *The 8-Queens Problem* (Ch. 4, §4.8.1) | Romanesque Checkered Courtyard | **Spatial Placement & Optics:** Moving 8 queen statues that project light beams. Conflicting beams glow red until a non-attacking configuration is reached. | Planned |
 | **Level 4: The Knight's Chasm** | *The Knight's Tour* (Ch. 5, §5.6.2) | Subterranean Lava Cavern | **Platforming & Pathfinding:** Leaping across an $8 \times 8$ grid of floating stone runes using only chess knight ($L$-shaped) moves; visited tiles crumble. | Planned |
 | **Level 5: Dreadbury Manor** | *Who Killed Aunt Agatha?* (Ch. 6, §6.5.2) | Stormy Victorian Mansion | **Detective Investigation:** Interrogating suspects (Charles & the Butler), collecting written clues, and proving the truth at an accusation altar. | Planned |
@@ -47,17 +48,23 @@ seproject/
 │
 ├── scenes/
 │   └── levels/
-│       └── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 (Startup scene)
+│       ├── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 (Startup scene)
+│       └── Level02_NinePortals.tscn # Playable 3D greybox scene for Level 2
 │
 ├── scripts/
 │   ├── levels/
-│   │   └── Level01Controller.gd   # 3D visuals & UI controller for Level 1
+│   │   ├── Level01Controller.gd   # 3D visuals & UI controller for Level 1
+│   │   └── Level02Controller.gd   # 3D visuals & UI controller for Level 2
 │   └── logic/
-│       └── RiverCrossingLogic.gd  # Headless rules validator for Wolf, Goat & Cabbage
+│       ├── RiverCrossingLogic.gd  # Headless rules validator for Wolf, Goat & Cabbage
+│       └── NinePortalsLogic.gd    # Headless rules & solver for the Nine Portals
 │
 ├── tests/
 │   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (41 assertions)
-│   └── TestLevel01Scene.gd        # Integration test for 3D UI & solution playback
+│   ├── TestLevel01Scene.gd        # Integration test for 3D UI & solution playback
+│   ├── TestLevel01Transition.gd   # Level 1 win auto-advances to Level 2
+│   ├── TestNinePortals.gd         # Unit tests for Nine Portals logic (25 assertions)
+│   └── TestLevel02Scene.gd        # Integration test for Level 2 UI
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon

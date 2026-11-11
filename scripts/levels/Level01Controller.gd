@@ -33,6 +33,8 @@ const Logic = preload("res://scripts/logic/RiverCrossingLogic.gd")
 const RAFT_WEST_X: float = -4.0
 const RAFT_EAST_X: float = 4.0
 const TWEEN_DURATION: float = 1.2
+const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level02_NinePortals.tscn"
+const NEXT_LEVEL_DELAY: float = 3.0
 
 var logic: RefCounted
 var is_animating: bool = false
@@ -123,6 +125,14 @@ func _on_puzzle_solved() -> void:
 	banner_label.text = "🎉 PUZZLE SOLVED!\nAll passengers safely crossed the river!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
 	status_label.text = "Victory! The gate ahead unlocks."
+	_proceed_to_next_level()
+
+## Auto-advance to Level 2 a few seconds after victory so the player can see the result.
+func _proceed_to_next_level() -> void:
+	banner_label.text += "\nProceeding to the Hall of Nine Portals..."
+	await get_tree().create_timer(NEXT_LEVEL_DELAY).timeout
+	if is_inside_tree():
+		get_tree().change_scene_to_file(NEXT_LEVEL_SCENE)
 
 func _update_ui() -> void:
 	btn_cross.text = "Row Raft to East" if logic.boat_side == Logic.Side.WEST else "Row Raft to West"

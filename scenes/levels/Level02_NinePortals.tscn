@@ -1,0 +1,554 @@
+[gd_scene load_steps=12 format=3]
+[ext_resource type="Script" path="res://scripts/levels/Level02Controller.gd" id="1_ctrl"]
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+sky_top_color = Color(0.05, 0.04, 0.09, 1)
+sky_horizon_color = Color(0.12, 0.09, 0.14, 1)
+ground_horizon_color = Color(0.12, 0.09, 0.14, 1)
+ground_bottom_color = Color(0.03, 0.03, 0.05, 1)
+
+[sub_resource type="Sky" id="Sky_res"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_main"]
+background_mode = 2
+sky = SubResource("Sky_res")
+ambient_light_source = 3
+ambient_light_color = Color(0.45, 0.4, 0.5, 1)
+ambient_light_sky_contribution = 0.3
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="Mat_Stone"]
+albedo_color = Color(0.42, 0.4, 0.38, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Floor"]
+albedo_color = Color(0.3, 0.26, 0.24, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_Door"]
+albedo_color = Color(0.45, 0.28, 0.14, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_Frame"]
+albedo_color = Color(0.2, 0.18, 0.17, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Dark"]
+albedo_color = Color(0.03, 0.03, 0.04, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Plaque"]
+albedo_color = Color(0.78, 0.65, 0.3, 1)
+metallic = 0.7
+roughness = 0.4
+
+[node name="Level02_NinePortals" type="Node3D"]
+script = ExtResource("1_ctrl")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 10, 8)
+light_energy = 0.6
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 5.2, 10.5)
+fov = 55.0
+
+[node name="Hall" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Hall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 2)
+size = Vector3(24, 1, 12)
+material = SubResource("Mat_Floor")
+
+[node name="BackWall" type="CSGBox3D" parent="Hall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1.2)
+size = Vector3(22, 7, 0.6)
+material = SubResource("Mat_Stone")
+
+[node name="Doors" type="Node3D" parent="."]
+[node name="Door1" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.2, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door1/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "1"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door2" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8999999999999995, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door2/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "2"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door3" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door3/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "3"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door4" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door4/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "4"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door5" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door5/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "5"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door6" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door6/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "6"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door7" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door7/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "7"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door8" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8999999999999995, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door8/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "8"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="Door9" type="Node3D" parent="Doors"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 0, 0)
+
+[node name="Frame" type="CSGBox3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.2)
+size = Vector3(1.9, 3.1, 0.4)
+material = SubResource("Mat_Frame")
+
+[node name="Alcove" type="CSGBox3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -0.45)
+size = Vector3(1.5, 2.8, 0.1)
+material = SubResource("Mat_Dark")
+
+[node name="Hinge" type="Node3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.05)
+
+[node name="Panel" type="CSGBox3D" parent="Doors/Door9/Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.4, 0)
+size = Vector3(1.5, 2.8, 0.12)
+material = SubResource("Mat_Door")
+
+[node name="Plaque" type="CSGBox3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.05)
+size = Vector3(0.9, 0.5, 0.06)
+material = SubResource("Mat_Plaque")
+
+[node name="NumberLabel" type="Label3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.1)
+pixel_size = 0.01
+modulate = Color(0.1, 0.05, 0, 1)
+text = "9"
+font_size = 72
+
+[node name="RoomSlot" type="Marker3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="RoomLight" type="OmniLight3D" parent="Doors/Door9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.6)
+visible = false
+omni_range = 4.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="RootControl" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HeaderPanel" type="PanelContainer" parent="UI/RootControl"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 90.0
+grow_horizontal = 2
+
+[node name="HeaderBox" type="VBoxContainer" parent="UI/RootControl/HeaderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Level 2: The Hall of Nine Portals"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Tiger: sign is false. Princess: sign is true. Empty rooms: all signs true or all false. Find the Princess."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="PlaquePanel" type="PanelContainer" parent="UI/RootControl"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = -250.0
+offset_right = 380.0
+offset_bottom = -130.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="PlaqueLabel" type="Label" parent="UI/RootControl/PlaquePanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Select a door to read its plaque."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Banner" type="PanelContainer" parent="UI/RootControl"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -60.0
+offset_right = 220.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BannerLabel" type="Label" parent="UI/RootControl/Banner"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Notification"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBar" type="PanelContainer" parent="UI/RootControl"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -110.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ActionBox" type="VBoxContainer" parent="UI/RootControl/ActionBar"]
+layout_mode = 2
+
+[node name="DoorButtons" type="HBoxContainer" parent="UI/RootControl/ActionBar/ActionBox"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="ControlButtons" type="HBoxContainer" parent="UI/RootControl/ActionBar/ActionBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnOpen" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Open Selected Door"
+
+[node name="BtnReset" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset"

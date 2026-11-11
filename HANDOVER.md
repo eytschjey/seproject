@@ -22,24 +22,21 @@
    * **Playable 3D Greybox Scene:** [`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn) with animated raft tweens, smooth item hops, lighting, and an interactive HUD.
    * **Scene Controller:** [`scripts/levels/Level01Controller.gd`](scripts/levels/Level01Controller.gd) connects UI and 3D node positions to logic signals. Bug fixes applied: Reset now re-enables controls properly, and carried items follow raft translation on every frame.
    * **Integration Test:** [`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd) simulates real button presses through the full 7-step solution and validates that items reach the East shore.
+4. **Level 2 (The Hall of Nine Portals - Smullyan's Princess & Tiger):**
+   * **Headless Logic:** [`scripts/logic/NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd) evaluates the nine inscriptions (with cross-references), checks protocol consistency, enumerates all consistent layouts, and runs the open-door game flow.
+   * **Unit Tests:** [`tests/TestNinePortals.gd`](tests/TestNinePortals.gd) (25 assertions) proves the Princess is uniquely in Room 5.
+   * **Scene:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): select a door (shows its plaque), then "Open". Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd).
 
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
 
-### Task 1: Level 2 — The Hall of Nine Portals (High Priority)
-* **Source:** Raymond Smullyan's Princess and Tiger puzzle ([`story/logical_riddles.md`](story/logical_riddles.md#6-the-trial-of-the-nine-portals) & [`story/level_progression.md`](story/level_progression.md#level-2-the-hall-of-nine-portals-high-stakes-deduction)).
-* **Sub-tasks:**
-  1. Create headless logic class `scripts/logic/NinePortalsLogic.gd`:
-     - Model 9 doors, each containing either `PRINCESS`, `TIGER`, or `EMPTY`.
-     - Evaluate the 9 inscriptions against the truth protocol (Tiger = False, Princess = True, Empty = all True or all False).
-     - Provide validation methods to check if an assignment of room contents is mathematically consistent.
-  2. Create test script `tests/TestNinePortals.gd`:
-     - Prove via unit tests which room uniquely holds the Princess.
-  3. Create 3D scene `scenes/levels/Level02_NinePortals.tscn`:
-     - Build a corridor with 9 identical doors and engraved plaques.
-     - Allow the player to inspect each plaque and choose a door to open.
-     - Include opening animations: Tiger jump scare/trap, empty room dust cloud, or radiant Princess portal.
+### ~~Task 1: Level 2 — The Hall of Nine Portals~~ ✅ DONE
+* Implemented as a button-driven level (same style as Level 1).
+* Fixed hidden layout: Tigers in Rooms 1, 2, 4, 6, 7, 8, 9; Room 3 empty; **Princess in Room 5**. Brute force shows 48 layouts satisfy the protocol; only the Princess's room (5) and Room 2 (tiger) are forced. `NinePortalsLogic.princess_candidates()` returns `[5]`.
+* Opening a tiger door shows "You failed! Press Reset to try again." (no auto-reset).
+* Level 1 victory now auto-advances to Level 2 after 3 s (`NEXT_LEVEL_DELAY` in `Level01Controller.gd`); covered by `tests/TestLevel01Transition.gd`.
+* Follow-ups: replace buttons with first-person plaque inspection (Task 2) and log plaques into the Journal (Task 3); real tiger/princess art and particles.
 
 ### Task 2: 3D First-Person Player Controller (Medium Priority)
 * **Goal:** Transition from clicking HUD buttons to physically walking through the chambers in 3D.
