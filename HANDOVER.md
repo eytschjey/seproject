@@ -89,6 +89,44 @@
 ### ~~Task 4: Level 5 — Dreadbury Manor (Narrative Murder Mystery)~~ ✅ DONE
 * Implemented in [`scripts/logic/DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), [`scripts/levels/Level05Controller.gd`](scripts/levels/Level05Controller.gd), and [`scenes/levels/Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn), connected from Level 4 and enabled in `MainMenuController.gd`.
 
+### Task 4 (New): 3D Model Replacement & Visual Asset Pipeline (Greybox to Final Art)
+* **Goal:** Incrementally replace rapid-prototype CSG geometry across Levels 1–5 with textured 3D models while preserving headless test suites, 3D mouse picking, and model-view decoupling.
+* **Pipeline & Format Standards:**
+  * **File Format:** glTF 2.0 Binary (`.glb`) exclusively. Bundles PBR textures, materials, and meshes without requiring external software (e.g. Blender) during headless test runs or CI.
+  * **Directory Organization:**
+    * `assets/models/environment/` (terrain, riverbanks, stone walls, lava chasm cliffs, manor library)
+    * `assets/models/props/` (wooden raft, cabbage, doors, brass plaques, dagger, chests, tiles)
+    * `assets/models/characters/` (wolf, goat, queen statue, knight piece, suspect busts)
+    * `assets/textures/` & `assets/materials/`
+    * `scenes/props/` (inherited `.tscn` prefabs with configured `Area3D`, `CollisionShape3D`, and material overrides)
+  * **Inherited Scenes over Raw `.glb`:** Never drop raw `.glb` files directly into master level scenes. Always create an inherited scene (`scenes/props/<PropName>.tscn`) from the imported `.glb`. This preserves collision shapes, script references, and material overrides when re-exporting updated models from 3D DCC tools.
+  * **Godot Import Suffixes:** Suffix meshes with `-col` for auto-generated convex colliders or `-colonly` for invisible boundary colliders.
+* **Level-by-Level Asset Breakdown & Controller Hookup Rules:**
+  1. **Level 1 (Ferryman's Crossing):**
+     * Replace CSG nodes (`$Items/Wolf`, `$Items/Goat`, `$Items/Cabbage`) with 3D model prefabs or `MeshInstance3D` nodes.
+     * *Constraint:* Preserve the exact node names (`Wolf`, `Goat`, `Cabbage`) and keep the child `ClickArea` (`Area3D`) + `CollisionShape3D` intact so [`Level01Controller.gd`](scripts/levels/Level01Controller.gd) raycasting continues to function with zero code changes.
+     * Replace `$Environment/Raft` with a wooden raft mesh; retain the `$Environment/Raft/ItemSlot` (`Marker3D`) and `ClickArea`.
+     * Add river water shader and textured riverbank terrain.
+  2. **Level 2 (Hall of Nine Portals):**
+     * Replace door frame CSG and door panel CSG with ornate doorframe and wooden door meshes.
+     * *Constraint:* Retain the `Hinge` (`Node3D`) parent pivot node so [`Level02Controller.gd`](scripts/levels/Level02Controller.gd)'s `-105.0°` rotation tween opens the door around its hinge axis naturally.
+     * Add 3D Tiger and Princess models/sprites behind opened doors.
+  3. **Level 3 (Sun Courtyard):**
+     * Create `scenes/props/QueenStatue.tscn` prefab.
+     * In [`Level03Controller.gd`](scripts/levels/Level03Controller.gd), update `_spawn_queen(cell)` to instantiate `QueenScene.instantiate()` instead of procedurally building CSG cylinders and spheres.
+     * Expose surface material override on the queen mesh to preserve the gold (`COLOR_SAFE`) vs crimson (`COLOR_CONFLICT`) visual feedback.
+     * Replace procedural tiles with textured marble tile meshes.
+  4. **Level 4 (Knight's Chasm):**
+     * Create `scenes/props/KnightPiece.tscn` prefab.
+     * In [`Level04Controller.gd`](scripts/levels/Level04Controller.gd), update `_build_knight()` to instantiate the prefab under `$Board/Knight`.
+     * Replace CSG rune blocks with carved stone rune slabs with glowing emission runes.
+     * Replace CSG lava floor with an animated scrolling lava shader.
+  5. **Level 5 (Dreadbury Manor):**
+     * Replace procedural suspect busts with character busts or portraits.
+     * Replace CSG dagger with an ornate 3D dagger model for the "Dagger of Truth" animation.
+     * Add Victorian furniture: armchair for Aunt Agatha, mahogany bookshelves, fireplace fire particle effect.
+* **Validation Requirement:** Always run `godot --headless --validate --quit scenes/levels/<Level>.tscn` and run all test suites (`godot --headless -s res://tests/<TestSuite>.gd`) after replacing any visual assets.
+
 ### Task 5: Bonus Chamber — The Midnight Bridge (Bridge & Torch Problem) (Future)
 * See [`story/level_progression.md`](story/level_progression.md) and [`story/logical_riddles.md`](story/logical_riddles.md#19-the-bridge-and-torch-problem).
 

@@ -16,7 +16,7 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)), Auto-Solve debug button, and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
 - [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 39 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)), 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)), Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with Levels 1–5 unlocked and a "< Menu" button in each level.
-- [ ] **Next Up:** First-person character navigation, journal UI, Bonus Chamber (The Midnight Bridge).
+- [ ] **Next Up:** 3D asset integration (replacing CSG greyboxes with glTF models), first-person character navigation, journal UI, Bonus Chamber (The Midnight Bridge).
 
 ---
 
@@ -108,7 +108,8 @@ seproject/
 * **Aspect Ratio:** Canvas items stretch with expand mode (`canvas_items` / `expand`)
 * **Architecture Pattern:** Decoupled Model-View-Controller:
   * **Model:** Pure GDScript classes validating puzzle rules and constraints (e.g. `RiverCrossingLogic.gd`).
-  * **View / Controller:** 3D nodes (`CSGBox3D`, `CSGSphere3D`, `Tween`) and UI handling animations, user input, and feedback.
+  * **View / Controller:** 3D nodes (`MeshInstance3D`, `CSG`, `Tween`) and UI handling animations, user input, and feedback.
+  * **3D Asset Pipeline:** glTF 2.0 (`.glb`) inherited scene prefabs (`scenes/props/`) preserving collision shapes and interaction markers.
 
 ---
 

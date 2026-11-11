@@ -50,6 +50,14 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
 ### 4. Documentation Synchronization
 - **Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes** so documentation stays in lockstep with the codebase.
 
+### 5. 3D Asset Pipeline & Greybox Replacement Standards
+- **Standard Format:** Use **glTF 2.0 Binary (`.glb`)** exclusively under `assets/models/`. Self-contained `.glb` files package PBR textures, meshes, and materials without requiring external DCC software (e.g. Blender) during headless test runs or CI builds.
+- **Prefabs via Inherited Scenes (`scenes/props/`):** Never drag raw `.glb` files directly into master level scenes. Always create an **Inherited Scene** (`scenes/props/<PropName>.tscn`) from the imported `.glb`. This allows configuring `Area3D` collision shapes, scripts, and material overrides that remain intact when re-exporting updated 3D meshes.
+- **Node Hierarchy & Identifier Stability:** When replacing CSG shapes with meshes, preserve exact node names (e.g. `$Items/Wolf`, `$Environment/Raft`, `$Doors/Door1`, `$Board/Knight`) and retain all child `Marker3D` attachment slots, `Hinge` rotation pivots, and `Area3D` click pickers. Controllers and tests rely on these exact node paths.
+- **Dynamic Spawners:** For pieces spawned at runtime (e.g. queen statues in Level 3, knight piece in Level 4, suspect busts in Level 5), preload the prefab (`const PropScene = preload(...)`) and instantiate it, applying material overrides for state changes (such as safe vs conflict coloring).
+- **Import Suffixes:** Leverage Godot's import hints on mesh objects in Blender: `-col` (generates convex collision shape) and `-colonly` (generates invisible collision geometry).
+- **Headless Validation:** Always validate modified scenes (`godot --headless --validate --quit scenes/levels/<SceneName>.tscn`) to guarantee no missing texture or resource dependencies exist.
+
 ---
 
 ## ⚠️ Known GDScript & Godot Quirks in this Project
