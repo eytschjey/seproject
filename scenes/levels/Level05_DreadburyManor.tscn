@@ -195,7 +195,10 @@ mouse_filter = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 90.0
+offset_left = 112.0
+offset_top = 12.0
+offset_right = -408.0
+offset_bottom = 94.0
 grow_horizontal = 2
 
 [node name="HeaderBox" type="VBoxContainer" parent="UI/RootControl/HeaderPanel"]
@@ -203,13 +206,20 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.88, 0.72, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 21
 text = "Level 5: The Night at Dreadbury Manor"
 horizontal_alignment = 1
 
 [node name="StatusLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.93, 0.99, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
 text = "Someone in Dreadbury Mansion killed Aunt Agatha. Examine the 8 clues and place the Dagger of Truth on the killer's bust."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -228,6 +238,9 @@ grow_vertical = 0
 [node name="ClueLabel" type="Label" parent="UI/RootControl/CluePanel"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.93, 0.99, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 16
 text = "Select a clue to inspect the evidence."
 horizontal_alignment = 1
@@ -241,9 +254,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -395.0
+offset_left = -392.0
 offset_top = -270.0
-offset_right = -20.0
+offset_right = -16.0
 offset_bottom = 295.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -255,6 +268,9 @@ theme_override_constants/separation = 6
 [node name="ClueCountLabel" type="Label" parent="UI/RootControl/SidePanel/SideBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.72, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 18
 text = "Clues Examined: 0 / 8"
 horizontal_alignment = 1
@@ -268,6 +284,9 @@ columns = 2
 
 [node name="AltarTitleLabel" type="Label" parent="UI/RootControl/SidePanel/SideBox"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.82, 0.45, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 17
 text = "The Accusation Altar"
 horizontal_alignment = 1
@@ -298,20 +317,14 @@ text = "Auto-Solve (Debug)"
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -340.0
-offset_top = -85.0
-offset_right = 140.0
-offset_bottom = 65.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_left = 112.0
+offset_top = 310.0
+offset_right = 700.0
+offset_bottom = 440.0
 
 [node name="BannerLabel" type="Label" parent="UI/RootControl/Banner"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 text = "Notification"

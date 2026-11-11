@@ -56,7 +56,7 @@ func _ready() -> void:
 	btn_undo.pressed.connect(_on_undo_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
-	BackToMenuButton.attach($UI/RootControl)
+	BackToMenuButton.attach($UI/RootControl, Color(0.35, 0.82, 1.0))
 	_build_knight()
 	_on_state_changed(logic.current, logic.path.duplicate())
 

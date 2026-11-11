@@ -59,6 +59,12 @@ var bust_materials: Array[StandardMaterial3D] = []
 var dagger_tween: Tween
 var is_auto_solving: bool = false
 
+var style_clue_unread: StyleBoxFlat
+var style_clue_read: StyleBoxFlat
+var style_clue_active: StyleBoxFlat
+var style_suspect_idle: StyleBoxFlat
+var style_suspect_selected: StyleBoxFlat
+
 func _ready() -> void:
 	logic = Logic.new()
 	logic.state_changed.connect(_on_state_changed)
@@ -66,6 +72,7 @@ func _ready() -> void:
 	logic.move_executed.connect(func(d: String): status_label.text = d)
 	logic.puzzle_failed.connect(_on_puzzle_failed)
 	logic.puzzle_solved.connect(_on_puzzle_solved)
+	_init_gui_styles()
 	_build_clues()
 	_build_altar()
 	_build_dagger()
@@ -73,9 +80,64 @@ func _ready() -> void:
 	btn_accuse.pressed.connect(_on_accuse_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
-	BackToMenuButton.attach($UI/RootControl)
+	BackToMenuButton.attach($UI/RootControl, Color(0.76, 0.46, 0.95))
 	_apply_storm_lighting()
 	_on_state_changed(logic.discovered_clues.duplicate(), logic.selected_clue, logic.selected_suspect)
+
+func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 6) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(border_w)
+	sb.set_corner_radius_all(radius)
+	return sb
+
+func _init_gui_styles() -> void:
+	# Level 5 Color Scheme: Victorian Gothic Noir, Moonlight Amethyst & Blood-Crimson
+	var panel_sb := _make_box_style(Color(0.11, 0.06, 0.16, 0.95), Color(0.76, 0.46, 0.95, 0.95), 2, 8)
+	panel_sb.content_margin_left = 14.0
+	panel_sb.content_margin_right = 14.0
+	panel_sb.content_margin_top = 8.0
+	panel_sb.content_margin_bottom = 8.0
+	for p in [$UI/RootControl/HeaderPanel, $UI/RootControl/CluePanel, $UI/RootControl/SidePanel, banner]:
+		if p != null:
+			p.add_theme_stylebox_override("panel", panel_sb)
+	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+	banner_label.add_theme_constant_override("outline_size", 3)
+
+	style_clue_unread = _make_box_style(Color(0.18, 0.12, 0.28, 0.96), Color(0.55, 0.40, 0.78, 0.9), 1, 5)
+	style_clue_read = _make_box_style(Color(0.32, 0.22, 0.10, 0.96), Color(0.92, 0.74, 0.28, 0.95), 2, 5)
+	style_clue_active = _make_box_style(Color(0.48, 0.34, 0.12, 1.0), Color(1.0, 0.92, 0.50, 1.0), 2, 5)
+	style_suspect_idle = _make_box_style(Color(0.18, 0.11, 0.24, 0.96), Color(0.62, 0.42, 0.82, 0.9), 1, 5)
+	style_suspect_selected = _make_box_style(Color(0.46, 0.12, 0.20, 1.0), Color(1.0, 0.82, 0.35, 1.0), 2, 5)
+
+	var accuse_normal := _make_box_style(Color(0.44, 0.08, 0.16, 0.98), Color(0.95, 0.42, 0.52, 0.95), 2, 6)
+	var accuse_hover := _make_box_style(Color(0.58, 0.12, 0.22, 1.0), Color(1.0, 0.72, 0.78, 1.0), 2, 6)
+	var accuse_disabled := _make_box_style(Color(0.16, 0.09, 0.15, 0.85), Color(0.38, 0.24, 0.36, 0.7), 1, 6)
+	btn_accuse.add_theme_stylebox_override("normal", accuse_normal)
+	btn_accuse.add_theme_stylebox_override("hover", accuse_hover)
+	btn_accuse.add_theme_stylebox_override("pressed", accuse_hover)
+	btn_accuse.add_theme_stylebox_override("disabled", accuse_disabled)
+
+	var util_normal := _make_box_style(Color(0.22, 0.12, 0.34, 0.96), Color(0.76, 0.48, 0.95, 0.95), 2, 6)
+	var util_hover := _make_box_style(Color(0.32, 0.18, 0.48, 1.0), Color(0.92, 0.75, 1.0, 1.0), 2, 6)
+	var util_disabled := _make_box_style(Color(0.12, 0.08, 0.18, 0.85), Color(0.35, 0.26, 0.45, 0.7), 1, 6)
+	for btn in [btn_reset, btn_solve]:
+		if btn == null:
+			continue
+		btn.add_theme_stylebox_override("normal", util_normal)
+		btn.add_theme_stylebox_override("hover", util_hover)
+		btn.add_theme_stylebox_override("pressed", util_hover)
+		btn.add_theme_stylebox_override("disabled", util_disabled)
+
+	for btn in [btn_accuse, btn_reset, btn_solve]:
+		if btn == null:
+			continue
+		btn.add_theme_color_override("font_color", Color(0.98, 0.94, 1.0))
+		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+		btn.add_theme_color_override("font_disabled_color", Color(0.56, 0.48, 0.64))
+		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+		btn.add_theme_constant_override("outline_size", 2)
 
 func clue_position(index: int) -> Vector3:
 	return clues_origin.global_position + CLUE_OFFSETS[index]
@@ -184,17 +246,27 @@ func _build_buttons() -> void:
 	for i in Logic.CLUE_COUNT:
 		var info: Dictionary = Logic.clue_info(i)
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(175, 38)
+		b.custom_minimum_size = Vector2(170, 36)
 		b.text = "%d. %s" % [i + 1, info["title"]]
 		b.tooltip_text = info["location"]
+		b.add_theme_color_override("font_color", Color(0.96, 0.93, 1.0))
+		b.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+		b.add_theme_color_override("font_disabled_color", Color(0.75, 0.70, 0.82))
+		b.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+		b.add_theme_constant_override("outline_size", 2)
 		b.pressed.connect(_on_clue_pressed.bind(i))
 		clue_grid.add_child(b)
 		clue_buttons.append(b)
 
 	for s in Logic.SUSPECT_COUNT:
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(350, 38)
+		b.custom_minimum_size = Vector2(344, 36)
 		b.text = "Select Bust: %s" % Logic.suspect_name(s)
+		b.add_theme_color_override("font_color", Color(0.98, 0.94, 1.0))
+		b.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+		b.add_theme_color_override("font_disabled_color", Color(0.75, 0.70, 0.82))
+		b.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+		b.add_theme_constant_override("outline_size", 2)
 		b.pressed.connect(_on_suspect_pressed.bind(s))
 		suspect_box.add_child(b)
 		suspect_buttons.append(b)
@@ -293,6 +365,15 @@ func _on_state_changed(discovered: Array, selected_clue: int, selected_suspect: 
 		var mark: String = "✓ " if discovered[i] else ""
 		b.text = "%s%d. %s" % [mark, i + 1, info["title"]]
 		b.modulate = Color(1.0, 0.92, 0.55) if discovered[i] else Color(1, 1, 1)
+		var sb: StyleBoxFlat = style_clue_unread
+		if i == selected_clue:
+			sb = style_clue_active
+		elif discovered[i]:
+			sb = style_clue_read
+		b.add_theme_stylebox_override("normal", sb)
+		b.add_theme_stylebox_override("hover", sb)
+		b.add_theme_stylebox_override("pressed", sb)
+		b.add_theme_stylebox_override("disabled", sb)
 		b.disabled = game_over
 
 	for s in bust_materials.size():
@@ -312,6 +393,11 @@ func _on_state_changed(discovered: Array, selected_clue: int, selected_suspect: 
 		var prefix: String = "► " if s == selected_suspect else ""
 		b.text = "%sBust: %s" % [prefix, Logic.suspect_name(s)]
 		b.modulate = Color(1.0, 0.88, 0.45) if s == selected_suspect else Color(1, 1, 1)
+		var sb: StyleBoxFlat = style_suspect_selected if s == selected_suspect else style_suspect_idle
+		b.add_theme_stylebox_override("normal", sb)
+		b.add_theme_stylebox_override("hover", sb)
+		b.add_theme_stylebox_override("pressed", sb)
+		b.add_theme_stylebox_override("disabled", sb)
 		b.disabled = game_over
 
 	_move_dagger(selected_suspect, logic.accused_suspect >= 0)

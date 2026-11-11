@@ -17,6 +17,9 @@ func _init() -> void:
 	check(not s.cell_buttons[Vector2i(1, 2)].disabled, "Knight-move cell is enabled")
 	check(s.cell_buttons[Vector2i(0, 0)].get_theme_stylebox("disabled") == s.style_cell_current, "Start cell uses high-contrast gold current style")
 	check(s.cell_buttons[Vector2i(1, 2)].get_theme_stylebox("normal") == s.style_cell_valid, "Valid knight-move cell uses high-contrast cyan style")
+	var header_panel: Control = s.get_node("UI/RootControl/HeaderPanel")
+	var side_panel: Control = s.get_node("UI/RootControl/SidePanel")
+	check(header_panel.offset_right <= side_panel.offset_left, "HeaderPanel and SidePanel do not overlap horizontally")
 
 	s.cell_buttons[Vector2i(1, 2)].pressed.emit()
 	await create_timer(0.4).timeout

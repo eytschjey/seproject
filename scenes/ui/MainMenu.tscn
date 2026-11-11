@@ -1,6 +1,24 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/MainMenuController.gd" id="1_menu"]
+
+[sub_resource type="StyleBoxFlat" id="Style_MenuPanel"]
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+bg_color = Color(0.09, 0.08, 0.18, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.62, 0.48, 0.95, 0.95)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 10
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -18,7 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.07, 0.06, 0.1, 1)
+color = Color(0.05, 0.04, 0.1, 1)
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -28,28 +46,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
+[node name="MenuCard" type="PanelContainer" parent="Center"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("Style_MenuPanel")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MenuCard"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="Center/VBox"]
+[node name="Title" type="Label" parent="Center/MenuCard/VBox"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.84, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 40
 text = "SEProject"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/VBox"]
+[node name="Subtitle" type="Label" parent="Center/MenuCard/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.75, 0.8, 1)
+theme_override_colors/font_color = Color(0.78, 0.72, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
 text = "A 3D Logic Puzzle Adventure - select a level"
 horizontal_alignment = 1
 
-[node name="LevelList" type="VBoxContainer" parent="Center/VBox"]
+[node name="LevelList" type="VBoxContainer" parent="Center/MenuCard/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="BtnQuit" type="Button" parent="Center/VBox"]
+[node name="BtnQuit" type="Button" parent="Center/MenuCard/VBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Quit"

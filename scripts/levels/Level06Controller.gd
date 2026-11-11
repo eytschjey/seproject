@@ -27,7 +27,8 @@ func _ready() -> void:
 	btn_anim.pressed.connect(_on_anim_pressed)
 	btn_pet.pressed.connect(pet_cat)
 	btn_reset.pressed.connect(_on_reset_pressed)
-	BackToMenuButton.attach($UI/RootControl)
+	BackToMenuButton.attach($UI/RootControl, Color(0.96, 0.58, 0.68))
+	_apply_gui_theme()
 
 	if anim_player and anim_player.has_animation("Take 001"):
 		var anim: Animation = anim_player.get_animation("Take 001")
@@ -35,6 +36,44 @@ func _ready() -> void:
 
 	_update_buttons()
 	status_label.text = "Welcome to Level 6: The Cat. Click the cat or use the controls below to interact."
+
+func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 8) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(border_w)
+	sb.set_corner_radius_all(radius)
+	sb.content_margin_left = 14.0
+	sb.content_margin_right = 14.0
+	sb.content_margin_top = 8.0
+	sb.content_margin_bottom = 8.0
+	return sb
+
+func _apply_gui_theme() -> void:
+	# Level 6 Color Scheme: Sanctuary Warm Coral-Rose & Cream-Peach
+	var panel_sb := _make_box_style(Color(0.16, 0.08, 0.12, 0.94), Color(0.96, 0.58, 0.68, 0.95), 2, 8)
+	for p in [$UI/RootControl/HeaderPanel, $UI/RootControl/BottomBar, banner]:
+		if p != null:
+			p.add_theme_stylebox_override("panel", panel_sb)
+	status_label.add_theme_color_override("font_color", Color(0.99, 0.94, 0.96))
+	status_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	status_label.add_theme_constant_override("outline_size", 2)
+	banner_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.9))
+	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+	banner_label.add_theme_constant_override("outline_size", 3)
+	var btn_normal := _make_box_style(Color(0.28, 0.12, 0.18, 0.96), Color(0.96, 0.62, 0.72, 0.95), 2, 6)
+	var btn_hover := _make_box_style(Color(0.40, 0.18, 0.26, 1.0), Color(1.0, 0.80, 0.86, 1.0), 2, 6)
+	var btn_pressed := _make_box_style(Color(0.52, 0.22, 0.32, 1.0), Color(1.0, 0.92, 0.95, 1.0), 2, 6)
+	for btn in [btn_pet, btn_spin, btn_anim, btn_reset]:
+		if btn == null:
+			continue
+		btn.add_theme_stylebox_override("normal", btn_normal)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		btn.add_theme_color_override("font_color", Color(1.0, 0.95, 0.97))
+		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+		btn.add_theme_constant_override("outline_size", 2)
 
 func _process(delta: float) -> void:
 	if is_spinning and is_instance_valid(cat_pivot):

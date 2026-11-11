@@ -31,17 +31,69 @@ var queen_nodes: Dictionary = {}    # Vector2i -> Node3D
 var queen_materials: Dictionary = {} # Vector2i -> StandardMaterial3D
 var is_auto_solving: bool = false
 
+var style_cell_light: StyleBoxFlat
+var style_cell_dark: StyleBoxFlat
+var style_cell_hover: StyleBoxFlat
+var style_cell_safe: StyleBoxFlat
+var style_cell_conflict: StyleBoxFlat
+
 func _ready() -> void:
 	logic = Logic.new()
 	logic.state_changed.connect(_on_state_changed)
 	logic.move_executed.connect(func(d: String): status_label.text = d)
 	logic.puzzle_solved.connect(_on_puzzle_solved)
+	_init_gui_styles()
 	_build_tiles()
 	_build_buttons()
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
-	BackToMenuButton.attach($UI/RootControl)
+	BackToMenuButton.attach($UI/RootControl, Color(0.98, 0.72, 0.22))
 	_on_state_changed([], [])
+
+func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 4) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(border_w)
+	sb.set_corner_radius_all(radius)
+	return sb
+
+func _init_gui_styles() -> void:
+	# Level 3 Color Scheme: Romanesque Warm Bronze & Solar Amber
+	var panel_sb := _make_box_style(Color(0.15, 0.10, 0.05, 0.94), Color(0.98, 0.72, 0.22, 0.95), 2, 8)
+	panel_sb.content_margin_left = 14.0
+	panel_sb.content_margin_right = 14.0
+	panel_sb.content_margin_top = 8.0
+	panel_sb.content_margin_bottom = 8.0
+	for p in [$UI/RootControl/HeaderPanel, $UI/RootControl/SidePanel, banner]:
+		if p != null:
+			p.add_theme_stylebox_override("panel", panel_sb)
+	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+	banner_label.add_theme_constant_override("outline_size", 3)
+
+	style_cell_light = _make_box_style(Color(0.28, 0.21, 0.13, 0.96), Color(0.62, 0.46, 0.24, 0.9), 1, 4)
+	style_cell_dark = _make_box_style(Color(0.18, 0.13, 0.08, 0.96), Color(0.48, 0.36, 0.18, 0.9), 1, 4)
+	style_cell_hover = _make_box_style(Color(0.44, 0.32, 0.16, 1.0), Color(1.0, 0.86, 0.42, 1.0), 2, 4)
+	style_cell_safe = _make_box_style(Color(0.88, 0.62, 0.08, 1.0), Color(1.0, 0.95, 0.65, 1.0), 2, 4)
+	style_cell_conflict = _make_box_style(Color(0.82, 0.14, 0.14, 1.0), Color(1.0, 0.65, 0.65, 1.0), 2, 4)
+
+	var btn_normal := _make_box_style(Color(0.28, 0.18, 0.08, 0.96), Color(0.98, 0.74, 0.24, 0.95), 2, 6)
+	var btn_hover := _make_box_style(Color(0.42, 0.28, 0.12, 1.0), Color(1.0, 0.88, 0.45, 1.0), 2, 6)
+	var btn_pressed := _make_box_style(Color(0.55, 0.38, 0.14, 1.0), Color(1.0, 0.96, 0.72, 1.0), 2, 6)
+	var btn_disabled := _make_box_style(Color(0.14, 0.10, 0.06, 0.85), Color(0.42, 0.32, 0.18, 0.7), 1, 6)
+	for btn in [btn_reset, btn_solve]:
+		if btn == null:
+			continue
+		btn.add_theme_stylebox_override("normal", btn_normal)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		btn.add_theme_stylebox_override("disabled", btn_disabled)
+		btn.add_theme_color_override("font_color", Color(1.0, 0.96, 0.86))
+		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 0.95))
+		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.88, 0.42))
+		btn.add_theme_color_override("font_disabled_color", Color(0.58, 0.50, 0.40))
+		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+		btn.add_theme_constant_override("outline_size", 2)
 
 ## World position of the centre of a board cell (relative to the BoardOrigin marker).
 func cell_position(cell: Vector2i) -> Vector3:
@@ -69,6 +121,12 @@ func _build_buttons() -> void:
 			var b := Button.new()
 			b.custom_minimum_size = Vector2(40, 40)
 			b.tooltip_text = Logic.cell_name(cell)
+			b.add_theme_color_override("font_color", Color(1.0, 0.98, 0.9))
+			b.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+			b.add_theme_color_override("font_disabled_color", Color(1.0, 0.98, 0.9))
+			b.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+			b.add_theme_constant_override("outline_size", 2)
+			b.add_theme_font_size_override("font_size", 15)
 			b.pressed.connect(_on_cell_pressed.bind(cell))
 			cell_grid.add_child(b)
 			cell_buttons[cell] = b
@@ -142,9 +200,18 @@ func _on_state_changed(queens: Array, conflicts: Array) -> void:
 	_rebuild_beams()
 	for cell in cell_buttons:
 		var b: Button = cell_buttons[cell]
-		b.text = "Q" if cell in queens else ""
-		b.modulate = Color(1, 0.4, 0.4) if cell in conflicts else Color(1, 1, 1)
+		var has_q: bool = cell in queens
+		var in_conf: bool = cell in conflicts
+		b.text = "Q" if has_q else ""
+		b.modulate = Color(1, 1, 1)
 		b.disabled = logic.is_solved
+		var base_sb: StyleBoxFlat = style_cell_light if (cell.x + cell.y) % 2 == 0 else style_cell_dark
+		if has_q:
+			base_sb = style_cell_conflict if in_conf else style_cell_safe
+		b.add_theme_stylebox_override("normal", base_sb)
+		b.add_theme_stylebox_override("disabled", base_sb)
+		b.add_theme_stylebox_override("hover", base_sb if has_q else style_cell_hover)
+		b.add_theme_stylebox_override("pressed", base_sb)
 	count_label.text = "Queens: %d / %d" % [queens.size(), Logic.BOARD_SIZE]
 	if is_instance_valid(btn_solve):
 		btn_solve.disabled = logic.is_solved

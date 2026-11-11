@@ -33,7 +33,9 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
 - Do not block development waiting for finished 3D meshes or external art.
 - Use Godot's built-in CSG nodes (`CSGBox3D`, `CSGSphere3D`, `CSGCylinder3D`) with standard materials for rapid prototyping.
 - Keep coordinate references organized via `Marker3D` nodes rather than hardcoded vectors.
-- **Camera Framing with HUD Side Panels:** When a level uses an expanded aspect ratio (`window/stretch/aspect="expand"`) with a right-hand HUD side panel, pull the camera back, elevate it, and angle downward (e.g. `y ~ 14`, `z ~ 9.5`, `pitch ~ -55°`, `fov ~ 46°`) so the near edge of the board is not clipped by the bottom of the window and the right edge does not collide with the side panel.
+- **Camera Framing & Non-Overlapping HUD Layout:** When a level uses an expanded aspect ratio (`window/stretch/aspect="expand"`) with a right-hand HUD `SidePanel`:
+  - Pull the camera back, elevate it, and angle downward (e.g. `y ~ 14`, `z ~ 9.5`, `pitch ~ -55°`, `fov ~ 46°`) so the near edge of the board is not clipped by the bottom of the window and the right edge does not collide with the side panel.
+  - Keep `BackToMenuButton` at `(16, 16)`, start `HeaderPanel` at `offset_left = 112.0`, and cap `HeaderPanel` at `offset_right = -408.0` whenever a right-hand `SidePanel` (`offset_left = -392.0`) is present so `SidePanel` never overlaps `HeaderPanel` or `StatusLabel`. Each level and the Main Menu has its own distinct thematic `StyleBoxFlat` color scheme.
 
 ### 3. Automated Headless Verification
 - Every logic puzzle **must have a corresponding automated test script** in `tests/`.

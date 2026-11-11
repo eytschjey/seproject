@@ -453,7 +453,10 @@ mouse_filter = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 90.0
+offset_left = 112.0
+offset_top = 12.0
+offset_right = -20.0
+offset_bottom = 92.0
 grow_horizontal = 2
 
 [node name="HeaderBox" type="VBoxContainer" parent="UI/RootControl/HeaderPanel"]
@@ -461,6 +464,9 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.38, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 22
 text = "Level 2: The Hall of Nine Portals"
 horizontal_alignment = 1
@@ -468,6 +474,9 @@ horizontal_alignment = 1
 [node name="StatusLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.99, 0.95, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
 text = "Tiger: sign is false. Princess: sign is true. Empty rooms: all signs true or all false. Click any door to read its plaque, then open the Princess's door."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -490,6 +499,9 @@ grow_vertical = 0
 [node name="PlaqueLabel" type="Label" parent="UI/RootControl/PlaquePanel"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "Click a door in the hall to inspect its plaque."
 horizontal_alignment = 1
@@ -500,17 +512,14 @@ autowrap_mode = 3
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -220.0
-offset_top = -60.0
-offset_right = 220.0
-offset_bottom = 60.0
+offset_left = -240.0
+offset_top = 122.0
+offset_right = 240.0
+offset_bottom = 222.0
 grow_horizontal = 2
-grow_vertical = 2
 
 [node name="BannerLabel" type="Label" parent="UI/RootControl/Banner"]
 unique_name_in_owner = true
