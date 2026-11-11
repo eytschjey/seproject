@@ -49,7 +49,7 @@ func _door(n: int) -> Node3D:
 func _select_door(n: int) -> void:
 	selected = n
 	inspected[n] = true
-	plaque_label.text = "Door %d:\n\"%s\"" % [n, Logic.inscription_text(n)]
+	plaque_label.text = "Door %d:\n\"%s\"" % [n, logic.get_inscription(n)]
 	_update_ui()
 
 func _on_open_pressed() -> void:
@@ -61,6 +61,9 @@ func _on_reset_pressed() -> void:
 	if is_animating:
 		return
 	logic.reset()
+	inspected.clear()
+	if selected != 0:
+		plaque_label.text = "Door %d:\n\"%s\"" % [selected, logic.get_inscription(selected)]
 	for n in content_nodes:
 		content_nodes[n].queue_free()
 	content_nodes.clear()
@@ -147,7 +150,7 @@ func _on_puzzle_failed(_reason: String) -> void:
 
 func _on_puzzle_solved() -> void:
 	banner.visible = true
-	banner_label.text = "PUZZLE SOLVED!\nThe Princess is behind Door 5. The Royal Sigil is yours!"
+	banner_label.text = "PUZZLE SOLVED!\nThe Princess is behind Door %d. The Royal Sigil is yours!" % logic.princess_room()
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
 	_proceed_to_next_level()
 
