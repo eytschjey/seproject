@@ -12,8 +12,8 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 1 3D Prototype:** Functional 3D greybox scene ([`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn)) with dynamic lighting, smooth item hops, raft movement tweening, and full interactive UI.
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence and visual tracking.
 - [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)), 25 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
-- [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 27 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)) and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
-- [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)) and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
+- [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 29 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)), Auto-Solve debug button, and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
+- [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)), Auto-Solve debug button, and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with a "< Menu" button in each level.
 - [ ] **Next Up:** First-person character navigation, journal UI, Level 5 (Dreadbury Manor).
 
@@ -112,12 +112,20 @@ You can run automated tests either directly in the Godot Editor or headlessly vi
 
 ### Pure Logic Unit Tests:
 ```bash
-godot --headless -s res://tests/TestRiverCrossing.gd
+godot --headless -s res://tests/TestRiverCrossing.gd   # Level 1 (41 assertions)
+godot --headless -s res://tests/TestNinePortals.gd     # Level 2 (25 assertions)
+godot --headless -s res://tests/TestQueens.gd          # Level 3 (29 assertions)
+godot --headless -s res://tests/TestKnightsTour.gd     # Level 4 (26 assertions)
 ```
 
-### Full Scene & UI Integration Test:
+### 3D Scene & UI Integration Tests:
 ```bash
-godot --headless -s res://tests/TestLevel01Scene.gd
+godot --headless -s res://tests/TestLevel01Scene.gd      # Level 1 Full Playback
+godot --headless -s res://tests/TestLevel01Transition.gd # Level 1 -> 2 Auto-Advance
+godot --headless -s res://tests/TestLevel02Scene.gd      # Level 2 Doors & Banner
+godot --headless -s res://tests/TestLevel03Scene.gd      # Level 3 UI & Auto-Solve
+godot --headless -s res://tests/TestLevel04Scene.gd      # Level 4 UI & Auto-Solve
+godot --headless -s res://tests/TestMainMenu.gd          # Level Select & Navigation
 ```
 
 ---
@@ -131,4 +139,4 @@ godot --headless -s res://tests/TestLevel01Scene.gd
    ```
 2. Open **Godot Engine 4.x** (v4.3+ recommended).
 3. Click **Import**, navigate to this directory, and select `project.godot`.
-4. Press **Play** ($\blacktriangleright$ or `F5`) to launch the playable Level 1 prototype.
+4. Press **Play** ($\blacktriangleright$ or `F5`) to launch into the Main Menu and choose any unlocked level.

@@ -28,17 +28,25 @@
    * **Scene:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): select a door (shows its plaque), then "Open". Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd).
 
 5. **Level 3 (The Sun Courtyard - 8 Queens):**
-   * **Headless Logic:** [`scripts/logic/QueensLogic.gd`](scripts/logic/QueensLogic.gd) - place/remove/toggle queens (max 8, conflicts allowed but reported), conflict pairs, win check, and a backtracking solver.
-   * **Unit Tests:** [`tests/TestQueens.gd`](tests/TestQueens.gd) (27 assertions) incl. exactly 92 solutions.
-   * **Scene:** [`scenes/levels/Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn) + [`scripts/levels/Level03Controller.gd`](scripts/levels/Level03Controller.gd): 3D marble board built from a `BoardOrigin` marker, an 8x8 HUD button grid toggles queens, statues are gold when safe / red when attacked, crimson beams link attacking pairs. Test: [`tests/TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
+   * **Headless Logic:** [`scripts/logic/QueensLogic.gd`](scripts/logic/QueensLogic.gd) - place/remove/toggle queens (max 8, conflicts allowed but reported), conflict pairs, win check, full 92-solution solver (`solve_all()`), and prefix-aware completion solver (`find_completion()`).
+   * **Unit Tests:** [`tests/TestQueens.gd`](tests/TestQueens.gd) (29 assertions) verifying attack rules, conflict reporting, full solver, and completion solver.
+   * **Scene:** [`scenes/levels/Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn) + [`scripts/levels/Level03Controller.gd`](scripts/levels/Level03Controller.gd): 3D marble board built from a `BoardOrigin` marker, an 8x8 HUD button grid toggles queens, statues are gold when safe / red when attacked, crimson beams link attacking pairs.
+   * **Framing & Auto-Solver:** Camera adjusted (`y = 14.0, z = 9.5, pitch = -55°`) to frame the entire board without clipping near tiles. Includes an animated `Auto-Solve (Debug)` button with pause/stop functionality. Test: [`tests/TestLevel03Scene.gd`](tests/TestLevel03Scene.gd) (15 checks).
    * Level 2 victory auto-advances to Level 3 after 4 s. Level 3 victory auto-advances to Level 4 after 4 s.
    * Follow-ups: pushable statues on a grid (needs the player controller), sun-crystal / drawbridge victory animation, beams along all 8 directions.
 
 6. **Level 4 (The Knight's Chasm - Knight's Tour):**
-   * **Headless Logic:** [`scripts/logic/KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd) - enforces valid knight jump offsets, board boundaries, unvisited constraint, tracks visited count (64), dead end detection, undo stack, and Warnsdorff-heuristic backtracking solver.
+   * **Headless Logic:** [`scripts/logic/KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd) - enforces valid knight jump offsets, board boundaries, unvisited constraint, tracks visited count (64), dead end detection, undo stack, Warnsdorff-heuristic backtracking solver, and bounded path completion (`find_tour_from_path()`).
    * **Unit Tests:** [`tests/TestKnightsTour.gd`](tests/TestKnightsTour.gd) (26 assertions) verifying moves, rejection signals, dead end detection, undo recovery, and complete 64-tile tour.
-   * **Scene:** [`scenes/levels/Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn) + [`scripts/levels/Level04Controller.gd`](scripts/levels/Level04Controller.gd): 3D underground cavern over glowing lava, floating stone rune tiles sinking upon departure, golden knight leaping between runes with smooth tweens, valid move highlighting (blue), and live visit counter HUD with undo/reset. Test: [`tests/TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
+   * **Scene:** [`scenes/levels/Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn) + [`scripts/levels/Level04Controller.gd`](scripts/levels/Level04Controller.gd): 3D underground cavern over glowing lava, floating stone rune tiles sinking upon departure, golden knight leaping between runes with smooth tweens, valid move highlighting (blue), and live visit counter HUD with undo/reset.
+   * **Framing & Auto-Solver:** Camera adjusted (`y = 14.0, z = 9.5, pitch = -55°`) to ensure all 64 runes are framed cleanly. Includes an animated `Auto-Solve (Debug)` button with pause/resume support. Test: [`tests/TestLevel04Scene.gd`](tests/TestLevel04Scene.gd) (14 checks).
    * Enabled in main menu level select. Level 4 has no next level yet (`NEXT_LEVEL_SCENE` is empty): set it when Level 5 is implemented.
+
+7. **Main Menu & Level Progression Architecture:**
+   * Startup scene set to [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn), managed by [`MainMenuController.gd`](scripts/ui/MainMenuController.gd).
+   * Levels 1–4 are unlocked and selectable; future levels display as "(coming soon)".
+   * All level scenes feature a consistent `< Menu` return button attached via [`BackToMenuButton.gd`](scripts/core/BackToMenuButton.gd).
+   * Linear play progression: Level 1 auto-advances to Level 2 (3s delay), Level 2 to Level 3 (4s delay), and Level 3 to Level 4 (4s delay). Level 4 is ready to connect to Level 5.
 
 ---
 
@@ -87,24 +95,34 @@ All tests can be executed directly in the terminal via Godot CLI:
 ```bash
 cd "/Users/jan/Desktop/Software Engineering/seproject"
 
-# 1. Run Level 1 logic unit tests (41 assertions)
+# 1. Level 1: River Crossing
 godot --headless -s res://tests/TestRiverCrossing.gd
-
-# 2. Run Level 1 UI integration test (full solution sequence)
 godot --headless -s res://tests/TestLevel01Scene.gd
+godot --headless -s res://tests/TestLevel01Transition.gd
 
-# 3. Level 2 / Level 3 / Level 4 tests
+# 2. Level 2: Hall of Nine Portals
 godot --headless -s res://tests/TestNinePortals.gd
 godot --headless -s res://tests/TestLevel02Scene.gd
+
+# 3. Level 3: Sun Courtyard (8-Queens)
 godot --headless -s res://tests/TestQueens.gd
 godot --headless -s res://tests/TestLevel03Scene.gd
+
+# 4. Level 4: Knight's Chasm (Knight's Tour)
 godot --headless -s res://tests/TestKnightsTour.gd
 godot --headless -s res://tests/TestLevel04Scene.gd
 
-# 4. Validate scene syntax without opening GUI
-godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
+# 5. Global Navigation & UI
+godot --headless -s res://tests/TestMainMenu.gd
 
-# 4. Launch Godot game directly to test interactively
+# 6. Validate scene syntax without opening GUI
+godot --headless --validate --quit scenes/ui/MainMenu.tscn
+godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
+godot --headless --validate --quit scenes/levels/Level02_NinePortals.tscn
+godot --headless --validate --quit scenes/levels/Level03_SunCourtyard.tscn
+godot --headless --validate --quit scenes/levels/Level04_KnightsChasm.tscn
+
+# 7. Launch Godot game directly to test interactively
 godot
 ```
 
