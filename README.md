@@ -12,6 +12,7 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 1 3D Prototype:** Functional 3D greybox scene ([`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn)) with dynamic lighting, smooth item hops, raft movement tweening, and full interactive UI.
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence and visual tracking.
 - [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)), 25 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
+- [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with a "< Menu" button in each level.
 - [ ] **Next Up:** First-person character navigation, journal UI, Level 3 (8-Queens).
 
 ---
@@ -47,11 +48,17 @@ seproject/
 │   └── level_progression.md       # Detailed Game Design Document (GDD) with Godot 3D mechanics
 │
 ├── scenes/
+│   ├── ui/
+│   │   └── MainMenu.tscn          # Level select (startup scene)
 │   └── levels/
-│       ├── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 (Startup scene)
+│       ├── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 
 │       └── Level02_NinePortals.tscn # Playable 3D greybox scene for Level 2
 │
 ├── scripts/
+│   ├── core/
+│   │   └── BackToMenuButton.gd    # "< Menu" HUD button
+│   ├── ui/
+│   │   └── MainMenuController.gd  # Level select logic
 │   ├── levels/
 │   │   ├── Level01Controller.gd   # 3D visuals & UI controller for Level 1
 │   │   └── Level02Controller.gd   # 3D visuals & UI controller for Level 2
@@ -62,6 +69,7 @@ seproject/
 ├── tests/
 │   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (41 assertions)
 │   ├── TestLevel01Scene.gd        # Integration test for 3D UI & solution playback
+│   ├── TestMainMenu.gd            # Menu lists levels, loads them, back button works
 │   ├── TestLevel01Transition.gd   # Level 1 win auto-advances to Level 2
 │   ├── TestNinePortals.gd         # Unit tests for Nine Portals logic (25 assertions)
 │   └── TestLevel02Scene.gd        # Integration test for Level 2 UI

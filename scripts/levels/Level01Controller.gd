@@ -54,6 +54,7 @@ func _ready() -> void:
 	btn_cross.pressed.connect(_on_cross_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	
+	BackToMenuButton.attach($UI/RootControl)
 	_update_ui()
 	_update_item_positions_instant()
 

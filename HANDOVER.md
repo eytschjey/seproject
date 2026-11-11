@@ -15,7 +15,7 @@
    * Renderer: `Forward Plus` (Vulkan).
    * 3D Physics: `Jolt Physics` enabled.
    * Input mappings configured for WASD, Arrows, Space (Jump), E (Interact), R (Reset), J/Tab (Journal).
-   * Main startup scene set to `res://scenes/levels/Level01_Tutorial.tscn`.
+   * Main startup scene set to `res://scenes/ui/MainMenu.tscn`.
 3. **Level 1 (The Ferryman's Crossing - Wolf, Goat & Cabbage):**
    * **Headless Logic:** [`scripts/logic/RiverCrossingLogic.gd`](scripts/logic/RiverCrossingLogic.gd) enforces river crossing rules, hazard checks (wolf/goat and goat/cabbage), and victory detection.
    * **Automated Unit Tests:** [`tests/TestRiverCrossing.gd`](tests/TestRiverCrossing.gd) runs 41 automated assertions headlessly via Godot CLI.
@@ -37,6 +37,9 @@
 * Opening a tiger door shows "You failed! Press Reset to try again." (no auto-reset).
 * Level 1 victory now auto-advances to Level 2 after 3 s (`NEXT_LEVEL_DELAY` in `Level01Controller.gd`); covered by `tests/TestLevel01Transition.gd`.
 * Follow-ups: replace buttons with first-person plaque inspection (Task 2) and log plaques into the Journal (Task 3); real tiger/princess art and particles.
+
+### ✅ Main Menu (done)
+* [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn) + [`scripts/ui/MainMenuController.gd`](scripts/ui/MainMenuController.gd): level select. To add a level, append an entry to `LEVELS` (empty `scene` = "coming soon"). Levels have a "< Menu" button via [`BackToMenuButton`](scripts/core/BackToMenuButton.gd). Test: `tests/TestMainMenu.gd`.
 
 ### Task 2: 3D First-Person Player Controller (Medium Priority)
 * **Goal:** Transition from clicking HUD buttons to physically walking through the chambers in 3D.

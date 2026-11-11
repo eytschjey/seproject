@@ -38,6 +38,7 @@ func _ready() -> void:
 		door_buttons.append(b)
 	btn_open.pressed.connect(_on_open_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
+	BackToMenuButton.attach($UI/RootControl)
 	_update_ui()
 
 func _door(n: int) -> Node3D:
