@@ -11,7 +11,7 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 1 Logic Engine:** Headless state machine ([`scripts/logic/RiverCrossingLogic.gd`](scripts/logic/RiverCrossingLogic.gd)) verifying state constraints and transitions (41 automated assertions passing).
 - [x] **Level 1 3D Prototype:** Functional 3D greybox scene ([`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn)) with direct 3D click interaction (clicking Wolf, Goat, Cabbage, or Raft directly with hover scale & cursor feedback), clean Action Bar, dynamic lighting, smooth item hops, and raft movement tweening.
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence via direct 3D object clicks and visual tracking.
-- [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)) with randomized layout and matching dynamic door inscriptions on start and reset, 30 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
+- [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)) with randomized layout and matching dynamic door inscriptions on start and reset, 30 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)), Auto-Solve debug button, and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
 - [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 29 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)), Auto-Solve debug button, and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
 - [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)), Auto-Solve debug button, and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
 - [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 39 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)), 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)), Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
@@ -129,7 +129,7 @@ godot --headless -s res://tests/TestDreadbury.gd       # Level 5 (39 assertions)
 ```bash
 godot --headless -s res://tests/TestLevel01Scene.gd      # Level 1 Full Playback
 godot --headless -s res://tests/TestLevel01Transition.gd # Level 1 -> 2 Auto-Advance
-godot --headless -s res://tests/TestLevel02Scene.gd      # Level 2 Doors & Banner
+godot --headless -s res://tests/TestLevel02Scene.gd      # Level 2 Doors, Banner & Auto-Solve
 godot --headless -s res://tests/TestLevel03Scene.gd      # Level 3 UI & Auto-Solve
 godot --headless -s res://tests/TestLevel04Scene.gd      # Level 4 UI & Auto-Solve
 godot --headless -s res://tests/TestLevel05Scene.gd      # Level 5 UI & Auto-Solve

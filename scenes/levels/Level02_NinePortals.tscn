@@ -552,3 +552,8 @@ text = "Open Selected Door"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reset"
+
+[node name="BtnSolve" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Auto-Solve (Debug)"

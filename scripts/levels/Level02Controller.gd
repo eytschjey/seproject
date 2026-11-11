@@ -8,6 +8,7 @@ const Logic = preload("res://scripts/logic/NinePortalsLogic.gd")
 @onready var door_buttons_box: HBoxContainer = %DoorButtons
 @onready var btn_open: Button = %BtnOpen
 @onready var btn_reset: Button = %BtnReset
+@onready var btn_solve: Button = %BtnSolve
 @onready var status_label: Label = %StatusLabel
 @onready var plaque_label: Label = %PlaqueLabel
 @onready var banner: PanelContainer = %Banner
@@ -17,11 +18,13 @@ const DOOR_OPEN_ANGLE: float = -105.0 # degrees; swings toward the viewer
 const DOOR_TWEEN_DURATION: float = 0.8
 const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level03_SunCourtyard.tscn"
 const NEXT_LEVEL_DELAY: float = 4.0
+@export var auto_solve_delay: float = 0.22
 
 var logic: RefCounted
 var door_buttons: Array[Button] = []
 var selected: int = 0 # 0 = nothing selected, else room number 1..9
 var is_animating: bool = false
+var is_auto_solving: bool = false
 var content_nodes: Dictionary = {} # room -> Node3D spawned behind the door
 var inspected: Dictionary = {}     # room -> true once its plaque was read
 
@@ -35,16 +38,22 @@ func _ready() -> void:
 	for n in range(1, Logic.DOOR_COUNT + 1):
 		var b := Button.new()
 		b.text = "Door %d" % n
-		b.pressed.connect(_select_door.bind(n))
+		b.pressed.connect(_on_door_button_pressed.bind(n))
 		door_buttons_box.add_child(b)
 		door_buttons.append(b)
 	btn_open.pressed.connect(_on_open_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
+	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl)
 	_update_ui()
 
 func _door(n: int) -> Node3D:
 	return get_node("Doors/Door%d" % n)
+
+func _on_door_button_pressed(n: int) -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+	_select_door(n)
 
 func _select_door(n: int) -> void:
 	selected = n
@@ -53,13 +62,20 @@ func _select_door(n: int) -> void:
 	_update_ui()
 
 func _on_open_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	if is_animating or selected == 0:
 		return
 	logic.open_door(selected)
 
 func _on_reset_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	if is_animating:
 		return
+	_reset_hall()
+
+func _reset_hall() -> void:
 	logic.reset()
 	inspected.clear()
 	if selected != 0:
@@ -74,6 +90,47 @@ func _on_reset_pressed() -> void:
 	banner.visible = false
 	status_label.text = "The hall resets. Choose wisely."
 	_update_ui()
+
+func _on_solve_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+		return
+	if is_animating or logic.is_solved:
+		return
+	start_auto_solve()
+
+func start_auto_solve() -> void:
+	is_auto_solving = true
+	btn_solve.text = "Stop Solver"
+	banner.visible = false
+	if logic.is_failed:
+		_reset_hall()
+	status_label.text = "Inspecting plaques and deducing the Princess's portal..."
+
+	for n in range(1, Logic.DOOR_COUNT + 1):
+		if not is_auto_solving or logic.is_solved:
+			break
+		if not inspected.has(n):
+			_select_door(n)
+			await get_tree().create_timer(auto_solve_delay).timeout
+
+	if is_auto_solving and not logic.is_solved:
+		var target_room: int = logic.solve_princess_room()
+		if target_room >= 1 and target_room <= Logic.DOOR_COUNT:
+			_select_door(target_room)
+			await get_tree().create_timer(auto_solve_delay).timeout
+			if is_auto_solving and not logic.is_solved and not is_animating:
+				logic.open_door(target_room)
+				while is_animating and is_inside_tree():
+					await get_tree().process_frame
+
+	stop_auto_solve()
+
+func stop_auto_solve() -> void:
+	is_auto_solving = false
+	if is_instance_valid(btn_solve):
+		btn_solve.text = "Auto-Solve (Debug)"
+		btn_solve.disabled = is_animating or (logic != null and logic.is_solved)
 
 func _on_move_executed(description: String) -> void:
 	status_label.text = description
@@ -144,11 +201,17 @@ func _spawn_content(room: int, content: int) -> void:
 				root.add_child(dust)
 
 func _on_puzzle_failed(_reason: String) -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	banner.visible = true
 	banner_label.text = "You failed!\nPress Reset to try again."
 	banner_label.modulate = Color(1.0, 0.35, 0.35)
 
 func _on_puzzle_solved() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = true
 	banner.visible = true
 	banner_label.text = "PUZZLE SOLVED!\nThe Princess is behind Door %d. The Royal Sigil is yours!" % logic.princess_room()
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
@@ -172,3 +235,5 @@ func _update_ui() -> void:
 	)
 	btn_open.text = "Open Door %d" % selected if selected != 0 else "Open Selected Door"
 	btn_reset.disabled = is_animating
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = is_animating or logic.is_solved

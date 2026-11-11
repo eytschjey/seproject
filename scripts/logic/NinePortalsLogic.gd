@@ -82,6 +82,11 @@ func get_inscription(room: int) -> String:
 func princess_room() -> int:
 	return contents.find(Content.PRINCESS) + 1
 
+## Deduce the Princess's room (1..9) purely from the current door inscriptions and protocol rules.
+func solve_princess_room() -> int:
+	var candidates := princess_candidates(roles)
+	return candidates[0] if not candidates.is_empty() else -1
+
 ## Return a room number (1..9) that is currently Empty (or -1 if none).
 func empty_room() -> int:
 	var idx := contents.find(Content.EMPTY)
