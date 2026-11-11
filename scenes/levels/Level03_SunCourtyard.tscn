@@ -39,8 +39,8 @@ light_energy = 1.2
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.8, 0.6, 0, -0.6, 0.8, 2.2, 9.5, 8.5)
-fov = 50.0
+transform = Transform3D(1, 0, 0, 0, 0.573576, 0.819152, 0, -0.819152, 0.573576, 2, 14, 9.5)
+fov = 46.0
 
 [node name="Courtyard" type="Node3D" parent="."]
 
