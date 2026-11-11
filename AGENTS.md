@@ -76,6 +76,8 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
    - When providing step-by-step debug solvers (e.g. in Levels 1, 2, 3, 4, and 5), expose the step interval via an exported variable (`@export var auto_solve_delay: float = 0.22`). In automated integration tests (`TestLevel0XScene.gd`), set `auto_solve_delay = 0.005` (or `0.01`) to test the full automated flow without introducing multi-second delays into test runs. Always guard loops with `is_auto_solving` flags so player input or scene resets safely cancel active solver routines.
 6. **3D Object Picking (`_unhandled_input` vs `Area3D.input_event`):**
    - Do not connect both `_unhandled_input` raycasting and `CollisionObject3D.input_event` for the same click action: `_unhandled_input` fires during the main input pass while `Area3D.input_event` fires during the physics picking step (often on the next `Engine.get_process_frames()` tick), causing a single mouse click to trigger twice and immediately undo toggle actions. Use `_unhandled_input` raycasting as the single source of truth for clicks.
+7. **glTF Model Internal Scaling & Bounding Boxes:**
+   - Models exported from DCC tools or Sketchfab (such as `cat.glb`) often already contain internal centimeter-to-meter scaling factors (e.g. `RootNode.scale = Vector3(0.01, 0.01, 0.01)`). Always inspect the instantiated world AABB (`mesh_instance.global_transform * mesh_instance.get_aabb()`) before applying scene-level scale to avoid drastically undersizing or oversizing the asset.
 
 ---
 
@@ -87,9 +89,11 @@ seproject/
 │   ├── logic.pdf                # Source textbook by Prof. Dr. Karl Stroetmann
 │   ├── logical_riddles.md       # Extracted catalog of all 21 riddles with formal logic
 │   └── level_progression.md     # Level-by-level GDD and Godot 3D mechanics mapping
+├── assets/                      # Imported 3D models and textures (assets/models/)
 ├── scenes/
 │   ├── ui/                      # Global UI screens (MainMenu.tscn)
-│   └── levels/                  # 3D level scenes (Level01..Level05)
+│   ├── props/                   # Prefabs inherited from imported 3D models (Cat.tscn)
+│   └── levels/                  # 3D level scenes (Level01..Level06)
 ├── scripts/
 │   ├── core/                    # Shared components (BackToMenuButton.gd)
 │   ├── ui/                      # UI controller scripts (MainMenuController.gd)
