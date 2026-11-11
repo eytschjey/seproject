@@ -77,58 +77,53 @@ func _ready() -> void:
 func _connect_area(area: Area3D, target: Variant) -> void:
 	area.mouse_entered.connect(func(): _on_area_mouse_entered(target))
 	area.mouse_exited.connect(func(): _on_area_mouse_exited(target))
-	area.input_event.connect(func(_cam: Node, event: InputEvent, _pos: Vector3, _normal: Vector3, _idx: int):
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if target is int:
-				click_item(target)
-			elif target == "RAFT":
-				click_raft()
-	)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and not event.is_echo() and event.button_index == MOUSE_BUTTON_LEFT:
 		_handle_screen_click(event.position)
 
 func _handle_screen_click(screen_pos: Vector2) -> void:
 	if is_animating or logic.is_failed or logic.is_solved or camera == null:
 		return
-	var from = camera.project_ray_origin(screen_pos)
-	var to = from + camera.project_ray_normal(screen_pos) * 100.0
-	var space = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(from, to)
-	query.collide_with_areas = true
-	query.collide_with_bodies = false
-	var result = space.intersect_ray(query)
-	if result.is_empty():
-		return
-	var col = result.collider
-	if col == wolf_area:
-		click_item(Logic.Item.WOLF)
-	elif col == goat_area:
-		click_item(Logic.Item.GOAT)
-	elif col == cabbage_area:
-		click_item(Logic.Item.CABBAGE)
-	elif col == raft_area:
+	var from := camera.project_ray_origin(screen_pos)
+	var to := from + camera.project_ray_normal(screen_pos) * 100.0
+	var space := get_world_3d().direct_space_state
+
+	# Prioritize item hitboxes over the raft hitbox so clicking a passenger on the raft always unloads it.
+	var item_query := PhysicsRayQueryParameters3D.create(from, to)
+	item_query.collide_with_areas = true
+	item_query.collide_with_bodies = false
+	item_query.exclude = [raft_area.get_rid()]
+	var item_result := space.intersect_ray(item_query)
+	if not item_result.is_empty():
+		var item_col = item_result.collider
+		if item_col == wolf_area:
+			click_item(Logic.Item.WOLF)
+			return
+		elif item_col == goat_area:
+			click_item(Logic.Item.GOAT)
+			return
+		elif item_col == cabbage_area:
+			click_item(Logic.Item.CABBAGE)
+			return
+
+	var raft_query := PhysicsRayQueryParameters3D.create(from, to)
+	raft_query.collide_with_areas = true
+	raft_query.collide_with_bodies = false
+	var raft_result := space.intersect_ray(raft_query)
+	if not raft_result.is_empty() and raft_result.collider == raft_area:
 		click_raft()
 
 ## Public entry point for clicking an item in 3D or tests.
 func click_item(item: int) -> void:
 	if is_auto_solving:
 		stop_auto_solve()
-	var cur_frame = Engine.get_process_frames()
-	if _last_click_frame == cur_frame:
-		return
-	_last_click_frame = cur_frame
 	_toggle_item(item)
 
 ## Public entry point for clicking the raft in 3D or tests.
 func click_raft() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
-	var cur_frame = Engine.get_process_frames()
-	if _last_click_frame == cur_frame:
-		return
-	_last_click_frame = cur_frame
 	_on_cross_pressed()
 
 func _toggle_item(item: int) -> void:
@@ -144,8 +139,7 @@ func _toggle_item(item: int) -> void:
 			status_label.text = "That passenger is on the " + shore_name + " shore. Row the raft across first!"
 			return
 		if logic.item_on_boat != null:
-			status_label.text = "The raft can only carry one passenger! Unload first."
-			return
+			logic.unload_item()
 		logic.load_item(item)
 
 func _on_cross_pressed() -> void:

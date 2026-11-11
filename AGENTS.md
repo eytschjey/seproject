@@ -64,7 +64,9 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
 4. **Item Movement with Moving Platforms:**
    - When an item is carried on an object that translates over time (like a raft), lock the item's global position to the raft's attachment slot in `_process(_delta)` so it doesn't lag or get displaced by concurrent animations.
 5. **Asynchronous Solvers & Integration Testing:**
-   - When providing step-by-step debug solvers (e.g. in Levels 2, 3, 4, and 5), expose the step interval via an exported variable (`@export var auto_solve_delay: float = 0.22`). In automated integration tests (`TestLevel0XScene.gd`), set `auto_solve_delay = 0.005` (or `0.01`) to test the full automated flow without introducing multi-second delays into test runs. Always guard loops with `is_auto_solving` flags so player input or scene resets safely cancel active solver routines.
+   - When providing step-by-step debug solvers (e.g. in Levels 1, 2, 3, 4, and 5), expose the step interval via an exported variable (`@export var auto_solve_delay: float = 0.22`). In automated integration tests (`TestLevel0XScene.gd`), set `auto_solve_delay = 0.005` (or `0.01`) to test the full automated flow without introducing multi-second delays into test runs. Always guard loops with `is_auto_solving` flags so player input or scene resets safely cancel active solver routines.
+6. **3D Object Picking (`_unhandled_input` vs `Area3D.input_event`):**
+   - Do not connect both `_unhandled_input` raycasting and `CollisionObject3D.input_event` for the same click action: `_unhandled_input` fires during the main input pass while `Area3D.input_event` fires during the physics picking step (often on the next `Engine.get_process_frames()` tick), causing a single mouse click to trigger twice and immediately undo toggle actions. Use `_unhandled_input` raycasting as the single source of truth for clicks.
 
 ---
 

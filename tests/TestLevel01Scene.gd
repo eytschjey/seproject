@@ -40,12 +40,28 @@ func _init() -> void:
 	check(s.banner.visible and s.banner_label.text.contains("SOLVED"), "Victory banner shown")
 	check(s.btn_solve.disabled, "Solve button disabled after puzzle is solved")
 	
-	# Reset and test manual 3D clicks sequence
+	# Reset and test one-click 3D raycast load, swap, and unload
 	s._on_reset_pressed()
-	await process_frame
+	await physics_frame
+	await physics_frame
 	check(not s.logic.is_solved, "Reset restores unsolved state")
 	
 	var Item = s.Logic.Item
+	var goat_screen_pos: Vector2 = s.camera.unproject_position(s.goat_node.global_position)
+	s._handle_screen_click(goat_screen_pos)
+	check(s.logic.item_on_boat == Item.GOAT, "Single 3D screen click loads Goat onto raft")
+	await create_timer(0.45).timeout
+	await physics_frame
+	var wolf_screen_pos: Vector2 = s.camera.unproject_position(s.wolf_node.global_position)
+	s._handle_screen_click(wolf_screen_pos)
+	check(s.logic.item_on_boat == Item.WOLF and Item.GOAT in s.logic.west_items, "Single 3D click on another item swaps passengers")
+	await create_timer(0.45).timeout
+	await physics_frame
+	var carried_screen_pos: Vector2 = s.camera.unproject_position(s.wolf_node.global_position)
+	s._handle_screen_click(carried_screen_pos)
+	check(s.logic.item_on_boat == null and s.logic.boat_side == s.Logic.Side.WEST, "Single 3D click on carried item unloads it without rowing")
+	s._on_reset_pressed()
+	await process_frame
 	var map = {
 		"G": Item.GOAT,
 		"W": Item.WOLF,
