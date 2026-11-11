@@ -15,11 +15,14 @@ func _init() -> void:
 	check(s.cell_buttons.size() == 64 and s.tile_nodes.size() == 64, "64 buttons and 64 tiles created")
 	check(s.cell_buttons[Vector2i(1, 1)].disabled, "Non-knight cell is disabled")
 	check(not s.cell_buttons[Vector2i(1, 2)].disabled, "Knight-move cell is enabled")
+	check(s.cell_buttons[Vector2i(0, 0)].get_theme_stylebox("disabled") == s.style_cell_current, "Start cell uses high-contrast gold current style")
+	check(s.cell_buttons[Vector2i(1, 2)].get_theme_stylebox("normal") == s.style_cell_valid, "Valid knight-move cell uses high-contrast cyan style")
 
 	s.cell_buttons[Vector2i(1, 2)].pressed.emit()
 	await create_timer(0.4).timeout
 	check(s.logic.visited_count() == 2, "Jump executed")
 	check(s.tile_sunk[Vector2i(0, 0)], "Start tile sinks after leaving it")
+	check(s.cell_buttons[Vector2i(0, 0)].get_theme_stylebox("disabled") == s.style_cell_visited, "Visited cell uses high-contrast teal style")
 	check(s.count_label.text.contains("2 / 64"), "Counter updated")
 	s.btn_undo.pressed.emit()
 	await create_timer(0.4).timeout

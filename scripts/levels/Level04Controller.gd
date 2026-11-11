@@ -36,6 +36,12 @@ var cell_buttons: Dictionary = {}    # Vector2i -> Button
 var knight_tween: Tween
 var is_auto_solving: bool = false
 
+var style_cell_idle: StyleBoxFlat
+var style_cell_visited: StyleBoxFlat
+var style_cell_current: StyleBoxFlat
+var style_cell_valid: StyleBoxFlat
+var style_cell_valid_hover: StyleBoxFlat
+
 func _ready() -> void:
 	logic = Logic.new()
 	logic.state_changed.connect(_on_state_changed)
@@ -43,14 +49,50 @@ func _ready() -> void:
 	logic.move_rejected.connect(func(r: String): status_label.text = r)
 	logic.puzzle_failed.connect(_on_puzzle_failed)
 	logic.puzzle_solved.connect(_on_puzzle_solved)
+	_init_gui_styles()
 	_build_tiles()
 	_build_buttons()
+	_style_action_buttons()
 	btn_undo.pressed.connect(_on_undo_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl)
 	_build_knight()
 	_on_state_changed(logic.current, logic.path.duplicate())
+
+func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 4) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(border_w)
+	sb.set_corner_radius_all(radius)
+	return sb
+
+func _init_gui_styles() -> void:
+	style_cell_idle = _make_box_style(Color(0.10, 0.14, 0.22, 0.95), Color(0.28, 0.38, 0.52, 0.9), 1, 4)
+	style_cell_visited = _make_box_style(Color(0.10, 0.25, 0.36, 0.96), Color(0.32, 0.68, 0.88, 0.95), 1, 4)
+	style_cell_current = _make_box_style(Color(0.88, 0.65, 0.08, 1.0), Color(1.0, 0.96, 0.65, 1.0), 2, 4)
+	style_cell_valid = _make_box_style(Color(0.06, 0.48, 0.88, 1.0), Color(0.55, 0.92, 1.0, 1.0), 2, 4)
+	style_cell_valid_hover = _make_box_style(Color(0.16, 0.62, 1.0, 1.0), Color(0.85, 0.98, 1.0, 1.0), 2, 4)
+
+func _style_action_buttons() -> void:
+	var normal := _make_box_style(Color(0.12, 0.22, 0.36, 0.96), Color(0.4, 0.82, 1.0, 0.95), 2, 6)
+	var hover := _make_box_style(Color(0.18, 0.34, 0.54, 1.0), Color(0.65, 0.94, 1.0, 1.0), 2, 6)
+	var pressed := _make_box_style(Color(0.08, 0.45, 0.78, 1.0), Color(0.85, 0.98, 1.0, 1.0), 2, 6)
+	var disabled := _make_box_style(Color(0.09, 0.12, 0.18, 0.88), Color(0.24, 0.3, 0.4, 0.7), 1, 6)
+	for btn in [btn_undo, btn_reset, btn_solve]:
+		if btn == null:
+			continue
+		btn.add_theme_stylebox_override("normal", normal)
+		btn.add_theme_stylebox_override("hover", hover)
+		btn.add_theme_stylebox_override("pressed", pressed)
+		btn.add_theme_stylebox_override("disabled", disabled)
+		btn.add_theme_color_override("font_color", Color(0.95, 0.98, 1.0))
+		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.95, 0.7))
+		btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.64, 0.75))
+		btn.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.9))
+		btn.add_theme_constant_override("outline_size", 2)
 
 ## World position of the centre of a board cell (relative to the BoardOrigin marker).
 func cell_position(cell: Vector2i) -> Vector3:
@@ -79,6 +121,9 @@ func _build_buttons() -> void:
 			var b := Button.new()
 			b.custom_minimum_size = Vector2(40, 40)
 			b.tooltip_text = Logic.cell_name(cell)
+			b.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.95))
+			b.add_theme_constant_override("outline_size", 2)
+			b.add_theme_font_size_override("font_size", 14)
 			b.pressed.connect(_on_cell_pressed.bind(cell))
 			cell_grid.add_child(b)
 			cell_buttons[cell] = b
@@ -178,7 +223,30 @@ func _on_state_changed(current: Vector2i, path: Array) -> void:
 		var step: int = path.find(cell)
 		b.text = str(step + 1) if step >= 0 else ""
 		b.disabled = logic != null and (logic.is_solved or logic.is_failed or cell not in valid)
-		b.modulate = Color(0.6, 0.8, 1.0) if cell in valid else Color(1, 1, 1)
+		b.modulate = Color(1, 1, 1)
+		if cell == current:
+			b.add_theme_stylebox_override("disabled", style_cell_current)
+			b.add_theme_stylebox_override("normal", style_cell_current)
+			b.add_theme_color_override("font_disabled_color", Color(1.0, 0.98, 0.9))
+			b.add_theme_color_override("font_color", Color(1.0, 0.98, 0.9))
+		elif cell in valid:
+			b.add_theme_stylebox_override("normal", style_cell_valid)
+			b.add_theme_stylebox_override("hover", style_cell_valid_hover)
+			b.add_theme_stylebox_override("pressed", style_cell_valid_hover)
+			b.add_theme_stylebox_override("disabled", style_cell_valid)
+			b.add_theme_color_override("font_color", Color(0.95, 0.99, 1.0))
+			b.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+			b.add_theme_color_override("font_disabled_color", Color(0.95, 0.99, 1.0))
+		elif step >= 0:
+			b.add_theme_stylebox_override("disabled", style_cell_visited)
+			b.add_theme_stylebox_override("normal", style_cell_visited)
+			b.add_theme_color_override("font_disabled_color", Color(0.68, 0.92, 1.0))
+			b.add_theme_color_override("font_color", Color(0.68, 0.92, 1.0))
+		else:
+			b.add_theme_stylebox_override("disabled", style_cell_idle)
+			b.add_theme_stylebox_override("normal", style_cell_idle)
+			b.add_theme_color_override("font_disabled_color", Color(0.55, 0.65, 0.78))
+			b.add_theme_color_override("font_color", Color(0.55, 0.65, 0.78))
 	count_label.text = "Visits: %d / %d" % [path.size(), Logic.BOARD_SIZE * Logic.BOARD_SIZE]
 	btn_undo.disabled = path.size() <= 1 or (logic != null and logic.is_solved)
 	if is_instance_valid(btn_solve):
