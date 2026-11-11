@@ -45,6 +45,7 @@ var is_failed: bool = false
 
 func _init(layout: Array[int] = DEFAULT_LAYOUT) -> void:
 	contents = layout.duplicate()
+	contents.shuffle()
 	reset()
 
 ## Restore the initial state (the hidden layout is kept).
@@ -55,6 +56,7 @@ func reset() -> void:
 	is_solved = false
 	is_failed = false
 	state_changed.emit(opened.duplicate(), -1)
+	contents.shuffle()
 
 ## Open a door (room 1..9). Returns true if the door was opened.
 func open_door(room: int) -> bool:
