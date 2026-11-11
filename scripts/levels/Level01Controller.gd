@@ -30,18 +30,24 @@ const Logic = preload("res://scripts/logic/RiverCrossingLogic.gd")
 # UI references
 @onready var btn_cross: Button = %BtnCross
 @onready var btn_reset: Button = %BtnReset
+@onready var btn_solve: Button = %BtnSolve
 @onready var status_label: Label = %StatusLabel
 @onready var banner: PanelContainer = %Banner
 @onready var banner_label: Label = %BannerLabel
 
+@export var auto_solve_delay: float = 0.25
+@export var raft_tween_duration: float = 1.2
+
 const RAFT_WEST_X: float = -4.0
 const RAFT_EAST_X: float = 4.0
-const TWEEN_DURATION: float = 1.2
 const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level02_NinePortals.tscn"
 const NEXT_LEVEL_DELAY: float = 3.0
 
 var logic: RefCounted
 var is_animating: bool = false
+var is_auto_solving: bool = false
+var _auto_solve_id: int = 0
+var raft_tween: Tween = null
 var item_tweens: Dictionary = {}  # item -> Tween
 var hopping: Dictionary = {}      # item -> bool
 
@@ -57,6 +63,7 @@ func _ready() -> void:
 	
 	btn_cross.pressed.connect(_on_cross_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
+	btn_solve.pressed.connect(_on_solve_pressed)
 	
 	_connect_area(wolf_area, Logic.Item.WOLF)
 	_connect_area(goat_area, Logic.Item.GOAT)
@@ -106,6 +113,8 @@ func _handle_screen_click(screen_pos: Vector2) -> void:
 
 ## Public entry point for clicking an item in 3D or tests.
 func click_item(item: int) -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	var cur_frame = Engine.get_process_frames()
 	if _last_click_frame == cur_frame:
 		return
@@ -114,6 +123,8 @@ func click_item(item: int) -> void:
 
 ## Public entry point for clicking the raft in 3D or tests.
 func click_raft() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	var cur_frame = Engine.get_process_frames()
 	if _last_click_frame == cur_frame:
 		return
@@ -150,12 +161,15 @@ func _animate_raft(_from_side: int, to_side: int) -> void:
 	is_animating = true
 	_set_buttons_enabled(false)
 	
+	if raft_tween != null and raft_tween.is_valid():
+		raft_tween.kill()
+	
 	var target_x = RAFT_EAST_X if to_side == Logic.Side.EAST else RAFT_WEST_X
-	var tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(raft, "position:x", target_x, TWEEN_DURATION)
+	raft_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	raft_tween.tween_property(raft, "position:x", target_x, raft_tween_duration)
 	# The carried item follows the raft every frame (see _process).
 	
-	await tween.finished
+	await raft_tween.finished
 	is_animating = false
 	_set_buttons_enabled(true)
 
@@ -191,14 +205,70 @@ func _tween_target_scale(target: Variant, target_scale: Vector3) -> void:
 		tw.tween_property(node, "scale", target_scale, 0.15)
 
 func _on_reset_pressed() -> void:
-	if is_animating:
-		return
+	if is_auto_solving:
+		stop_auto_solve()
+	if raft_tween != null and raft_tween.is_valid():
+		raft_tween.kill()
+		raft_tween = null
+	is_animating = false
+	for item in item_tweens:
+		if item_tweens[item] != null and item_tweens[item].is_valid():
+			item_tweens[item].kill()
+	item_tweens.clear()
+	hopping.clear()
 	logic.reset()
 	banner.visible = false
 	status_label.text = "Puzzle reset. Transport everything to the East Shore."
-	# Re-enable ALL controls (they were disabled by the fail state).
 	_set_buttons_enabled(true)
-	_animate_raft_back_to_start()
+	raft.position.x = RAFT_WEST_X
+	_update_item_positions_instant()
+
+func _on_solve_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+		return
+	if logic == null or logic.is_solved or is_animating:
+		return
+	if logic.is_failed:
+		_on_reset_pressed()
+	start_auto_solve()
+
+func start_auto_solve() -> void:
+	_auto_solve_id += 1
+	var my_id: int = _auto_solve_id
+	is_auto_solving = true
+	btn_solve.text = "Stop Solver"
+	status_label.text = "Auto-solver active..."
+	
+	var steps: Array[Dictionary] = logic.find_solution()
+	for step in steps:
+		if my_id != _auto_solve_id or not is_auto_solving or logic.is_solved or logic.is_failed:
+			break
+		
+		match step.type:
+			"load":
+				_toggle_item(step.item)
+				await get_tree().create_timer(auto_solve_delay).timeout
+			"unload":
+				_toggle_item(logic.item_on_boat)
+				await get_tree().create_timer(auto_solve_delay).timeout
+			"cross":
+				var old_side = logic.boat_side
+				if logic.cross_river():
+					_animate_raft(old_side, logic.boat_side)
+					while is_animating and is_auto_solving and my_id == _auto_solve_id:
+						await get_tree().process_frame
+				await get_tree().create_timer(auto_solve_delay).timeout
+	
+	if my_id == _auto_solve_id:
+		stop_auto_solve()
+
+func stop_auto_solve() -> void:
+	_auto_solve_id += 1
+	is_auto_solving = false
+	if is_instance_valid(btn_solve):
+		btn_solve.text = "Auto-Solve (Debug)"
+		btn_solve.disabled = logic != null and logic.is_solved
 
 func _on_state_changed(_boat_side: int, _west: Array, _east: Array, _carried) -> void:
 	_update_ui()
@@ -208,18 +278,26 @@ func _on_move_executed(description: String) -> void:
 	status_label.text = description
 
 func _on_puzzle_failed(reason: String) -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	banner.visible = true
 	banner_label.text = "⚠️ " + reason + "\nPress Reset to try again!"
 	banner_label.modulate = Color(1.0, 0.35, 0.35)
 	_set_buttons_enabled(false)
 	btn_reset.disabled = false
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = true
 	DisplayServer.cursor_set_shape(DisplayServer.CURSOR_ARROW)
 
 func _on_puzzle_solved() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	banner.visible = true
 	banner_label.text = "🎉 PUZZLE SOLVED!\nAll passengers safely crossed the river!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
 	status_label.text = "Victory! The gate ahead unlocks."
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = true
 	DisplayServer.cursor_set_shape(DisplayServer.CURSOR_ARROW)
 	_proceed_to_next_level()
 
@@ -236,6 +314,8 @@ func _update_ui() -> void:
 func _set_buttons_enabled(enabled: bool) -> void:
 	btn_cross.disabled = not enabled
 	btn_reset.disabled = not enabled
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = not enabled or (logic != null and logic.is_solved)
 	if enabled:
 		_update_ui()
 

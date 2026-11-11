@@ -248,3 +248,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 45)
 layout_mode = 2
 text = "Reset"
+
+[node name="BtnSolve" type="Button" parent="UI/RootControl/ActionBar/HBox" unique_id=870249345]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 45)
+layout_mode = 2
+text = "Auto-Solve (Debug)"

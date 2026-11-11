@@ -15,6 +15,7 @@ func _init() -> void:
 	test_illegal_move_goat_eats_cabbage()
 	test_valid_solution_path()
 	test_reset()
+	test_find_solution()
 	
 	print("==================================================")
 	if failed_assertions == 0:
@@ -132,3 +133,35 @@ func test_reset() -> void:
 	assert_test(not logic.is_failed, "is_failed reset to false")
 	assert_test(logic.west_items.size() == 3, "West items restored")
 	assert_test(logic.boat_side == Logic.Side.WEST, "Boat restored to West")
+
+func test_find_solution() -> void:
+	print("\n[Test 6: BFS Auto-Solver]")
+	var logic = Logic.new()
+	var path: Array[Dictionary] = logic.find_solution()
+	assert_test(path.size() == 17, "find_solution finds optimal 17-step sequence")
+	
+	for step in path:
+		if step.type == "load":
+			logic.load_item(step.item)
+		elif step.type == "unload":
+			logic.unload_item()
+		elif step.type == "cross":
+			logic.cross_river()
+	
+	assert_test(logic.is_solved, "Applying BFS steps solves the puzzle")
+	assert_test(logic.find_solution().is_empty(), "find_solution on solved state returns empty")
+	
+	# Test from partial state
+	logic.reset()
+	logic.load_item(Logic.Item.GOAT)
+	logic.cross_river()
+	var partial_path = logic.find_solution()
+	assert_test(partial_path.size() == 15, "find_solution finds remaining steps from partial state")
+	for step in partial_path:
+		if step.type == "load":
+			logic.load_item(step.item)
+		elif step.type == "unload":
+			logic.unload_item()
+		elif step.type == "cross":
+			logic.cross_river()
+	assert_test(logic.is_solved, "Applying partial steps solves the puzzle")
