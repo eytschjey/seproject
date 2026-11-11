@@ -180,14 +180,14 @@ Instead of answering text questions in static pop-up menus, the player solves th
 > *Someone who lives in Dreadbury Mansion killed Aunt Agatha. Agatha, the butler, and Charles live in Dreadbury Mansion, and are the only people who live therein.*
 
 * **Clues to Discover in the Manor:**
-  1. **Coroner's Journal:** *"A killer always hates their victim, and is never richer than their victim."*
-  2. **Charles's Letter:** Charles hates no one that Aunt Agatha hates.
-  3. **Diary of Agatha:** Agatha hates everyone except the butler.
-  4. **Financial Ledger:** The butler is poorer than Agatha.
-  5. **Butler's Rule:** The butler hates everyone not richer than Aunt Agatha.
-  6. **Butler's Confession:** The butler hates everyone Aunt Agatha hates.
-  7. **Psychological Profile:** No one in the mansion hates everyone.
-  8. **Estate Will:** Agatha is not the butler.
+  1. **Coroner's Journal:** *"A killer always hates their victim."*
+  2. **Charles's Letter:** *"Charles hates no one that Aunt Agatha hates."*
+  3. **Diary of Agatha:** *"Agatha hates everyone except the butler."*
+  4. **Financial Ledger:** *"A killer is never richer than their victim."*
+  5. **Butler's Rule:** *"The butler hates everyone not richer than Aunt Agatha."*
+  6. **Butler's Confession:** *"The butler hates everyone Aunt Agatha hates."*
+  7. **Psychological Profile:** *"No one in the mansion hates everyone."*
+  8. **Estate Will:** *"Agatha, the butler, and Charles are the only residents of Dreadbury Mansion, and Agatha is not the butler."*
 
 ### 3D Godot Implementation Mechanics
 * **Environmental Storytelling / Investigation:**

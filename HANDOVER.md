@@ -23,9 +23,9 @@
    * **Scene Controller:** [`scripts/levels/Level01Controller.gd`](scripts/levels/Level01Controller.gd) connects UI and 3D node positions to logic signals. Bug fixes applied: Reset now re-enables controls properly, and carried items follow raft translation on every frame.
    * **Integration Test:** [`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd) simulates real button presses through the full 7-step solution and validates that items reach the East shore.
 4. **Level 2 (The Hall of Nine Portals - Smullyan's Princess & Tiger):**
-   * **Headless Logic:** [`scripts/logic/NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd) evaluates the nine inscriptions (with cross-references), checks protocol consistency, enumerates all consistent layouts, and runs the open-door game flow.
-   * **Unit Tests:** [`tests/TestNinePortals.gd`](tests/TestNinePortals.gd) (25 assertions) proves the Princess is uniquely in Room 5.
-   * **Scene:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): select a door (shows its plaque), then "Open". Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd).
+   * **Headless Logic:** [`scripts/logic/NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd) randomizes the room layout on start and after every reset, dynamically remaps all door inscriptions to match the permuted rooms, evaluates cross-references, checks protocol consistency, enumerates all consistent layouts, and runs the open-door game flow.
+   * **Unit Tests:** [`tests/TestNinePortals.gd`](tests/TestNinePortals.gd) (30 assertions) proves the Princess's room is uniquely deducible for both canonical and randomized layouts.
+   * **Scene:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): select a door (shows its plaque), then "Open". Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd) (15 checks).
 
 5. **Level 3 (The Sun Courtyard - 8 Queens):**
    * **Headless Logic:** [`scripts/logic/QueensLogic.gd`](scripts/logic/QueensLogic.gd) - place/remove/toggle queens (max 8, conflicts allowed but reported), conflict pairs, win check, full 92-solution solver (`solve_all()`), and prefix-aware completion solver (`find_completion()`).
@@ -40,21 +40,25 @@
    * **Unit Tests:** [`tests/TestKnightsTour.gd`](tests/TestKnightsTour.gd) (26 assertions) verifying moves, rejection signals, dead end detection, undo recovery, and complete 64-tile tour.
    * **Scene:** [`scenes/levels/Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn) + [`scripts/levels/Level04Controller.gd`](scripts/levels/Level04Controller.gd): 3D underground cavern over glowing lava, floating stone rune tiles sinking upon departure, golden knight leaping between runes with smooth tweens, valid move highlighting (blue), and live visit counter HUD with undo/reset.
    * **Framing & Auto-Solver:** Camera adjusted (`y = 14.0, z = 9.5, pitch = -55°`) to ensure all 64 runes are framed cleanly. Includes an animated `Auto-Solve (Debug)` button with pause/resume support. Test: [`tests/TestLevel04Scene.gd`](tests/TestLevel04Scene.gd) (14 checks).
-   * Enabled in main menu level select. Level 4 has no next level yet (`NEXT_LEVEL_SCENE` is empty): set it when Level 5 is implemented.
+   * Level 4 victory auto-advances to Level 5 after 4 s.
 
-7. **Main Menu & Level Progression Architecture:**
+7. **Level 5 (The Night at Dreadbury Manor - Who Killed Aunt Agatha?):**
+   * **Headless Logic:** [`scripts/logic/DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd) - models the 3 residents (`AGATHA`, `BUTLER`, `CHARLES`), 8 manor clues, first-order predicates (`killed`, `hates`, `richer_than_agatha`), exhaustive first-order model checker (`enumerate_consistent_models()`, `killer_candidates() == [Suspect.AGATHA]`), clue discovery tracking, suspect selection, accusation evaluation, and logical contradiction explanations (`contradiction_for()`).
+   * **Unit Tests:** [`tests/TestDreadbury.gd`](tests/TestDreadbury.gd) (39 assertions) verifying first-order axiom consistency, unique killer deduction, clue inspection, false accusation failure, and victory flow.
+   * **Scene:** [`scenes/levels/Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn) + [`scripts/levels/Level05Controller.gd`](scripts/levels/Level05Controller.gd): 3D Victorian manor library with stained-glass windows, fireplace glow, Aunt Agatha in the armchair, Charles and the Butler, 8 clue pedestals, the Accusation Altar with 3 suspect busts, an animated **Dagger of Truth**, and a hidden suicide note revealed with morning sunlight upon solving. Includes an animated `Auto-Solve (Debug)` button with pause/resume support. Test: [`tests/TestLevel05Scene.gd`](tests/TestLevel05Scene.gd) (15 checks).
+
+8. **Main Menu & Level Progression Architecture:**
    * Startup scene set to [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn), managed by [`MainMenuController.gd`](scripts/ui/MainMenuController.gd).
-   * Levels 1–4 are unlocked and selectable; future levels display as "(coming soon)".
+   * Levels 1–5 are unlocked and selectable.
    * All level scenes feature a consistent `< Menu` return button attached via [`BackToMenuButton.gd`](scripts/core/BackToMenuButton.gd).
-   * Linear play progression: Level 1 auto-advances to Level 2 (3s delay), Level 2 to Level 3 (4s delay), and Level 3 to Level 4 (4s delay). Level 4 is ready to connect to Level 5.
+   * Linear play progression: Level 1 auto-advances to Level 2 (3s delay), Level 2 to Level 3 (4s delay), Level 3 to Level 4 (4s delay), and Level 4 to Level 5 (4s delay).
 
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
 
 ### ~~Task 1: Level 2 — The Hall of Nine Portals~~ ✅ DONE
-* Implemented as a button-driven level (same style as Level 1).
-* Fixed hidden layout: Tigers in Rooms 1, 2, 4, 6, 7, 8, 9; Room 3 empty; **Princess in Room 5**. Brute force shows 48 layouts satisfy the protocol; only the Princess's room (5) and Room 2 (tiger) are forced. `NinePortalsLogic.princess_candidates()` returns `[5]`.
+* Implemented as a button-driven level with randomized room permutations on start and reset, dynamically updating all door inscriptions so the Princess's door is always uniquely deducible (`NinePortalsLogic.princess_candidates(logic.roles) == [logic.princess_room()]`).
 * Opening a tiger door shows "You failed! Press Reset to try again." (no auto-reset).
 * Level 1 victory now auto-advances to Level 2 after 3 s (`NEXT_LEVEL_DELAY` in `Level01Controller.gd`); covered by `tests/TestLevel01Transition.gd`.
 * Follow-ups: replace buttons with first-person plaque inspection (Task 2) and log plaques into the Journal (Task 3); real tiger/princess art and particles.
@@ -81,10 +85,11 @@
   - Automatically logs discovered door inscriptions and NPC dialogue clues.
   - Optional: A grid/matrix scratchpad so players can manually cross off deductions without pen and paper.
 
-### Task 4: Level 5 — Dreadbury Manor (Narrative Murder Mystery) (Future)
-* See [`story/level_progression.md`](story/level_progression.md) and [`story/logical_riddles.md`](story/logical_riddles.md#21-who-killed-aunt-agatha-the-dreadbury-mansion-mystery).
-* Formulate Aunt Agatha riddle constraints into first-order / propositional logic model.
-* Connect from Level 4 (`NEXT_LEVEL_SCENE` in `Level04Controller.gd`) and enable in `MainMenuController.gd`.
+### ~~Task 4: Level 5 — Dreadbury Manor (Narrative Murder Mystery)~~ ✅ DONE
+* Implemented in [`scripts/logic/DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), [`scripts/levels/Level05Controller.gd`](scripts/levels/Level05Controller.gd), and [`scenes/levels/Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn), connected from Level 4 and enabled in `MainMenuController.gd`.
+
+### Task 5: Bonus Chamber — The Midnight Bridge (Bridge & Torch Problem) (Future)
+* See [`story/level_progression.md`](story/level_progression.md) and [`story/logical_riddles.md`](story/logical_riddles.md#19-the-bridge-and-torch-problem).
 
 ---
 
@@ -112,17 +117,22 @@ godot --headless -s res://tests/TestLevel03Scene.gd
 godot --headless -s res://tests/TestKnightsTour.gd
 godot --headless -s res://tests/TestLevel04Scene.gd
 
-# 5. Global Navigation & UI
+# 5. Level 5: Dreadbury Manor (Who Killed Aunt Agatha?)
+godot --headless -s res://tests/TestDreadbury.gd
+godot --headless -s res://tests/TestLevel05Scene.gd
+
+# 6. Global Navigation & UI
 godot --headless -s res://tests/TestMainMenu.gd
 
-# 6. Validate scene syntax without opening GUI
+# 7. Validate scene syntax without opening GUI
 godot --headless --validate --quit scenes/ui/MainMenu.tscn
 godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
 godot --headless --validate --quit scenes/levels/Level02_NinePortals.tscn
 godot --headless --validate --quit scenes/levels/Level03_SunCourtyard.tscn
 godot --headless --validate --quit scenes/levels/Level04_KnightsChasm.tscn
+godot --headless --validate --quit scenes/levels/Level05_DreadburyManor.tscn
 
-# 7. Launch Godot game directly to test interactively
+# 8. Launch Godot game directly to test interactively
 godot
 ```
 
