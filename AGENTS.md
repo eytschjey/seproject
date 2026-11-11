@@ -47,6 +47,9 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
   godot --headless --validate --quit scenes/levels/<SceneName>.tscn
   ```
 
+### 4. Documentation Synchronization
+- **Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes** so documentation stays in lockstep with the codebase.
+
 ---
 
 ## ⚠️ Known GDScript & Godot Quirks in this Project
