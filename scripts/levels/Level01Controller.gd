@@ -2,9 +2,11 @@ extends Node3D
 
 ## Level 01 Controller: Manages 3D greybox visual representations of the Wolf, Goat & Cabbage puzzle.
 ## Decoupled from the rules: connects directly to RiverCrossingLogic.
+## Direct 3D interaction: Click items to load/unload; click raft or button to row across.
 
 const Logic = preload("res://scripts/logic/RiverCrossingLogic.gd")
 
+@onready var camera: Camera3D = $Camera3D
 @onready var raft: Node3D = $Environment/Raft
 @onready var raft_slot: Marker3D = $Environment/Raft/ItemSlot
 
@@ -20,10 +22,12 @@ const Logic = preload("res://scripts/logic/RiverCrossingLogic.gd")
 @onready var east_goat_pos: Marker3D = $Environment/EastShore/GoatPos
 @onready var east_cabbage_pos: Marker3D = $Environment/EastShore/CabbagePos
 
+@onready var wolf_area: Area3D = $Items/Wolf/ClickArea
+@onready var goat_area: Area3D = $Items/Goat/ClickArea
+@onready var cabbage_area: Area3D = $Items/Cabbage/ClickArea
+@onready var raft_area: Area3D = $Environment/Raft/ClickArea
+
 # UI references
-@onready var btn_wolf: Button = %BtnWolf
-@onready var btn_goat: Button = %BtnGoat
-@onready var btn_cabbage: Button = %BtnCabbage
 @onready var btn_cross: Button = %BtnCross
 @onready var btn_reset: Button = %BtnReset
 @onready var status_label: Label = %StatusLabel
@@ -41,6 +45,9 @@ var is_animating: bool = false
 var item_tweens: Dictionary = {}  # item -> Tween
 var hopping: Dictionary = {}      # item -> bool
 
+var _last_click_frame: int = -1
+var hovered_target: Variant = null
+
 func _ready() -> void:
 	logic = Logic.new()
 	logic.state_changed.connect(_on_state_changed)
@@ -48,15 +55,70 @@ func _ready() -> void:
 	logic.puzzle_solved.connect(_on_puzzle_solved)
 	logic.move_executed.connect(_on_move_executed)
 	
-	btn_wolf.pressed.connect(func(): _toggle_item(Logic.Item.WOLF))
-	btn_goat.pressed.connect(func(): _toggle_item(Logic.Item.GOAT))
-	btn_cabbage.pressed.connect(func(): _toggle_item(Logic.Item.CABBAGE))
 	btn_cross.pressed.connect(_on_cross_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
+	
+	_connect_area(wolf_area, Logic.Item.WOLF)
+	_connect_area(goat_area, Logic.Item.GOAT)
+	_connect_area(cabbage_area, Logic.Item.CABBAGE)
+	_connect_area(raft_area, "RAFT")
 	
 	BackToMenuButton.attach($UI/RootControl)
 	_update_ui()
 	_update_item_positions_instant()
+
+func _connect_area(area: Area3D, target: Variant) -> void:
+	area.mouse_entered.connect(func(): _on_area_mouse_entered(target))
+	area.mouse_exited.connect(func(): _on_area_mouse_exited(target))
+	area.input_event.connect(func(_cam: Node, event: InputEvent, _pos: Vector3, _normal: Vector3, _idx: int):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if target is int:
+				click_item(target)
+			elif target == "RAFT":
+				click_raft()
+	)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_handle_screen_click(event.position)
+
+func _handle_screen_click(screen_pos: Vector2) -> void:
+	if is_animating or logic.is_failed or logic.is_solved or camera == null:
+		return
+	var from = camera.project_ray_origin(screen_pos)
+	var to = from + camera.project_ray_normal(screen_pos) * 100.0
+	var space = get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var result = space.intersect_ray(query)
+	if result.is_empty():
+		return
+	var col = result.collider
+	if col == wolf_area:
+		click_item(Logic.Item.WOLF)
+	elif col == goat_area:
+		click_item(Logic.Item.GOAT)
+	elif col == cabbage_area:
+		click_item(Logic.Item.CABBAGE)
+	elif col == raft_area:
+		click_raft()
+
+## Public entry point for clicking an item in 3D or tests.
+func click_item(item: int) -> void:
+	var cur_frame = Engine.get_process_frames()
+	if _last_click_frame == cur_frame:
+		return
+	_last_click_frame = cur_frame
+	_toggle_item(item)
+
+## Public entry point for clicking the raft in 3D or tests.
+func click_raft() -> void:
+	var cur_frame = Engine.get_process_frames()
+	if _last_click_frame == cur_frame:
+		return
+	_last_click_frame = cur_frame
+	_on_cross_pressed()
 
 func _toggle_item(item: int) -> void:
 	if is_animating or logic.is_failed or logic.is_solved:
@@ -65,6 +127,14 @@ func _toggle_item(item: int) -> void:
 	if logic.item_on_boat == item:
 		logic.unload_item()
 	else:
+		var item_on_same_shore = (item in logic.west_items if logic.boat_side == Logic.Side.WEST else item in logic.east_items)
+		if not item_on_same_shore:
+			var shore_name = "West" if logic.boat_side == Logic.Side.EAST else "East"
+			status_label.text = "That passenger is on the " + shore_name + " shore. Row the raft across first!"
+			return
+		if logic.item_on_boat != null:
+			status_label.text = "The raft can only carry one passenger! Unload first."
+			return
 		logic.load_item(item)
 
 func _on_cross_pressed() -> void:
@@ -97,6 +167,29 @@ func _process(_delta: float) -> void:
 		return
 	_get_item_node(logic.item_on_boat).global_position = raft_slot.global_position
 
+func _on_area_mouse_entered(target: Variant) -> void:
+	if is_animating or logic.is_failed or logic.is_solved:
+		return
+	hovered_target = target
+	DisplayServer.cursor_set_shape(DisplayServer.CURSOR_POINTING_HAND)
+	_tween_target_scale(target, Vector3(1.12, 1.12, 1.12) if target is int else Vector3(1.05, 1.05, 1.05))
+
+func _on_area_mouse_exited(target: Variant) -> void:
+	if hovered_target == target:
+		hovered_target = null
+		DisplayServer.cursor_set_shape(DisplayServer.CURSOR_ARROW)
+	_tween_target_scale(target, Vector3.ONE)
+
+func _tween_target_scale(target: Variant, target_scale: Vector3) -> void:
+	var node: Node3D = null
+	if target is int:
+		node = _get_item_node(target)
+	elif target == "RAFT":
+		node = raft
+	if node != null:
+		var tw = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tw.tween_property(node, "scale", target_scale, 0.15)
+
 func _on_reset_pressed() -> void:
 	if is_animating:
 		return
@@ -120,12 +213,14 @@ func _on_puzzle_failed(reason: String) -> void:
 	banner_label.modulate = Color(1.0, 0.35, 0.35)
 	_set_buttons_enabled(false)
 	btn_reset.disabled = false
+	DisplayServer.cursor_set_shape(DisplayServer.CURSOR_ARROW)
 
 func _on_puzzle_solved() -> void:
 	banner.visible = true
 	banner_label.text = "🎉 PUZZLE SOLVED!\nAll passengers safely crossed the river!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
 	status_label.text = "Victory! The gate ahead unlocks."
+	DisplayServer.cursor_set_shape(DisplayServer.CURSOR_ARROW)
 	_proceed_to_next_level()
 
 ## Auto-advance to Level 2 a few seconds after victory so the player can see the result.
@@ -137,24 +232,8 @@ func _proceed_to_next_level() -> void:
 
 func _update_ui() -> void:
 	btn_cross.text = "Row Raft to East" if logic.boat_side == Logic.Side.WEST else "Row Raft to West"
-	
-	_update_button_label(btn_wolf, Logic.Item.WOLF, "Wolf")
-	_update_button_label(btn_goat, Logic.Item.GOAT, "Goat")
-	_update_button_label(btn_cabbage, Logic.Item.CABBAGE, "Cabbage")
-
-func _update_button_label(button: Button, item: int, name_str: String) -> void:
-	if logic.item_on_boat == item:
-		button.text = "Unload " + name_str
-		button.disabled = false
-	else:
-		var is_on_same_shore = item in logic.west_items if logic.boat_side == Logic.Side.WEST else item in logic.east_items
-		button.text = "Load " + name_str
-		button.disabled = not is_on_same_shore or logic.item_on_boat != null
 
 func _set_buttons_enabled(enabled: bool) -> void:
-	btn_wolf.disabled = not enabled
-	btn_goat.disabled = not enabled
-	btn_cabbage.disabled = not enabled
 	btn_cross.disabled = not enabled
 	btn_reset.disabled = not enabled
 	if enabled:
