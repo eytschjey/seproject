@@ -19,7 +19,8 @@ const Logic = preload("res://scripts/logic/KnightsTourLogic.gd")
 
 const CELL_SIZE: float = 1.0
 const SINK_DEPTH: float = 3.0
-const NEXT_LEVEL_SCENE: String = ""  # Level 5 does not exist yet.
+const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level05_DreadburyManor.tscn"
+const NEXT_LEVEL_DELAY: float = 4.0
 @export var auto_solve_delay: float = 0.22
 
 const COLOR_IDLE := Color(0.45, 0.4, 0.38)
@@ -222,3 +223,11 @@ func _on_puzzle_solved() -> void:
 		_set_tile_sunk(cell, false)
 		tile_materials[cell].albedo_color = COLOR_SOLVED
 		tile_materials[cell].emission = COLOR_SOLVED
+	_proceed_to_next_level()
+
+## Auto-advance to Level 5 a few seconds after victory so the player can see the result.
+func _proceed_to_next_level() -> void:
+	banner_label.text += "\nProceeding to Dreadbury Manor..."
+	await get_tree().create_timer(NEXT_LEVEL_DELAY).timeout
+	if is_inside_tree():
+		get_tree().change_scene_to_file(NEXT_LEVEL_SCENE)
