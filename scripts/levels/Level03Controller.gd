@@ -11,6 +11,7 @@ const Logic = preload("res://scripts/logic/QueensLogic.gd")
 @onready var beams_root: Node3D = $Board/Beams
 @onready var cell_grid: GridContainer = %CellGrid
 @onready var btn_reset: Button = %BtnReset
+@onready var btn_solve: Button = %BtnSolve
 @onready var status_label: Label = %StatusLabel
 @onready var count_label: Label = %QueenCountLabel
 @onready var banner: PanelContainer = %Banner
@@ -19,6 +20,7 @@ const Logic = preload("res://scripts/logic/QueensLogic.gd")
 const CELL_SIZE: float = 1.0
 const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level04_KnightsChasm.tscn"
 const NEXT_LEVEL_DELAY: float = 4.0
+@export var auto_solve_delay: float = 0.35
 
 const COLOR_SAFE := Color(1.0, 0.82, 0.25)
 const COLOR_CONFLICT := Color(1.0, 0.15, 0.1)
@@ -27,6 +29,7 @@ var logic: RefCounted
 var cell_buttons: Dictionary = {}   # Vector2i -> Button
 var queen_nodes: Dictionary = {}    # Vector2i -> Node3D
 var queen_materials: Dictionary = {} # Vector2i -> StandardMaterial3D
+var is_auto_solving: bool = false
 
 func _ready() -> void:
 	logic = Logic.new()
@@ -36,6 +39,7 @@ func _ready() -> void:
 	_build_tiles()
 	_build_buttons()
 	btn_reset.pressed.connect(_on_reset_pressed)
+	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl)
 	_on_state_changed([], [])
 
@@ -70,12 +74,53 @@ func _build_buttons() -> void:
 			cell_buttons[cell] = b
 
 func _on_cell_pressed(cell: Vector2i) -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	logic.toggle_queen(cell)
 
 func _on_reset_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
 	logic.reset()
 	banner.visible = false
 	status_label.text = "The courtyard is cleared. Place 8 queens so none attack each other."
+
+func _on_solve_pressed() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+		return
+	if logic.is_solved:
+		return
+	start_auto_solve()
+
+func start_auto_solve() -> void:
+	is_auto_solving = true
+	btn_solve.text = "Stop Solver"
+	banner.visible = false
+	status_label.text = "Placing queens automatically..."
+	
+	# Find a solution extending current non-conflicting queens; if none, reset and solve fresh.
+	var solution: Array[Vector2i] = []
+	if logic.conflicting_queens().is_empty():
+		solution = Logic.find_completion(logic.queens)
+	if solution.is_empty():
+		logic.reset()
+		solution = Logic.find_completion([])
+	
+	for cell in solution:
+		if not is_auto_solving or logic.is_solved:
+			break
+		if not logic.has_queen(cell):
+			logic.place_queen(cell)
+			await get_tree().create_timer(auto_solve_delay).timeout
+	
+	stop_auto_solve()
+
+func stop_auto_solve() -> void:
+	is_auto_solving = false
+	if is_instance_valid(btn_solve):
+		btn_solve.text = "Auto-Solve (Debug)"
+		btn_solve.disabled = logic != null and logic.is_solved
 
 func _on_state_changed(queens: Array, conflicts: Array) -> void:
 	# Remove statues whose queen is gone.
@@ -101,6 +146,8 @@ func _on_state_changed(queens: Array, conflicts: Array) -> void:
 		b.modulate = Color(1, 0.4, 0.4) if cell in conflicts else Color(1, 1, 1)
 		b.disabled = logic.is_solved
 	count_label.text = "Queens: %d / %d" % [queens.size(), Logic.BOARD_SIZE]
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = logic.is_solved
 
 func _spawn_queen(cell: Vector2i) -> void:
 	var root := Node3D.new()
@@ -152,6 +199,10 @@ func _rebuild_beams() -> void:
 		beam.look_at(b, Vector3.UP)
 
 func _on_puzzle_solved() -> void:
+	if is_auto_solving:
+		stop_auto_solve()
+	if is_instance_valid(btn_solve):
+		btn_solve.disabled = true
 	banner.visible = true
 	banner_label.text = "PUZZLE SOLVED!\nThe beams converge on the sun crystal.\nThe drawbridge to the catacombs lowers!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)

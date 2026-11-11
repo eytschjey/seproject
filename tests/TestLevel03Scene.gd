@@ -30,11 +30,24 @@ func _init() -> void:
 	await process_frame
 	check(s.queen_nodes.is_empty(), "Reset removes all statues")
 
-	var sol: Array = s.Logic.solve_all()[0]
-	for cell in sol:
-		s.cell_buttons[cell].pressed.emit()
+	check(s.btn_solve != null and not s.btn_solve.disabled, "Auto-solve button exists and enabled")
+	s.auto_solve_delay = 0.005
+	s.btn_solve.pressed.emit()
+	await create_timer(0.02).timeout
+	check(s.is_auto_solving and s.logic.queens.size() > 0, "Auto-solver places queens automatically")
+	s.btn_solve.pressed.emit() # Stop it
 	await process_frame
-	check(s.logic.is_solved, "Full solution solves the puzzle")
+	check(not s.is_auto_solving, "Auto-solver stops when toggled")
+	var paused_count: int = s.logic.queens.size()
+	await create_timer(0.02).timeout
+	check(s.logic.queens.size() == paused_count, "Placements pause when solver is stopped")
+
+	# Resume solver to complete 8 queens
+	s.btn_solve.pressed.emit()
+	while not s.logic.is_solved and s.is_auto_solving:
+		await process_frame
+	check(s.logic.is_solved, "Auto-solver completed 8-queens solution")
 	check(s.banner.visible and s.banner_label.text.contains("SOLVED"), "Victory banner shown")
+	check(s.btn_solve.disabled, "Solve button disabled after puzzle is solved")
 	print("checks failed: ", checks_failed)
 	quit(1 if checks_failed > 0 else 0)

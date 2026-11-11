@@ -99,6 +99,47 @@ static func solve_all() -> Array:
 	_search([], solutions)
 	return solutions
 
+## Find a full 8-queens solution extending `current_queens` (or [] if impossible / conflicts exist).
+static func find_completion(current_queens: Array = []) -> Array[Vector2i]:
+	if not pairs_in(current_queens).is_empty():
+		return []
+	var occupied_rows: Array[int] = []
+	for q in current_queens:
+		occupied_rows.append(q.y)
+	var missing_rows: Array[int] = []
+	for r in BOARD_SIZE:
+		if r not in occupied_rows:
+			missing_rows.append(r)
+	
+	var partial: Array[Vector2i] = []
+	for q in current_queens:
+		partial.append(q)
+	var result: Array[Vector2i] = []
+	if _search_completion(partial, missing_rows, 0, result):
+		return result
+	return []
+
+static func _search_completion(partial: Array[Vector2i], missing_rows: Array[int], idx: int, result: Array[Vector2i]) -> bool:
+	if idx == missing_rows.size():
+		result.clear()
+		for q in partial:
+			result.append(q)
+		return true
+	var row: int = missing_rows[idx]
+	for col in BOARD_SIZE:
+		var cell := Vector2i(col, row)
+		var safe := true
+		for q in partial:
+			if attacks(q, cell):
+				safe = false
+				break
+		if safe:
+			partial.append(cell)
+			if _search_completion(partial, missing_rows, idx + 1, result):
+				return true
+			partial.pop_back()
+	return false
+
 static func _search(partial: Array, solutions: Array) -> void:
 	var row: int = partial.size()
 	if row == BOARD_SIZE:

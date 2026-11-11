@@ -61,6 +61,10 @@ func test_solutions() -> void:
 			all_valid = false
 	assert_test(all_valid, "Every solution is valid")
 	assert_test(not Logic.is_valid_solution(all[0].slice(0, 7)), "7 queens is not a full solution")
+	var comp := Logic.find_completion([Vector2i(0, 0)])
+	assert_test(comp.size() == 8 and Logic.is_valid_solution(comp), "find_completion finds full valid solution extending (0,0)")
+	var comp_bad := Logic.find_completion([Vector2i(0, 0), Vector2i(0, 5)])
+	assert_test(comp_bad.is_empty(), "find_completion returns empty on conflicting input")
 
 func test_game_flow() -> void:
 	print("\n[Test 4: Game flow]")
