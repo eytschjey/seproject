@@ -31,8 +31,14 @@
    * **Headless Logic:** [`scripts/logic/QueensLogic.gd`](scripts/logic/QueensLogic.gd) - place/remove/toggle queens (max 8, conflicts allowed but reported), conflict pairs, win check, and a backtracking solver.
    * **Unit Tests:** [`tests/TestQueens.gd`](tests/TestQueens.gd) (27 assertions) incl. exactly 92 solutions.
    * **Scene:** [`scenes/levels/Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn) + [`scripts/levels/Level03Controller.gd`](scripts/levels/Level03Controller.gd): 3D marble board built from a `BoardOrigin` marker, an 8x8 HUD button grid toggles queens, statues are gold when safe / red when attacked, crimson beams link attacking pairs. Test: [`tests/TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
-   * Level 2 victory auto-advances to Level 3 after 4 s. Level 3 has no next level yet (`NEXT_LEVEL_SCENE` is empty): set it and add the auto-advance when Level 4 exists.
+   * Level 2 victory auto-advances to Level 3 after 4 s. Level 3 victory auto-advances to Level 4 after 4 s.
    * Follow-ups: pushable statues on a grid (needs the player controller), sun-crystal / drawbridge victory animation, beams along all 8 directions.
+
+6. **Level 4 (The Knight's Chasm - Knight's Tour):**
+   * **Headless Logic:** [`scripts/logic/KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd) - enforces valid knight jump offsets, board boundaries, unvisited constraint, tracks visited count (64), dead end detection, undo stack, and Warnsdorff-heuristic backtracking solver.
+   * **Unit Tests:** [`tests/TestKnightsTour.gd`](tests/TestKnightsTour.gd) (26 assertions) verifying moves, rejection signals, dead end detection, undo recovery, and complete 64-tile tour.
+   * **Scene:** [`scenes/levels/Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn) + [`scripts/levels/Level04Controller.gd`](scripts/levels/Level04Controller.gd): 3D underground cavern over glowing lava, floating stone rune tiles sinking upon departure, golden knight leaping between runes with smooth tweens, valid move highlighting (blue), and live visit counter HUD with undo/reset. Test: [`tests/TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
+   * Enabled in main menu level select. Level 4 has no next level yet (`NEXT_LEVEL_SCENE` is empty): set it when Level 5 is implemented.
 
 ---
 
@@ -67,8 +73,10 @@
   - Automatically logs discovered door inscriptions and NPC dialogue clues.
   - Optional: A grid/matrix scratchpad so players can manually cross off deductions without pen and paper.
 
-### Task 4: Level 4 — The Knight's Chasm (Knight's Tour) (Future)
-* See [`story/level_progression.md`](story/level_progression.md). Mirror the Level 3 pattern: headless logic + solver test, button-driven scene, then wire `NEXT_LEVEL_SCENE` in `Level03Controller.gd` and add it to the menu `LEVELS`.
+### Task 4: Level 5 — Dreadbury Manor (Narrative Murder Mystery) (Future)
+* See [`story/level_progression.md`](story/level_progression.md) and [`story/logical_riddles.md`](story/logical_riddles.md#21-who-killed-aunt-agatha-the-dreadbury-mansion-mystery).
+* Formulate Aunt Agatha riddle constraints into first-order / propositional logic model.
+* Connect from Level 4 (`NEXT_LEVEL_SCENE` in `Level04Controller.gd`) and enable in `MainMenuController.gd`.
 
 ---
 
@@ -85,11 +93,13 @@ godot --headless -s res://tests/TestRiverCrossing.gd
 # 2. Run Level 1 UI integration test (full solution sequence)
 godot --headless -s res://tests/TestLevel01Scene.gd
 
-# 3. Level 2 / Level 3 tests
+# 3. Level 2 / Level 3 / Level 4 tests
 godot --headless -s res://tests/TestNinePortals.gd
 godot --headless -s res://tests/TestLevel02Scene.gd
 godot --headless -s res://tests/TestQueens.gd
 godot --headless -s res://tests/TestLevel03Scene.gd
+godot --headless -s res://tests/TestKnightsTour.gd
+godot --headless -s res://tests/TestLevel04Scene.gd
 
 # 4. Validate scene syntax without opening GUI
 godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn

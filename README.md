@@ -13,8 +13,9 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence and visual tracking.
 - [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)), 25 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), button-driven 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
 - [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 27 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)) and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
+- [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)) and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with a "< Menu" button in each level.
-- [ ] **Next Up:** First-person character navigation, journal UI, Level 4 (Knight's Tour).
+- [ ] **Next Up:** First-person character navigation, journal UI, Level 5 (Dreadbury Manor).
 
 ---
 
@@ -31,7 +32,7 @@ Rather than solving abstract logic puzzles on paper or through 2D menus, players
 | **Level 1: The Ferryman's Crossing** | *Wolf, Goat & Cabbage* (Ch. 5, Ex. 19) | Misty Riverbank & Dock | **Tutorial & Raft Physics:** Transporting items one by one across a river, checking state constraints to prevent items from being eaten. | **Playable Prototype** |
 | **Level 2: The Hall of Nine Portals** | *Smullyan’s Princess & Tiger* (Ch. 4, Ex. 13) | Palace Throne Corridor | **Propositional Deduction:** 9 doors with etched inscriptions. Avoid lethal tiger traps by reasoning about truth and deception. | **Playable Prototype** |
 | **Level 3: The Sun Courtyard** | *The 8-Queens Problem* (Ch. 4, §4.8.1) | Romanesque Checkered Courtyard | **Spatial Placement & Optics:** Moving 8 queen statues that project light beams. Conflicting beams glow red until a non-attacking configuration is reached. | **Playable Prototype** |
-| **Level 4: The Knight's Chasm** | *The Knight's Tour* (Ch. 5, §5.6.2) | Subterranean Lava Cavern | **Platforming & Pathfinding:** Leaping across an $8 \times 8$ grid of floating stone runes using only chess knight ($L$-shaped) moves; visited tiles crumble. | Planned |
+| **Level 4: The Knight's Chasm** | *The Knight's Tour* (Ch. 5, §5.6.2) | Subterranean Lava Cavern | **Platforming & Pathfinding:** Leaping across an $8 \times 8$ grid of floating stone runes using only chess knight ($L$-shaped) moves; visited tiles crumble. | **Playable Prototype** |
 | **Level 5: Dreadbury Manor** | *Who Killed Aunt Agatha?* (Ch. 6, §6.5.2) | Stormy Victorian Mansion | **Detective Investigation:** Interrogating suspects (Charles & the Butler), collecting written clues, and proving the truth at an accusation altar. | Planned |
 | **Bonus: The Midnight Bridge** | *Bridge & Torch Problem* (Ch. 5, Ex. 25) | Dark Ravine Rope Bridge | **Resource & Time Management:** Guiding 4 characters of differing speeds across a swaying bridge before a 15-minute torch burns out. | Planned |
 
@@ -54,7 +55,8 @@ seproject/
 │   └── levels/
 │       ├── Level01_Tutorial.tscn  # Playable 3D greybox scene for Level 1 
 │       ├── Level02_NinePortals.tscn # Playable 3D greybox scene for Level 2
-│       └── Level03_SunCourtyard.tscn # Playable 3D greybox scene for Level 3
+│       ├── Level03_SunCourtyard.tscn # Playable 3D greybox scene for Level 3
+│       └── Level04_KnightsChasm.tscn # Playable 3D greybox scene for Level 4
 │
 ├── scripts/
 │   ├── core/
@@ -64,11 +66,13 @@ seproject/
 │   ├── levels/
 │   │   ├── Level01Controller.gd   # 3D visuals & UI controller for Level 1
 │   │   ├── Level02Controller.gd   # 3D visuals & UI controller for Level 2
-│   │   └── Level03Controller.gd   # 3D visuals & UI controller for Level 3
+│   │   ├── Level03Controller.gd   # 3D visuals & UI controller for Level 3
+│   │   └── Level04Controller.gd   # 3D visuals & UI controller for Level 4
 │   └── logic/
 │       ├── RiverCrossingLogic.gd  # Headless rules validator for Wolf, Goat & Cabbage
 │       ├── NinePortalsLogic.gd    # Headless rules & solver for the Nine Portals
-│       └── QueensLogic.gd         # Headless rules & solver for 8-Queens
+│       ├── QueensLogic.gd         # Headless rules & solver for 8-Queens
+│       └── KnightsTourLogic.gd    # Headless rules & solver for Knight's Tour
 │
 ├── tests/
 │   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (41 assertions)
@@ -78,7 +82,9 @@ seproject/
 │   ├── TestNinePortals.gd         # Unit tests for Nine Portals logic (25 assertions)
 │   ├── TestLevel02Scene.gd        # Integration test for Level 2 UI
 │   ├── TestQueens.gd              # Unit tests for 8-Queens logic (27 assertions)
-│   └── TestLevel03Scene.gd        # Integration test for Level 3 UI
+│   ├── TestLevel03Scene.gd        # Integration test for Level 3 UI
+│   ├── TestKnightsTour.gd         # Unit tests for Knight's Tour logic (26 assertions)
+│   └── TestLevel04Scene.gd        # Integration test for Level 4 UI
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon

@@ -17,7 +17,8 @@ const Logic = preload("res://scripts/logic/QueensLogic.gd")
 @onready var banner_label: Label = %BannerLabel
 
 const CELL_SIZE: float = 1.0
-const NEXT_LEVEL_SCENE: String = ""  # Level 4 does not exist yet; solved levels stay here.
+const NEXT_LEVEL_SCENE: String = "res://scenes/levels/Level04_KnightsChasm.tscn"
+const NEXT_LEVEL_DELAY: float = 4.0
 
 const COLOR_SAFE := Color(1.0, 0.82, 0.25)
 const COLOR_CONFLICT := Color(1.0, 0.15, 0.1)
@@ -158,3 +159,11 @@ func _on_puzzle_solved() -> void:
 	for cell in queen_materials:
 		queen_materials[cell].albedo_color = Color(0.4, 1.0, 0.5)
 		queen_materials[cell].emission = Color(0.4, 1.0, 0.5)
+	_proceed_to_next_level()
+
+## Auto-advance to Level 4 a few seconds after victory so the player can see the result.
+func _proceed_to_next_level() -> void:
+	banner_label.text += "\nProceeding to the Knight's Chasm..."
+	await get_tree().create_timer(NEXT_LEVEL_DELAY).timeout
+	if is_inside_tree():
+		get_tree().change_scene_to_file(NEXT_LEVEL_SCENE)
