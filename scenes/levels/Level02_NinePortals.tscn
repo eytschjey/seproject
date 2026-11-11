@@ -53,7 +53,7 @@ light_energy = 0.6
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 5.2, 10.5)
+transform = Transform3D(1, 0, 0, 0, 0.978148, 0.207912, 0, -0.207912, 0.978148, 0, 4.6, 12.2)
 fov = 55.0
 
 [node name="Hall" type="Node3D" parent="."]
@@ -468,7 +468,7 @@ horizontal_alignment = 1
 [node name="StatusLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Tiger: sign is false. Princess: sign is true. Empty rooms: all signs true or all false. Find the Princess."
+text = "Tiger: sign is false. Princess: sign is true. Empty rooms: all signs true or all false. Click any door to read its plaque, then open the Princess's door."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -481,9 +481,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -380.0
-offset_top = -250.0
+offset_top = -220.0
 offset_right = 380.0
-offset_bottom = -130.0
+offset_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -491,7 +491,7 @@ grow_vertical = 0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Select a door to read its plaque."
+text = "Click a door in the hall to inspect its plaque."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -526,34 +526,37 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -110.0
+offset_left = 40.0
+offset_top = -85.0
+offset_right = -40.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
 
 [node name="ActionBox" type="VBoxContainer" parent="UI/RootControl/ActionBar"]
 layout_mode = 2
-
-[node name="DoorButtons" type="HBoxContainer" parent="UI/RootControl/ActionBar/ActionBox"]
-unique_name_in_owner = true
-layout_mode = 2
 alignment = 1
 
 [node name="ControlButtons" type="HBoxContainer" parent="UI/RootControl/ActionBar/ActionBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="BtnOpen" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 42)
 layout_mode = 2
 disabled = true
 text = "Open Selected Door"
 
 [node name="BtnReset" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 42)
 layout_mode = 2
 text = "Reset"
 
 [node name="BtnSolve" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 42)
 layout_mode = 2
 text = "Auto-Solve (Debug)"

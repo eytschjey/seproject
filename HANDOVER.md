@@ -26,7 +26,7 @@
 4. **Level 2 (The Hall of Nine Portals - Smullyan's Princess & Tiger):**
    * **Headless Logic:** [`scripts/logic/NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd) randomizes the room layout on start and after every reset, dynamically remaps all door inscriptions to match the permuted rooms, evaluates cross-references, checks protocol consistency, enumerates all consistent layouts, deduces the unique Princess room (`solve_princess_room()`), and runs the open-door game flow.
    * **Unit Tests:** [`tests/TestNinePortals.gd`](tests/TestNinePortals.gd) (30 assertions) proves the Princess's room is uniquely deducible for both canonical and randomized layouts.
-   * **Scene & Auto-Solver:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): select a door (shows its plaque), then "Open", plus an animated `Auto-Solve (Debug)` button (`%BtnSolve`) that inspects plaques step-by-step and opens the deduced Princess door. Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd) (19 checks).
+   * **Direct 3D Door Click Selection & Auto-Solver:** [`scenes/levels/Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn) with controller [`scripts/levels/Level02Controller.gd`](scripts/levels/Level02Controller.gd): click any of the 9 doors directly in 3D via `_unhandled_input` raycasting to select it and read its plaque (with hover scale/cursor feedback and gold/amber plaque & frame highlights), then press "Open Selected Door", plus an animated `Auto-Solve (Debug)` button (`%BtnSolve`) that inspects plaques step-by-step and opens the deduced Princess door. Camera framed at `(0, 4.6, 12.2)` so all 9 doors fit comfortably in view. Integration test: [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd) (21 checks).
 
 5. **Level 3 (The Sun Courtyard - 8 Queens):**
    * **Headless Logic:** [`scripts/logic/QueensLogic.gd`](scripts/logic/QueensLogic.gd) - place/remove/toggle queens (max 8, conflicts allowed but reported), conflict pairs, win check, full 92-solution solver (`solve_all()`), and prefix-aware completion solver (`find_completion()`).
@@ -59,10 +59,10 @@
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
 
 ### ~~Task 1: Level 2 — The Hall of Nine Portals~~ ✅ DONE
-* Implemented as a button-driven level with randomized room permutations on start and reset, dynamically updating all door inscriptions so the Princess's door is always uniquely deducible (`NinePortalsLogic.princess_candidates(logic.roles) == [logic.princess_room()]`).
+* Implemented with direct 3D door click selection, randomized room permutations on start and reset, and dynamically updated door inscriptions so the Princess's door is always uniquely deducible (`NinePortalsLogic.princess_candidates(logic.roles) == [logic.princess_room()]`).
 * Opening a tiger door shows "You failed! Press Reset to try again." (no auto-reset).
 * Level 1 victory now auto-advances to Level 2 after 3 s (`NEXT_LEVEL_DELAY` in `Level01Controller.gd`); covered by `tests/TestLevel01Transition.gd`.
-* Follow-ups: replace buttons with first-person plaque inspection (Task 2) and log plaques into the Journal (Task 3); real tiger/princess art and particles.
+* Follow-ups: first-person walking navigation (Task 2) and logging plaques into the Journal (Task 3); real tiger/princess art and particles.
 
 ### ✅ Main Menu (done)
 * [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn) + [`scripts/ui/MainMenuController.gd`](scripts/ui/MainMenuController.gd): level select. To add a level, append an entry to `LEVELS` (empty `scene` = "coming soon"). Levels have a "< Menu" button via [`BackToMenuButton`](scripts/core/BackToMenuButton.gd). Test: `tests/TestMainMenu.gd`.

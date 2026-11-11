@@ -1,6 +1,6 @@
 extends SceneTree
 
-# Plays through the real UI buttons: wrong door (tiger), reset, empty door, then the princess.
+# Plays through Level 2 via direct 3D door clicks: wrong door (tiger), reset, empty door, and auto-solver.
 var checks_failed: int = 0
 
 func check(cond: bool, msg: String) -> void:
@@ -11,12 +11,16 @@ func check(cond: bool, msg: String) -> void:
 func _init() -> void:
 	var s = load("res://scenes/levels/Level02_NinePortals.tscn").instantiate()
 	root.add_child(s)
-	await process_frame
-	check(s.door_buttons.size() == 9, "Nine door buttons created")
+	await physics_frame
+	await physics_frame
+	check(s.door_areas.size() == 9, "Nine 3D door click areas created")
 	check(s.btn_open.disabled, "Open disabled before selecting a door")
 
 	var tiger_rm: int = s.logic.tiger_room()
-	s.door_buttons[tiger_rm - 1].pressed.emit()
+	var tiger_door_pos: Vector3 = s._door(tiger_rm).global_position + Vector3(0, 1.5, 0)
+	var tiger_screen_pos: Vector2 = s.camera.unproject_position(tiger_door_pos)
+	s._handle_screen_click(tiger_screen_pos)
+	check(s.selected == tiger_rm, "Single 3D screen click selects the door")
 	check(s.plaque_label.text.contains(s.logic.get_inscription(tiger_rm)), "Plaque for selected door displayed")
 	s.btn_open.pressed.emit()
 	await create_timer(1.1).timeout
@@ -34,7 +38,9 @@ func _init() -> void:
 	check(s.plaque_label.text.contains(s.logic.get_inscription(tiger_rm)), "Reset updates displayed plaque inscription")
 
 	var empty_rm: int = s.logic.empty_room()
-	s.door_buttons[empty_rm - 1].pressed.emit()
+	var empty_door_pos: Vector3 = s._door(empty_rm).global_position + Vector3(0, 1.5, 0)
+	s._handle_screen_click(s.camera.unproject_position(empty_door_pos))
+	check(s.selected == empty_rm, "3D click selects empty door")
 	s.btn_open.pressed.emit()
 	await create_timer(1.1).timeout
 	check(not s.logic.is_failed and not s.logic.is_solved, "Empty room keeps the game going")

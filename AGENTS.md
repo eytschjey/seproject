@@ -47,8 +47,9 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
   godot --headless --validate --quit scenes/levels/<SceneName>.tscn
   ```
 
-### 4. Documentation Synchronization
+### 4. Documentation & Git Synchronization
 - **Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes** so documentation stays in lockstep with the codebase.
+- **Git Workflow:** Always run `git pull` before making any changes, and `git commit` + `git push` after completing and verifying changes.
 
 ### 5. 3D Asset Pipeline & Greybox Replacement Standards
 - **Standard Format:** Use **glTF 2.0 Binary (`.glb`)** exclusively under `assets/models/`. Self-contained `.glb` files package PBR textures, meshes, and materials without requiring external DCC software (e.g. Blender) during headless test runs or CI builds.
