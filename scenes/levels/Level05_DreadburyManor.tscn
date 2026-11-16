@@ -206,9 +206,9 @@ layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.72, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
+theme_override_colors/font_color = Color(0.84, 0.8, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 21
 text = "Level 5: The Night at Dreadbury Manor"
 horizontal_alignment = 1
@@ -216,9 +216,9 @@ horizontal_alignment = 1
 [node name="StatusLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.93, 0.99, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_color = Color(0.86, 0.85, 0.89, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 13
 text = "Someone in Dreadbury Mansion killed Aunt Agatha. Examine the 8 clues and place the Dagger of Truth on the killer's bust."
 horizontal_alignment = 1
@@ -238,9 +238,9 @@ grow_vertical = 0
 [node name="ClueLabel" type="Label" parent="UI/RootControl/CluePanel"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.93, 0.99, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_color = Color(0.86, 0.85, 0.89, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 16
 text = "Select a clue to inspect the evidence."
 horizontal_alignment = 1
@@ -268,9 +268,9 @@ theme_override_constants/separation = 6
 [node name="ClueCountLabel" type="Label" parent="UI/RootControl/SidePanel/SideBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.72, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
+theme_override_colors/font_color = Color(0.84, 0.8, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 18
 text = "Clues Examined: 0 / 8"
 horizontal_alignment = 1
@@ -284,9 +284,9 @@ columns = 2
 
 [node name="AltarTitleLabel" type="Label" parent="UI/RootControl/SidePanel/SideBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.82, 0.45, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_color = Color(0.86, 0.8, 0.7, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 17
 text = "The Accusation Altar"
 horizontal_alignment = 1

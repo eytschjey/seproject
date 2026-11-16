@@ -70,12 +70,12 @@ func _ready() -> void:
 	_connect_area(cabbage_area, Logic.Item.CABBAGE)
 	_connect_area(raft_area, "RAFT")
 	
-	BackToMenuButton.attach($UI/RootControl, Color(0.35, 0.85, 0.58))
+	BackToMenuButton.attach($UI/RootControl, Color(0.38, 0.52, 0.44, 0.65))
 	_apply_gui_theme()
 	_update_ui()
 	_update_item_positions_instant()
 
-func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 8) -> StyleBoxFlat:
+func _make_box_style(bg: Color, border: Color, border_w: int = 1, radius: int = 6) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
@@ -88,17 +88,17 @@ func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 
 	return sb
 
 func _apply_gui_theme() -> void:
-	# Level 1 Color Scheme: Riverbank Forest Emerald & Moss-Teal
-	var panel_sb := _make_box_style(Color(0.05, 0.14, 0.11, 0.94), Color(0.35, 0.85, 0.58, 0.95), 2, 8)
+	# Level 1 Color Scheme: Subtle Moss & Slate
+	var panel_sb := _make_box_style(Color(0.08, 0.12, 0.10, 0.86), Color(0.32, 0.46, 0.38, 0.55), 1, 8)
 	for p in [$UI/RootControl/HeaderPanel, $UI/RootControl/ActionBar, banner]:
 		if p != null:
 			p.add_theme_stylebox_override("panel", panel_sb)
-	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
-	banner_label.add_theme_constant_override("outline_size", 3)
-	var btn_normal := _make_box_style(Color(0.10, 0.25, 0.19, 0.96), Color(0.42, 0.88, 0.62, 0.95), 2, 6)
-	var btn_hover := _make_box_style(Color(0.16, 0.36, 0.27, 1.0), Color(0.65, 0.98, 0.78, 1.0), 2, 6)
-	var btn_pressed := _make_box_style(Color(0.08, 0.44, 0.32, 1.0), Color(0.85, 1.0, 0.9, 1.0), 2, 6)
-	var btn_disabled := _make_box_style(Color(0.07, 0.12, 0.10, 0.85), Color(0.22, 0.36, 0.28, 0.7), 1, 6)
+	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+	banner_label.add_theme_constant_override("outline_size", 2)
+	var btn_normal := _make_box_style(Color(0.13, 0.19, 0.16, 0.90), Color(0.36, 0.50, 0.42, 0.65), 1, 6)
+	var btn_hover := _make_box_style(Color(0.18, 0.25, 0.21, 0.94), Color(0.46, 0.62, 0.52, 0.75), 1, 6)
+	var btn_pressed := _make_box_style(Color(0.22, 0.31, 0.26, 0.96), Color(0.56, 0.72, 0.62, 0.85), 1, 6)
+	var btn_disabled := _make_box_style(Color(0.09, 0.12, 0.10, 0.75), Color(0.22, 0.30, 0.25, 0.45), 1, 6)
 	for btn in [btn_cross, btn_reset, btn_solve]:
 		if btn == null:
 			continue
@@ -106,12 +106,12 @@ func _apply_gui_theme() -> void:
 		btn.add_theme_stylebox_override("hover", btn_hover)
 		btn.add_theme_stylebox_override("pressed", btn_pressed)
 		btn.add_theme_stylebox_override("disabled", btn_disabled)
-		btn.add_theme_color_override("font_color", Color(0.92, 0.99, 0.95))
-		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
-		btn.add_theme_color_override("font_pressed_color", Color(0.75, 1.0, 0.85))
-		btn.add_theme_color_override("font_disabled_color", Color(0.48, 0.62, 0.54))
-		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
-		btn.add_theme_constant_override("outline_size", 2)
+		btn.add_theme_color_override("font_color", Color(0.86, 0.90, 0.88))
+		btn.add_theme_color_override("font_hover_color", Color(0.94, 0.97, 0.95))
+		btn.add_theme_color_override("font_pressed_color", Color(0.78, 0.90, 0.82))
+		btn.add_theme_color_override("font_disabled_color", Color(0.48, 0.54, 0.50))
+		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.65))
+		btn.add_theme_constant_override("outline_size", 1)
 
 func _connect_area(area: Area3D, target: Variant) -> void:
 	area.mouse_entered.connect(func(): _on_area_mouse_entered(target))

@@ -47,10 +47,10 @@ func _ready() -> void:
 	_build_buttons()
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
-	BackToMenuButton.attach($UI/RootControl, Color(0.98, 0.72, 0.22))
+	BackToMenuButton.attach($UI/RootControl, Color(0.58, 0.46, 0.32, 0.65))
 	_on_state_changed([], [])
 
-func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 4) -> StyleBoxFlat:
+func _make_box_style(bg: Color, border: Color, border_w: int = 1, radius: int = 4) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
@@ -59,8 +59,8 @@ func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 
 	return sb
 
 func _init_gui_styles() -> void:
-	# Level 3 Color Scheme: Romanesque Warm Bronze & Solar Amber
-	var panel_sb := _make_box_style(Color(0.15, 0.10, 0.05, 0.94), Color(0.98, 0.72, 0.22, 0.95), 2, 8)
+	# Level 3 Color Scheme: Subtle Sandstone & Warm Umber
+	var panel_sb := _make_box_style(Color(0.12, 0.10, 0.08, 0.86), Color(0.52, 0.43, 0.30, 0.55), 1, 8)
 	panel_sb.content_margin_left = 14.0
 	panel_sb.content_margin_right = 14.0
 	panel_sb.content_margin_top = 8.0
@@ -68,19 +68,19 @@ func _init_gui_styles() -> void:
 	for p in [$UI/RootControl/HeaderPanel, $UI/RootControl/SidePanel, banner]:
 		if p != null:
 			p.add_theme_stylebox_override("panel", panel_sb)
-	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
-	banner_label.add_theme_constant_override("outline_size", 3)
+	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+	banner_label.add_theme_constant_override("outline_size", 2)
 
-	style_cell_light = _make_box_style(Color(0.28, 0.21, 0.13, 0.96), Color(0.62, 0.46, 0.24, 0.9), 1, 4)
-	style_cell_dark = _make_box_style(Color(0.18, 0.13, 0.08, 0.96), Color(0.48, 0.36, 0.18, 0.9), 1, 4)
-	style_cell_hover = _make_box_style(Color(0.44, 0.32, 0.16, 1.0), Color(1.0, 0.86, 0.42, 1.0), 2, 4)
-	style_cell_safe = _make_box_style(Color(0.88, 0.62, 0.08, 1.0), Color(1.0, 0.95, 0.65, 1.0), 2, 4)
-	style_cell_conflict = _make_box_style(Color(0.82, 0.14, 0.14, 1.0), Color(1.0, 0.65, 0.65, 1.0), 2, 4)
+	style_cell_light = _make_box_style(Color(0.22, 0.19, 0.15, 0.90), Color(0.38, 0.32, 0.24, 0.6), 1, 4)
+	style_cell_dark = _make_box_style(Color(0.15, 0.13, 0.10, 0.90), Color(0.32, 0.26, 0.20, 0.6), 1, 4)
+	style_cell_hover = _make_box_style(Color(0.28, 0.23, 0.17, 0.95), Color(0.58, 0.48, 0.34, 0.75), 1, 4)
+	style_cell_safe = _make_box_style(Color(0.52, 0.42, 0.18, 0.92), Color(0.72, 0.62, 0.36, 0.75), 1, 4)
+	style_cell_conflict = _make_box_style(Color(0.52, 0.22, 0.20, 0.92), Color(0.75, 0.38, 0.35, 0.75), 1, 4)
 
-	var btn_normal := _make_box_style(Color(0.28, 0.18, 0.08, 0.96), Color(0.98, 0.74, 0.24, 0.95), 2, 6)
-	var btn_hover := _make_box_style(Color(0.42, 0.28, 0.12, 1.0), Color(1.0, 0.88, 0.45, 1.0), 2, 6)
-	var btn_pressed := _make_box_style(Color(0.55, 0.38, 0.14, 1.0), Color(1.0, 0.96, 0.72, 1.0), 2, 6)
-	var btn_disabled := _make_box_style(Color(0.14, 0.10, 0.06, 0.85), Color(0.42, 0.32, 0.18, 0.7), 1, 6)
+	var btn_normal := _make_box_style(Color(0.20, 0.16, 0.11, 0.90), Color(0.54, 0.44, 0.30, 0.65), 1, 6)
+	var btn_hover := _make_box_style(Color(0.26, 0.21, 0.15, 0.94), Color(0.65, 0.54, 0.38, 0.75), 1, 6)
+	var btn_pressed := _make_box_style(Color(0.32, 0.25, 0.18, 0.96), Color(0.75, 0.64, 0.45, 0.85), 1, 6)
+	var btn_disabled := _make_box_style(Color(0.11, 0.09, 0.07, 0.75), Color(0.30, 0.25, 0.18, 0.45), 1, 6)
 	for btn in [btn_reset, btn_solve]:
 		if btn == null:
 			continue
@@ -88,12 +88,12 @@ func _init_gui_styles() -> void:
 		btn.add_theme_stylebox_override("hover", btn_hover)
 		btn.add_theme_stylebox_override("pressed", btn_pressed)
 		btn.add_theme_stylebox_override("disabled", btn_disabled)
-		btn.add_theme_color_override("font_color", Color(1.0, 0.96, 0.86))
-		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 0.95))
-		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.88, 0.42))
-		btn.add_theme_color_override("font_disabled_color", Color(0.58, 0.50, 0.40))
-		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
-		btn.add_theme_constant_override("outline_size", 2)
+		btn.add_theme_color_override("font_color", Color(0.89, 0.86, 0.80))
+		btn.add_theme_color_override("font_hover_color", Color(0.96, 0.94, 0.88))
+		btn.add_theme_color_override("font_pressed_color", Color(0.92, 0.84, 0.68))
+		btn.add_theme_color_override("font_disabled_color", Color(0.52, 0.48, 0.42))
+		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.65))
+		btn.add_theme_constant_override("outline_size", 1)
 
 ## World position of the centre of a board cell (relative to the BoardOrigin marker).
 func cell_position(cell: Vector2i) -> Vector3:

@@ -96,18 +96,18 @@ alignment = 1
 
 [node name="Title" type="Label" parent="UI/RootControl/HeaderPanel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.78, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
+theme_override_colors/font_color = Color(0.9, 0.82, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 22
 text = "Level 6: The Cat"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="UI/RootControl/HeaderPanel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.93, 0.95, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.65)
+theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 14
 text = "Interactive 3D Exhibit — cat.glb"
 horizontal_alignment = 1

@@ -80,11 +80,11 @@ func _ready() -> void:
 	btn_accuse.pressed.connect(_on_accuse_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
-	BackToMenuButton.attach($UI/RootControl, Color(0.76, 0.46, 0.95))
+	BackToMenuButton.attach($UI/RootControl, Color(0.48, 0.38, 0.54, 0.65))
 	_apply_storm_lighting()
 	_on_state_changed(logic.discovered_clues.duplicate(), logic.selected_clue, logic.selected_suspect)
 
-func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 6) -> StyleBoxFlat:
+func _make_box_style(bg: Color, border: Color, border_w: int = 1, radius: int = 5) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
@@ -93,8 +93,8 @@ func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 
 	return sb
 
 func _init_gui_styles() -> void:
-	# Level 5 Color Scheme: Victorian Gothic Noir, Moonlight Amethyst & Blood-Crimson
-	var panel_sb := _make_box_style(Color(0.11, 0.06, 0.16, 0.95), Color(0.76, 0.46, 0.95, 0.95), 2, 8)
+	# Level 5 Color Scheme: Subtle Dusk-Plum & Muted Pewter
+	var panel_sb := _make_box_style(Color(0.10, 0.08, 0.13, 0.88), Color(0.42, 0.35, 0.50, 0.55), 1, 8)
 	panel_sb.content_margin_left = 14.0
 	panel_sb.content_margin_right = 14.0
 	panel_sb.content_margin_top = 8.0
@@ -102,26 +102,26 @@ func _init_gui_styles() -> void:
 	for p in [$UI/RootControl/HeaderPanel, $UI/RootControl/CluePanel, $UI/RootControl/SidePanel, banner]:
 		if p != null:
 			p.add_theme_stylebox_override("panel", panel_sb)
-	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
-	banner_label.add_theme_constant_override("outline_size", 3)
+	banner_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+	banner_label.add_theme_constant_override("outline_size", 2)
 
-	style_clue_unread = _make_box_style(Color(0.18, 0.12, 0.28, 0.96), Color(0.55, 0.40, 0.78, 0.9), 1, 5)
-	style_clue_read = _make_box_style(Color(0.32, 0.22, 0.10, 0.96), Color(0.92, 0.74, 0.28, 0.95), 2, 5)
-	style_clue_active = _make_box_style(Color(0.48, 0.34, 0.12, 1.0), Color(1.0, 0.92, 0.50, 1.0), 2, 5)
-	style_suspect_idle = _make_box_style(Color(0.18, 0.11, 0.24, 0.96), Color(0.62, 0.42, 0.82, 0.9), 1, 5)
-	style_suspect_selected = _make_box_style(Color(0.46, 0.12, 0.20, 1.0), Color(1.0, 0.82, 0.35, 1.0), 2, 5)
+	style_clue_unread = _make_box_style(Color(0.15, 0.13, 0.20, 0.90), Color(0.36, 0.30, 0.46, 0.65), 1, 5)
+	style_clue_read = _make_box_style(Color(0.24, 0.20, 0.14, 0.92), Color(0.56, 0.48, 0.32, 0.70), 1, 5)
+	style_clue_active = _make_box_style(Color(0.32, 0.26, 0.16, 0.95), Color(0.68, 0.58, 0.38, 0.80), 1, 5)
+	style_suspect_idle = _make_box_style(Color(0.15, 0.12, 0.19, 0.90), Color(0.40, 0.32, 0.48, 0.65), 1, 5)
+	style_suspect_selected = _make_box_style(Color(0.34, 0.16, 0.20, 0.94), Color(0.68, 0.54, 0.36, 0.80), 1, 5)
 
-	var accuse_normal := _make_box_style(Color(0.44, 0.08, 0.16, 0.98), Color(0.95, 0.42, 0.52, 0.95), 2, 6)
-	var accuse_hover := _make_box_style(Color(0.58, 0.12, 0.22, 1.0), Color(1.0, 0.72, 0.78, 1.0), 2, 6)
-	var accuse_disabled := _make_box_style(Color(0.16, 0.09, 0.15, 0.85), Color(0.38, 0.24, 0.36, 0.7), 1, 6)
+	var accuse_normal := _make_box_style(Color(0.30, 0.12, 0.16, 0.92), Color(0.58, 0.32, 0.38, 0.70), 1, 6)
+	var accuse_hover := _make_box_style(Color(0.38, 0.16, 0.21, 0.96), Color(0.70, 0.42, 0.48, 0.80), 1, 6)
+	var accuse_disabled := _make_box_style(Color(0.13, 0.09, 0.13, 0.75), Color(0.30, 0.22, 0.28, 0.45), 1, 6)
 	btn_accuse.add_theme_stylebox_override("normal", accuse_normal)
 	btn_accuse.add_theme_stylebox_override("hover", accuse_hover)
 	btn_accuse.add_theme_stylebox_override("pressed", accuse_hover)
 	btn_accuse.add_theme_stylebox_override("disabled", accuse_disabled)
 
-	var util_normal := _make_box_style(Color(0.22, 0.12, 0.34, 0.96), Color(0.76, 0.48, 0.95, 0.95), 2, 6)
-	var util_hover := _make_box_style(Color(0.32, 0.18, 0.48, 1.0), Color(0.92, 0.75, 1.0, 1.0), 2, 6)
-	var util_disabled := _make_box_style(Color(0.12, 0.08, 0.18, 0.85), Color(0.35, 0.26, 0.45, 0.7), 1, 6)
+	var util_normal := _make_box_style(Color(0.17, 0.13, 0.22, 0.90), Color(0.46, 0.36, 0.56, 0.65), 1, 6)
+	var util_hover := _make_box_style(Color(0.22, 0.17, 0.28, 0.94), Color(0.58, 0.46, 0.68, 0.75), 1, 6)
+	var util_disabled := _make_box_style(Color(0.11, 0.09, 0.14, 0.75), Color(0.28, 0.23, 0.34, 0.45), 1, 6)
 	for btn in [btn_reset, btn_solve]:
 		if btn == null:
 			continue
@@ -133,11 +133,11 @@ func _init_gui_styles() -> void:
 	for btn in [btn_accuse, btn_reset, btn_solve]:
 		if btn == null:
 			continue
-		btn.add_theme_color_override("font_color", Color(0.98, 0.94, 1.0))
-		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
-		btn.add_theme_color_override("font_disabled_color", Color(0.56, 0.48, 0.64))
-		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
-		btn.add_theme_constant_override("outline_size", 2)
+		btn.add_theme_color_override("font_color", Color(0.88, 0.86, 0.91))
+		btn.add_theme_color_override("font_hover_color", Color(0.95, 0.94, 0.97))
+		btn.add_theme_color_override("font_disabled_color", Color(0.50, 0.46, 0.54))
+		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.65))
+		btn.add_theme_constant_override("outline_size", 1)
 
 func clue_position(index: int) -> Vector3:
 	return clues_origin.global_position + CLUE_OFFSETS[index]

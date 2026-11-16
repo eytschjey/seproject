@@ -56,11 +56,11 @@ func _ready() -> void:
 	btn_undo.pressed.connect(_on_undo_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
-	BackToMenuButton.attach($UI/RootControl, Color(0.35, 0.82, 1.0))
+	BackToMenuButton.attach($UI/RootControl, Color(0.38, 0.50, 0.60, 0.65))
 	_build_knight()
 	_on_state_changed(logic.current, logic.path.duplicate())
 
-func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 4) -> StyleBoxFlat:
+func _make_box_style(bg: Color, border: Color, border_w: int = 1, radius: int = 4) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
@@ -69,17 +69,17 @@ func _make_box_style(bg: Color, border: Color, border_w: int = 2, radius: int = 
 	return sb
 
 func _init_gui_styles() -> void:
-	style_cell_idle = _make_box_style(Color(0.10, 0.14, 0.22, 0.95), Color(0.28, 0.38, 0.52, 0.9), 1, 4)
-	style_cell_visited = _make_box_style(Color(0.10, 0.25, 0.36, 0.96), Color(0.32, 0.68, 0.88, 0.95), 1, 4)
-	style_cell_current = _make_box_style(Color(0.88, 0.65, 0.08, 1.0), Color(1.0, 0.96, 0.65, 1.0), 2, 4)
-	style_cell_valid = _make_box_style(Color(0.06, 0.48, 0.88, 1.0), Color(0.55, 0.92, 1.0, 1.0), 2, 4)
-	style_cell_valid_hover = _make_box_style(Color(0.16, 0.62, 1.0, 1.0), Color(0.85, 0.98, 1.0, 1.0), 2, 4)
+	style_cell_idle = _make_box_style(Color(0.11, 0.13, 0.17, 0.90), Color(0.24, 0.29, 0.36, 0.65), 1, 4)
+	style_cell_visited = _make_box_style(Color(0.13, 0.20, 0.26, 0.92), Color(0.28, 0.42, 0.52, 0.70), 1, 4)
+	style_cell_current = _make_box_style(Color(0.55, 0.44, 0.18, 0.95), Color(0.78, 0.68, 0.38, 0.85), 1, 4)
+	style_cell_valid = _make_box_style(Color(0.18, 0.34, 0.48, 0.94), Color(0.42, 0.62, 0.76, 0.80), 1, 4)
+	style_cell_valid_hover = _make_box_style(Color(0.24, 0.42, 0.58, 0.96), Color(0.56, 0.74, 0.86, 0.90), 1, 4)
 
 func _style_action_buttons() -> void:
-	var normal := _make_box_style(Color(0.12, 0.22, 0.36, 0.96), Color(0.4, 0.82, 1.0, 0.95), 2, 6)
-	var hover := _make_box_style(Color(0.18, 0.34, 0.54, 1.0), Color(0.65, 0.94, 1.0, 1.0), 2, 6)
-	var pressed := _make_box_style(Color(0.08, 0.45, 0.78, 1.0), Color(0.85, 0.98, 1.0, 1.0), 2, 6)
-	var disabled := _make_box_style(Color(0.09, 0.12, 0.18, 0.88), Color(0.24, 0.3, 0.4, 0.7), 1, 6)
+	var normal := _make_box_style(Color(0.13, 0.18, 0.24, 0.90), Color(0.36, 0.48, 0.58, 0.65), 1, 6)
+	var hover := _make_box_style(Color(0.18, 0.24, 0.32, 0.94), Color(0.46, 0.60, 0.72, 0.75), 1, 6)
+	var pressed := _make_box_style(Color(0.22, 0.30, 0.40, 0.96), Color(0.56, 0.70, 0.82, 0.85), 1, 6)
+	var disabled := _make_box_style(Color(0.09, 0.11, 0.15, 0.75), Color(0.22, 0.26, 0.32, 0.45), 1, 6)
 	for btn in [btn_undo, btn_reset, btn_solve]:
 		if btn == null:
 			continue
@@ -87,12 +87,12 @@ func _style_action_buttons() -> void:
 		btn.add_theme_stylebox_override("hover", hover)
 		btn.add_theme_stylebox_override("pressed", pressed)
 		btn.add_theme_stylebox_override("disabled", disabled)
-		btn.add_theme_color_override("font_color", Color(0.95, 0.98, 1.0))
-		btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
-		btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.95, 0.7))
-		btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.64, 0.75))
-		btn.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.9))
-		btn.add_theme_constant_override("outline_size", 2)
+		btn.add_theme_color_override("font_color", Color(0.86, 0.89, 0.92))
+		btn.add_theme_color_override("font_hover_color", Color(0.94, 0.96, 0.98))
+		btn.add_theme_color_override("font_pressed_color", Color(0.88, 0.84, 0.72))
+		btn.add_theme_color_override("font_disabled_color", Color(0.48, 0.53, 0.58))
+		btn.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.65))
+		btn.add_theme_constant_override("outline_size", 1)
 
 ## World position of the centre of a board cell (relative to the BoardOrigin marker).
 func cell_position(cell: Vector2i) -> Vector3:
