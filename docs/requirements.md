@@ -147,6 +147,6 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 | **FR-03** (Level 2) | `scripts/logic/NinePortalsLogic.gd`, `scenes/levels/Level02_NinePortals.tscn`, `scripts/levels/Level02Controller.gd` | `tests/TestNinePortals.gd` (30), `tests/TestLevel02Scene.gd` (21) | Implementiert |
 | **FR-04** (Level 3) | `scripts/logic/QueensLogic.gd`, `scenes/levels/Level03_SunCourtyard.tscn`, `scripts/levels/Level03Controller.gd` | `tests/TestQueens.gd` (29), `tests/TestLevel03Scene.gd` (15) | Implementiert |
 | **FR-05** (Level 4) | `scripts/logic/KnightsTourLogic.gd`, `scenes/levels/Level04_KnightsChasm.tscn`, `scripts/levels/Level04Controller.gd` | `tests/TestKnightsTour.gd` (26), `tests/TestLevel04Scene.gd` (18) | Implementiert |
-| **FR-06** (Level 5) | `scripts/logic/DreadburyLogic.gd`, `scenes/levels/Level05_DreadburyManor.tscn`, `scripts/levels/Level05Controller.gd` | `tests/TestDreadbury.gd` (62), `tests/TestLevel05Scene.gd` (20) | Implementiert |
+| **FR-06** (Level 5) | `scripts/logic/DreadburyLogic.gd`, `scenes/levels/Level05_DreadburyManor.tscn`, `scripts/levels/Level05Controller.gd` | `tests/TestDreadbury.gd` (62), `tests/TestLevel05Scene.gd` (22) | Implementiert |
 | **FR-07** (Level 6) | `scenes/props/Cat.tscn`, `scenes/levels/Level06_Cat.tscn`, `scripts/levels/Level06Controller.gd` | `tests/TestLevel06Scene.gd` (17) | Implementiert |
 | **FR-08** (Backlog) | `story/level_progression.md`, `HANDOVER.md` | Geplant | Geplant |

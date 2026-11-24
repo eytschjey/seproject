@@ -16,6 +16,11 @@ func _init() -> void:
 	check(s.clue_buttons.size() == 8 and s.clue_nodes.size() == 8, "8 clue buttons and 8 3D clue nodes created")
 	check(s.suspect_buttons.size() == 3 and s.bust_nodes.size() == 3, "3 suspect buttons and 3 3D busts created")
 	check(s.btn_accuse.disabled, "Accuse button disabled before selecting a suspect")
+	var start_status: String = s.status_label.text.to_lower()
+	check(
+		not start_status.contains("servant") and not start_status.contains("heir") and not start_status.contains("tragic") and not start_status.contains("butler") and not start_status.contains("charles"),
+		"Initial status display does not leak the active case outcome"
+	)
 
 	# Inspect Clue 1
 	var initial_case: int = s.logic.active_case
@@ -42,6 +47,11 @@ func _init() -> void:
 	await process_frame
 	check(not s.logic.is_failed and not s.banner.visible and s.logic.discovered_count() == 0, "Reset clears failure and clue progress")
 	check(s.logic.active_case != initial_case, "Reset rotates to a different Dreadbury Manor outcome")
+	var reset_status: String = s.status_label.text.to_lower()
+	check(
+		not reset_status.contains("servant") and not reset_status.contains("heir") and not reset_status.contains("tragic") and not reset_status.contains("butler") and not reset_status.contains("charles"),
+		"Post-reset status display does not leak the active case outcome"
+	)
 
 	# Test Auto-Solver (pause and resume) on the new outcome
 	var target_killer: int = s.logic.solve_killer()

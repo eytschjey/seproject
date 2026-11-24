@@ -171,7 +171,7 @@ Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Fun
 - **Zugehörige Anforderungen:** `FR-06.1`, `FR-06.2`
 - **Status:** Implementiert
 - **Akzeptanzkriterien:**
-  - **Gegeben**, ich starte Level 5 oder drücke `Reset`, **Wenn** der Fall geladen wird, **Dann** wird einer von 3 logisch eindeutigen Fällen (`The Tragic Secret`, `The Servant's Grudge`, `The Heir's Vendetta`) mit passenden Hinweisen aktiviert (bei `Reset` stets ein anderer Fall als zuvor).
+  - **Gegeben**, ich starte Level 5 oder drücke `Reset`, **Wenn** der Fall geladen wird, **Dann** wird einer von 3 logisch eindeutigen Fällen mit passenden Hinweisen aktiviert (bei `Reset` stets ein anderer Fall als zuvor), wobei die Statusanzeige neutral bleibt und keinen Hinweis auf den Täter verrät.
   - **Gegeben**, ich klicke eine Hinweis-Schaltfläche (`1..8`) an, **Wenn** der Hinweis untersucht wird, **Dann** zeigt `CluePanel` Titel, Fundort, Text und formale FOL-Formel des aktiven Falls, die Schaltfläche erhält ein `✓`, die 3D-Schriftrolle wechselt ihre Farbe und `Clues Examined: N / 8` wird aktualisiert.
 
 ### US-19: Verdächtigen am Altar anklagen und bei Fehlern den Widerspruch sehen

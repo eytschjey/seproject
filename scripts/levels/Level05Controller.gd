@@ -82,7 +82,7 @@ func _ready() -> void:
 	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.48, 0.38, 0.54, 0.65))
 	_apply_storm_lighting()
-	status_label.text = "Case: %s — Examine the 8 clues and place the Dagger of Truth on the killer's bust." % logic.get_case_title()
+	status_label.text = "Someone in Dreadbury Mansion killed Aunt Agatha. Examine the 8 clues and place the Dagger of Truth on the killer's bust."
 	_on_state_changed(logic.discovered_clues.duplicate(), logic.selected_clue, logic.selected_suspect)
 
 func _make_box_style(bg: Color, border: Color, border_w: int = 1, radius: int = 5) -> StyleBoxFlat:
@@ -295,7 +295,7 @@ func _on_reset_pressed() -> void:
 	suicide_note.visible = false
 	_apply_storm_lighting()
 	clue_label.text = "Select a clue to inspect the evidence."
-	status_label.text = "New Case: %s — Examine the clues and identify who killed Aunt Agatha." % logic.get_case_title()
+	status_label.text = "A new mystery unfolds at Dreadbury Manor. Examine the 8 clues and deduce who killed Aunt Agatha."
 
 func _on_solve_pressed() -> void:
 	if is_auto_solving:

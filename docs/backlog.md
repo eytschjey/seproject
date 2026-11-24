@@ -97,7 +97,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-04** | Level 2 (*Hall of Nine Portals*) mit Randomisierung, 3D-Türklicks & Auto-Solver | `TestNinePortals.gd` (30), `TestLevel02Scene.gd` (21) |
 | **DONE-05** | Level 3 (*8-Queens*) mit Konfliktstrahlen & Vervollständigungs-Auto-Solver | `TestQueens.gd` (29), `TestLevel03Scene.gd` (15) |
 | **DONE-06** | Level 4 (*Knight's Tour*) mit versinkenden Kacheln, Undo & Warnsdorff-Auto-Solver | `TestKnightsTour.gd` (26), `TestLevel04Scene.gd` (18) |
-| **DONE-07** | Level 5 (*Dreadbury Manor*) mit FOL-Modellprüfer, 3 randomisierten Ausgängen (Agatha/Butler/Charles), 8 dynamischen Hinweisen & Auto-Solver | `TestDreadbury.gd` (62), `TestLevel05Scene.gd` (20) |
+| **DONE-07** | Level 5 (*Dreadbury Manor*) mit FOL-Modellprüfer, 3 randomisierten Ausgängen (Agatha/Butler/Charles), spoilerfreier Fallanzeige, 8 dynamischen Hinweisen & Auto-Solver | `TestDreadbury.gd` (62), `TestLevel05Scene.gd` (22) |
 | **DONE-08** | Level 6 (*The Cat Sanctuary*) als `.glb`-Prefab-Showcase mit Animation & Picking | `TestLevel06Scene.gd` (17) |
 | **DONE-09** | Überlappungsfreies HUD-Layout, dezente Farbschemata pro Szene & SRS/User-Stories | Alle 6 Szenen validiert, `docs/requirements.md`, `docs/user_stories.md` |
 

@@ -29,6 +29,12 @@ const SUSPECT_NAMES: Array[String] = [
 ]
 
 const CASE_TITLES: Array[String] = [
+	"The Night at Dreadbury Manor",
+	"The Night at Dreadbury Manor",
+	"The Night at Dreadbury Manor",
+]
+
+const VICTORY_TITLES: Array[String] = [
 	"The Tragic Secret",
 	"The Servant's Grudge",
 	"The Heir's Vendetta",
@@ -332,19 +338,19 @@ static func victory_message_for(case_id: int) -> String:
 	match case_id:
 		Case.AGATHA:
 			return (
-				"MYSTERY SOLVED! (%s)\n" % CASE_TITLES[Case.AGATHA]
+				"MYSTERY SOLVED! (%s)\n" % VICTORY_TITLES[Case.AGATHA]
 				+ "Aunt Agatha killed herself! Placing the Dagger of Truth on Agatha's bust\n"
 				+ "reveals her hidden suicide note. The storm clears and the manor doors swing open!"
 			)
 		Case.BUTLER:
 			return (
-				"MYSTERY SOLVED! (%s)\n" % CASE_TITLES[Case.BUTLER]
+				"MYSTERY SOLVED! (%s)\n" % VICTORY_TITLES[Case.BUTLER]
 				+ "The Butler poisoned Aunt Agatha! Placing the Dagger of Truth on the Butler's bust\n"
 				+ "reveals his hidden confession & poison ledger. Dawn breaks as the curse lifts!"
 			)
 		Case.CHARLES:
 			return (
-				"MYSTERY SOLVED! (%s)\n" % CASE_TITLES[Case.CHARLES]
+				"MYSTERY SOLVED! (%s)\n" % VICTORY_TITLES[Case.CHARLES]
 				+ "Charles murdered Aunt Agatha! Placing the Dagger of Truth on Charles's bust\n"
 				+ "reveals his forged will and vendetta letter. Morning sunlight floods Dreadbury Manor!"
 			)
