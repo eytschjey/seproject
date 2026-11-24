@@ -87,9 +87,10 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
 
 ```text
 seproject/
-├── docs/                        # Software engineering requirements & user stories
+├── docs/                        # Software engineering requirements, user stories & backlog
 │   ├── requirements.md          # Functional & non-functional requirements (SRS)
-│   └── user_stories.md          # Agile user stories & acceptance criteria
+│   ├── user_stories.md          # Agile user stories & acceptance criteria
+│   └── backlog.md               # Prioritized product backlog & sprint roadmap
 ├── story/                       # Design documents & mathematical riddle definitions
 │   ├── logic.pdf                # Source textbook by Prof. Dr. Karl Stroetmann
 │   ├── logical_riddles.md       # Extracted catalog of all 21 riddles with formal logic

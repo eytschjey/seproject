@@ -11,7 +11,7 @@
 1. **Riddle Research, Requirements & Game Design:**
    * All 21 logic riddles from Prof. Dr. Karl Stroetmann's textbook extracted and formalized in [`story/logical_riddles.md`](story/logical_riddles.md).
    * Level progression roadmap and mechanics mapped in [`story/level_progression.md`](story/level_progression.md).
-   * Functional/non-functional requirements specification and traceability matrix documented in [`docs/requirements.md`](docs/requirements.md); agile user stories and Given/When/Then acceptance criteria documented in [`docs/user_stories.md`](docs/user_stories.md).
+   * Functional/non-functional requirements specification and traceability matrix documented in [`docs/requirements.md`](docs/requirements.md); agile user stories and Given/When/Then acceptance criteria documented in [`docs/user_stories.md`](docs/user_stories.md); prioritized product backlog and sprint roadmap documented in [`docs/backlog.md`](docs/backlog.md).
 2. **Godot Configuration:**
    * Renderer: `Forward Plus` (Vulkan).
    * 3D Physics: `Jolt Physics` enabled.

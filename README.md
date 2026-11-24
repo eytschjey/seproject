@@ -7,7 +7,7 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 ## 🚦 Current Project Status
 
 - [x] **Project Foundation:** Godot 4 configured with Forward+ rendering, Jolt 3D Physics, and standard input map bindings (WASD, Space, Interact, Reset, Journal).
-- [x] **Design & Source Extraction:** All 21 logic riddles extracted from course notes ([`story/logical_riddles.md`](story/logical_riddles.md)), full progression mapped ([`story/level_progression.md`](story/level_progression.md)), and formal requirements & agile user stories defined ([`docs/requirements.md`](docs/requirements.md), [`docs/user_stories.md`](docs/user_stories.md)).
+- [x] **Design & Source Extraction:** All 21 logic riddles extracted from course notes ([`story/logical_riddles.md`](story/logical_riddles.md)), full progression mapped ([`story/level_progression.md`](story/level_progression.md)), and formal requirements, agile user stories, and prioritized product backlog defined ([`docs/requirements.md`](docs/requirements.md), [`docs/user_stories.md`](docs/user_stories.md), [`docs/backlog.md`](docs/backlog.md)).
 - [x] **Level 1 Logic Engine:** Headless state machine ([`scripts/logic/RiverCrossingLogic.gd`](scripts/logic/RiverCrossingLogic.gd)) verifying state constraints, transitions, and BFS pathfinding solver (46 automated assertions passing).
 - [x] **Level 1 3D Prototype:** Functional 3D greybox scene ([`scenes/levels/Level01_Tutorial.tscn`](scenes/levels/Level01_Tutorial.tscn)) with one-click 3D object interaction (clicking Wolf, Goat, Cabbage, or Raft directly to load, swap, unload, or row with hover scale & cursor feedback), subtle Moss & Slate HUD theme, Auto-Solve debug button, dynamic lighting, smooth item hops, and raft movement tweening.
 - [x] **Integration Testing:** Headless UI test ([`tests/TestLevel01Scene.gd`](tests/TestLevel01Scene.gd)) simulating complete 7-step solution sequence via direct 3D object clicks and automated solver execution.
@@ -47,9 +47,10 @@ Full game design specifications and exact riddle texts are located in [`story/le
 
 ```text
 seproject/
-├── docs/                          # Software engineering specifications
+├── docs/                          # Software engineering specifications (German)
 │   ├── requirements.md            # Functional & non-functional requirements (SRS) + traceability
-│   └── user_stories.md            # Agile user stories & Given/When/Then acceptance criteria
+│   ├── user_stories.md            # Agile user stories & Given/When/Then acceptance criteria
+│   └── backlog.md                 # Prioritized product backlog, story points & sprint roadmap
 │
 ├── story/                         # Game narrative, design docs & logic source material
 │   ├── logic.pdf                  # "Theoretical Computer Science: Logic & Puzzles" (K. Stroetmann)
