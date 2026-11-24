@@ -1,252 +1,252 @@
-# User Stories & Acceptance Criteria — SEProject
+# User Stories & Akzeptanzkriterien — SEProject
 
-**Project:** SEProject — A 3D Logic Puzzle Adventure  
-**Last Updated:** November 24, 2026
+**Projekt:** SEProject — Ein 3D-Logikrätsel-Abenteuer  
+**Zuletzt aktualisiert:** 24. November 2026
 
-Each user story follows the agile format (**As a** `<role>`, **I want** `<capability>`, **so that** `<benefit>`) with testable **Given / When / Then** acceptance criteria and traceability to [`docs/requirements.md`](requirements.md).
-
----
-
-## Epic 1: Navigation, Menu & Core HUD
-
-### US-01: Select and Launch a Level from the Main Menu
-- **Story:** As a **Player**, I want to see all available levels on the startup Main Menu and click any unlocked level, so that I can jump directly into the puzzle I want to play.
-- **Related Requirements:** `FR-01.1`, `FR-01.4`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** the game launches, **When** `MainMenu.tscn` loads, **Then** Levels 1–6 are listed as enabled buttons alongside a `Quit` button.
-  - **Given** I am on the Main Menu, **When** I click a level button, **Then** the corresponding 3D level scene loads immediately.
-  - **Given** I am on the Main Menu, **When** I click `Quit`, **Then** the application exits cleanly.
-
-### US-02: Return to the Main Menu from Any Level
-- **Story:** As a **Player**, I want a visible `< Menu` button in every level, so that I can switch puzzles or exit at any time without restarting the game.
-- **Related Requirements:** `FR-01.2`, `NFR-03`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I am inside any level (Levels 1–6), **When** I look at the top-left corner, **Then** a `< Menu` button is visible at `(16, 16)` without overlapping the header panel.
-  - **Given** I click `< Menu`, **When** the action completes, **Then** the game returns to `MainMenu.tscn`.
-
-### US-03: Seamless Progression Between Levels
-- **Story:** As a **Player**, I want the game to celebrate my victory and automatically advance me to the next chamber after solving a puzzle, so that the adventure feels continuous.
-- **Related Requirements:** `FR-01.3`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I solve Level 1, 2, 3, 4, or 5, **When** the victory condition is met, **Then** a victory banner appears announcing the next chamber and automatically loads the next level after 3–4 seconds.
-
-### US-04: Readable, Non-Overlapping, Subtle HUD
-- **Story:** As a **Player**, I want each level's HUD to have subtle, atmospheric colors that stay legible without overlapping status labels or 3D scene labels, so that I can focus on solving the riddle.
-- **Related Requirements:** `NFR-03`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I play any level at standard aspect ratio (`1152×648` with `expand`), **When** the HUD renders, **Then** `SidePanel` never overlaps `HeaderPanel` or `StatusLabel`, `BackToMenuButton` never overlaps `HeaderPanel`, and notification banners do not obscure 3D `Label3D` plaques.
-  - **Given** I move between levels, **When** each scene loads, **Then** each level displays its own subtle, muted thematic color scheme with clear text contrast.
+Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Funktion>`, **damit** `<Nutzen>`) mit testbaren **Gegeben / Wenn / Dann**-Akzeptanzkriterien sowie Verweisen auf [`docs/requirements.md`](requirements.md).
 
 ---
 
-## Epic 2: Level 1 — The Ferryman's Crossing (*Wolf, Goat & Cabbage*)
+## Epic 1: Navigation, Menü & Basis-HUD
 
-### US-05: Load, Swap, and Unload Passengers with One 3D Click
-- **Story:** As a **Player**, I want to click directly on the 3D Wolf, Goat, or Cabbage to load, swap, or unload them onto the raft, so that interacting with the puzzle feels tactile and intuitive.
-- **Related Requirements:** `FR-02.1`, `FR-02.3`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** the raft is on the same shore as an item, **When** I click that 3D item once, **Then** it hops onto the raft (and if another item is already on the raft, the previous item automatically hops back onto the shore).
-  - **Given** an item is currently on the raft, **When** I click that 3D item once, **Then** it unloads back onto the current shore without rowing the raft.
-  - **Given** I hover over a clickable 3D item or the raft, **When** the pointer enters its hitbox, **Then** the cursor changes to a pointing hand and the object subtly scales up.
+### US-01: Level im Hauptmenü auswählen und starten
+- **Story:** Als **Spieler** möchte ich im Start-Hauptmenü alle verfügbaren Level sehen und jedes freigeschaltete Level anklicken können, damit ich direkt in das gewünschte Rätsel einsteigen kann.
+- **Zugehörige Anforderungen:** `FR-01.1`, `FR-01.4`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, das Spiel startet, **Wenn** `MainMenu.tscn` geladen ist, **Dann** werden Level 1–6 als aktive Schaltflächen zusammen mit einer `Quit`-Schaltfläche angezeigt.
+  - **Gegeben**, ich befinde mich im Hauptmenü, **Wenn** ich auf eine Level-Schaltfläche klicke, **Dann** wird die zugehörige 3D-Levelszene sofort geladen.
+  - **Gegeben**, ich befinde mich im Hauptmenü, **Wenn** ich auf `Quit` klicke, **Dann** wird die Anwendung sauber beendet.
 
-### US-06: Row the Raft and Receive Clear Hazard Feedback
-- **Story:** As a **Player**, I want to row the raft across the river by clicking the raft or the `Row Raft` button and be warned if I leave conflicting animals/items unsupervised, so that I understand the puzzle constraints.
-- **Related Requirements:** `FR-02.2`, `FR-02.3`, `FR-02.4`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** the raft is on a shore, **When** I click the raft or press `Row Raft`, **Then** the raft smoothly tweens to the opposite shore carrying any loaded passenger.
-  - **Given** I row away leaving Wolf+Goat or Goat+Cabbage alone on a shore, **When** the crossing is evaluated, **Then** a failure banner explains what was eaten and prompts me to press `Reset`.
-  - **Given** all three items reach the East shore safely, **When** the final item is unloaded, **Then** the puzzle is marked solved and transitions to Level 2.
+### US-02: Aus jedem Level ins Hauptmenü zurückkehren
+- **Story:** Als **Spieler** möchte ich in jedem Level eine sichtbare Schaltfläche `< Menu` haben, damit ich jederzeit das Rätsel wechseln oder das Spiel verlassen kann, ohne es neu zu starten.
+- **Zugehörige Anforderungen:** `FR-01.2`, `NFR-03`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich befinde mich in einem beliebigen Level (Level 1–6), **Wenn** ich in die obere linke Ecke schaue, **Dann** ist eine Schaltfläche `< Menu` bei `(16, 16)` sichtbar, ohne das Header-Panel zu überlappen.
+  - **Gegeben**, ich klicke auf `< Menu`, **Wenn** die Aktion ausgeführt wird, **Dann** kehrt das Spiel zu `MainMenu.tscn` zurück.
 
-### US-07: Reset or Watch the BFS Auto-Solver in Level 1
-- **Story:** As a **Player or Evaluator**, I want to reset Level 1 or toggle an automated BFS solver, so that I can retry after a mistake or verify the optimal 7-crossing solution.
-- **Related Requirements:** `FR-02.4`, `FR-02.5`, `NFR-04`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** any board state (including failure), **When** I press `Reset`, **Then** all items and the raft return to the West shore and controls are re-enabled.
-  - **Given** I press `Auto-Solve (Debug)`, **When** the solver runs, **Then** it executes optimal load/cross/unload steps automatically, and clicking `Stop Solver` or any 3D object pauses it immediately.
+### US-03: Nahtloser Fortschritt zwischen den Leveln
+- **Story:** Als **Spieler** möchte ich nach dem Lösen eines Rätsels eine Siegesmeldung sehen und automatisch in die nächste Kammer weitergeleitet werden, damit sich das Abenteuer zusammenhängend anfühlt.
+- **Zugehörige Anforderungen:** `FR-01.3`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich löse Level 1, 2, 3, 4 oder 5, **Wenn** die Siegbedingung erfüllt ist, **Dann** erscheint ein Siegesbanner mit Hinweis auf die nächste Kammer und lädt nach 3–4 Sekunden automatisch das nächste Level.
 
----
-
-## Epic 3: Level 2 — The Hall of Nine Portals (*Princess & Tiger*)
-
-### US-08: Inspect Door Inscriptions by Clicking 3D Doors
-- **Story:** As a **Player**, I want to click any of the 9 doors directly in the 3D hall to read its etched plaque, so that I can gather the logical statements needed to deduce the Princess's room.
-- **Related Requirements:** `FR-03.1`, `FR-03.3`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I am in the Hall of Nine Portals, **When** I click a 3D door, **Then** its plaque inscription is displayed in `PlaquePanel`, the selected door's plaque and frame glow gold, and `Open Door N` becomes enabled.
-  - **Given** I click a different door, **When** the selection changes, **Then** the previously inspected door's plaque remains subtly highlighted in warm amber so I know I already read it.
-
-### US-09: Replay with Randomized Room Layouts
-- **Story:** As a **Player**, I want the Princess, Tigers, and Empty rooms to be randomized on start and reset with matching remapped inscriptions, so that I cannot simply memorize a single fixed door number.
-- **Related Requirements:** `FR-03.2`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I start or reset Level 2, **When** the hall initializes, **Then** the room contents are permuted, all 9 inscriptions are dynamically remapped to reference the new room numbers, and exactly one room is logically deducible as the Princess's room.
-
-### US-10: Open a Selected Door and Experience the Outcome
-- **Story:** As a **Player**, I want to open my chosen door and see the 3D door swing open to reveal a Princess, a Tiger, or an Empty vault, so that my deduction has dramatic physical feedback.
-- **Related Requirements:** `FR-03.4`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I select a door and press `Open Door N`, **When** it contains a Tiger, **Then** the door swings open to reveal the tiger, red light illuminates the alcove, and a failure banner instructs me to press `Reset`.
-  - **Given** I open an Empty room, **When** the door swings open, **Then** dust/empty vault props appear and I can continue inspecting and opening remaining doors.
-  - **Given** I open the Princess's door, **When** the door swings open, **Then** the Princess glows gold and the victory banner triggers progression to Level 3.
-
-### US-11: Run the Deductive Auto-Solver in Level 2
-- **Story:** As an **Evaluator**, I want an `Auto-Solve (Debug)` button in Level 2, so that I can verify that the randomized layout is always solvable and watch the solver open the correct door.
-- **Related Requirements:** `FR-03.5`, `NFR-04`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I press `Auto-Solve (Debug)`, **When** the solver runs, **Then** it steps through uninspected plaques, deduces the unique Princess room, and opens that door to solve the level.
+### US-04: Gut lesbares, überlappungsfreies und dezentes HUD
+- **Story:** Als **Spieler** möchte ich, dass das HUD jedes Levels dezente, atmosphärische Farben verwendet und weder Statustexte noch 3D-Beschriftungen überlappt, damit ich mich ganz auf das Rätsel konzentrieren kann.
+- **Zugehörige Anforderungen:** `NFR-03`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich spiele ein beliebiges Level in Standardauflösung (`1152×648` mit `expand`), **Wenn** das HUD gerendert wird, **Dann** überlappt `SidePanel` niemals `HeaderPanel` oder `StatusLabel`, `BackToMenuButton` überlappt niemals `HeaderPanel`, und Banner verdecken keine 3D-`Label3D`-Tafeln.
+  - **Gegeben**, ich wechsle zwischen Leveln, **Wenn** eine Szene geladen wird, **Dann** zeigt jedes Level sein eigenes dezentes, thematisches Farbschema mit klarem Textkontrast.
 
 ---
 
-## Epic 4: Level 3 — The Sun Courtyard (*The 8-Queens Problem*)
+## Epic 2: Level 1 — The Ferryman's Crossing (*Wolf, Ziege & Kohlkopf*)
 
-### US-12: Place and Remove Queen Statues on the 8x8 Courtyard
-- **Story:** As a **Player**, I want to toggle Queen statues on an 8x8 grid and see them drop onto the 3D marble board, so that I can experiment with non-attacking configurations.
-- **Related Requirements:** `FR-04.1`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** fewer than 8 queens are placed, **When** I click an empty cell on the 8x8 grid, **Then** a 3D Queen statue spawns on the corresponding marble tile and the counter increments (`Queens: N / 8`).
-  - **Given** a cell already holds a queen, **When** I click it again, **Then** the statue is removed and the counter decrements.
+### US-05: Passagiere mit einem 3D-Klick laden, tauschen und abladen
+- **Story:** Als **Spieler** möchte ich direkt auf Wolf, Ziege oder Kohlkopf in 3D klicken können, um sie mit einem Klick auf das Floß zu laden, zu tauschen oder abzuladen, damit sich die Steuerung direkt und intuitiv anfühlt.
+- **Zugehörige Anforderungen:** `FR-02.1`, `FR-02.3`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, das Floß liegt am selben Ufer wie ein Objekt, **Wenn** ich dieses 3D-Objekt einmal anklicke, **Dann** springt es auf das Floß (und ein zuvor geladenes Objekt springt automatisch ans Ufer zurück).
+  - **Gegeben**, ein Objekt befindet sich bereits auf dem Floß, **Wenn** ich es einmal anklicke, **Dann** wird es ohne Überfahrt wieder am aktuellen Ufer abgeladen.
+  - **Gegeben**, ich fahre mit dem Mauszeiger über ein klickbares 3D-Objekt oder das Floß, **Wenn** der Zeiger die Hitbox betritt, **Dann** wechselt der Cursor zur Zeigehand und das Objekt skaliert leicht hoch.
 
-### US-13: See Real-Time Conflict Beams Between Attacking Queens
-- **Story:** As a **Player**, I want attacking queens to turn crimson and project laser beams between each other, so that I can immediately spot row, column, and diagonal conflicts.
-- **Related Requirements:** `FR-04.2`, `FR-04.3`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** two queens share a row, column, or diagonal, **When** placed, **Then** both statues turn crimson, a glowing crimson 3D beam links them, and their HUD cells highlight in muted terracotta-red.
-  - **Given** I remove the conflicting queen, **When** no attacks remain, **Then** the beam disappears and safe queens glow gold.
-  - **Given** 8 queens are placed with zero conflicts, **When** the 8th queen lands, **Then** all statues turn green and the victory banner transitions to Level 4.
+### US-06: Fluss überqueren und klares Gefahren-Feedback erhalten
+- **Story:** Als **Spieler** möchte ich das Floß durch Anklicken des Floßes oder der Schaltfläche `Row Raft` über den Fluss rudern und gewarnt werden, falls ich unverträgliche Passagiere allein lasse, damit ich die Rätselregeln verstehe.
+- **Zugehörige Anforderungen:** `FR-02.2`, `FR-02.3`, `FR-02.4`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, das Floß liegt an einem Ufer, **Wenn** ich auf das Floß oder auf `Row Raft` klicke, **Dann** gleitet das Floß samt eventuellem Passagier flüssig ans gegenüberliegende Ufer.
+  - **Gegeben**, ich rudere weg und lasse Wolf+Ziege oder Ziege+Kohlkopf allein zurück, **Wenn** die Überfahrt ausgewertet wird, **Dann** erklärt ein Fehlerbanner, was gefressen wurde, und fordert zum Klicken auf `Reset` auf.
+  - **Gegeben**, alle drei Objekte erreichen sicher das Ostufer, **Wenn** das letzte Objekt abgeladen wird, **Dann** gilt das Rätsel als gelöst und wechselt zu Level 2.
 
-### US-14: Complete or Solve 8-Queens Automatically
-- **Story:** As a **Player or Evaluator**, I want an `Auto-Solve (Debug)` button that completes my valid partial placement (or resets and solves from scratch if uncompletable), so that I can test the 8-Queens constraint solver.
-- **Related Requirements:** `FR-04.4`, `NFR-04`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I press `Auto-Solve (Debug)`, **When** the solver runs, **Then** it places queens step-by-step until a valid 8-queen solution is reached; pressing `Stop Solver` pauses placement immediately.
-
----
-
-## Epic 5: Level 4 — The Knight's Chasm (*The Knight's Tour*)
-
-### US-15: Leap Across Floating Rune Tiles Using Legal Knight Moves
-- **Story:** As a **Player**, I want valid knight jumps to be clearly highlighted while visited tiles crumble into the lava behind me, so that I can navigate the 64-tile chasm accurately.
-- **Related Requirements:** `FR-05.1`, `FR-05.2`, `FR-05.4`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** the knight is on a tile, **When** I view the 3D board and HUD grid, **Then** only legal unvisited knight-move cells are enabled and highlighted in steel-blue, while the current tile is highlighted in ochre-gold.
-  - **Given** I click a valid destination cell, **When** the knight jumps, **Then** the 3D knight arcs to the new tile, the previous tile sinks into the lava, and the counter updates (`Visits: N / 64`).
-  - **Given** I reach `64 / 64` visits, **When** the final jump completes, **Then** all 64 tiles rise into a glowing bridge and the level advances to Level 5.
-
-### US-16: Undo Jumps and Recover from Dead Ends
-- **Story:** As a **Player**, I want to undo my previous jumps if I trap myself in a dead end, so that I can backtrack without restarting the entire 64-tile tour.
-- **Related Requirements:** `FR-05.3`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I have made at least one jump, **When** I press `Undo Last Jump`, **Then** the knight returns to the previous tile, that tile rises back out of the lava, and the visit counter decrements.
-  - **Given** no legal moves remain before 64 visits, **When** the dead end occurs, **Then** a failure banner notifies me to undo a jump or press `Reset`.
-
-### US-17: Watch the Warnsdorff-Heuristic Auto-Solver Complete the Tour
-- **Story:** As an **Evaluator**, I want an `Auto-Solve (Debug)` button in Level 4, so that I can verify that the 64-tile Knight's Tour completes cleanly from the current path or from A1.
-- **Related Requirements:** `FR-05.5`, `NFR-04`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I press `Auto-Solve (Debug)`, **When** the solver runs, **Then** the knight executes a complete 64-tile tour step-by-step, with full pause/resume support via `Stop Solver`.
+### US-07: Level 1 zurücksetzen oder den BFS-Auto-Solver beobachten
+- **Story:** Als **Spieler oder Prüfer** möchte ich Level 1 zurücksetzen oder einen automatischen BFS-Solver umschalten können, damit ich nach einem Fehler neu starten oder die optimale 7-Züge-Lösung verifizieren kann.
+- **Zugehörige Anforderungen:** `FR-02.4`, `FR-02.5`, `NFR-04`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ein beliebiger Spielzustand (inkl. Fehlerzustand), **Wenn** ich `Reset` drücke, **Dann** kehren alle Objekte und das Floß ans Westufer zurück und alle Steuerungen sind wieder aktiv.
+  - **Gegeben**, ich drücke `Auto-Solve (Debug)`, **Wenn** der Solver läuft, **Dann** führt er optimale Lade-, Überfahrt- und Abladeschritte automatisch aus; ein Klick auf `Stop Solver` oder ein 3D-Objekt pausiert ihn sofort.
 
 ---
 
-## Epic 6: Level 5 — The Night at Dreadbury Manor (*Who Killed Aunt Agatha?*)
+## Epic 3: Level 2 — The Hall of Nine Portals (*Prinzessin & Tiger*)
 
-### US-18: Examine Manor Clues and Formal Logic Formulas
-- **Story:** As a **Player**, I want to inspect all 8 documentary clues in the manor and see both their narrative statements and first-order logic formulas, so that I can deduce who killed Aunt Agatha.
-- **Related Requirements:** `FR-06.1`, `FR-06.2`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I click any clue button (`1..8`), **When** inspected, **Then** `CluePanel` displays the clue's title, location, text, and formal FOL formula, the button is marked with `✓`, the 3D clue scroll changes color, and `Clues Examined: N / 8` updates.
+### US-08: Türinschriften durch direktes Anklicken der 3D-Türen lesen
+- **Story:** Als **Spieler** möchte ich jede der 9 Türen direkt in der 3D-Halle anklicken können, um ihre eingravierte Tafel zu lesen, damit ich die Aussagen zur Deduktion des Prinzessinnen-Raums sammeln kann.
+- **Zugehörige Anforderungen:** `FR-03.1`, `FR-03.3`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich befinde mich in der Halle der neun Portale, **Wenn** ich auf eine 3D-Tür klicke, **Dann** wird deren Inschrift im `PlaquePanel` angezeigt, Tafel und Rahmen leuchten golden auf und `Open Door N` wird aktiviert.
+  - **Gegeben**, ich klicke anschließend eine andere Tür an, **Wenn** die Auswahl wechselt, **Dann** bleibt die zuvor gelesene Tafel dezent bernsteinfarben markiert, damit ich bereits geprüfte Türen erkenne.
 
-### US-19: Accuse a Suspect and See Logical Contradictions on Mistakes
-- **Story:** As a **Player**, I want to select a suspect bust and place the Dagger of Truth, receiving a clear logical contradiction if I accuse the wrong person, so that I learn why my deduction failed.
-- **Related Requirements:** `FR-06.3`, `FR-06.4`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** no suspect is selected, **When** I view the Altar controls, **Then** `Place Dagger of Truth` is disabled.
-  - **Given** I select Charles or the Butler and place the dagger, **When** evaluated, **Then** the dagger plunges onto the bust, the bust turns red, and the failure banner explains the exact logical contradiction (`contradiction_for()`).
+### US-09: Wiederspielbarkeit durch zufällige Raumbelegungen
+- **Story:** Als **Spieler** möchte ich, dass Prinzessin, Tiger und leere Räume bei jedem Start und Reset neu gemischt und die Inschriften passend umgeschrieben werden, damit ich mir keine feste Türnummer merken kann.
+- **Zugehörige Anforderungen:** `FR-03.2`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich starte Level 2 oder drücke `Reset`, **Wenn** die Halle initialisiert wird, **Dann** werden die Rauminhalte permutiert, alle 9 Inschriften dynamisch auf die neuen Raumnummern angepasst und genau ein Raum ist logisch eindeutig als Raum der Prinzessin deduzierbar.
 
-### US-20: Solve the Mystery and Trigger the Finale
-- **Story:** As a **Player**, I want accusing Aunt Agatha to reveal her hidden suicide note and clear the storm, so that the mystery concludes satisfyingly.
-- **Related Requirements:** `FR-06.5`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** I select Aunt Agatha and place the Dagger of Truth (manually or via `Auto-Solve (Debug)`), **When** evaluated, **Then** the hidden 3D suicide note becomes visible, lighting shifts from storm blue to morning sunlight, and the victory banner announces the resolution.
+### US-10: Ausgewählte Tür öffnen und Ergebnis erleben
+- **Story:** Als **Spieler** möchte ich meine gewählte Tür öffnen und sehen, wie sie sich in 3D aufschwingt und entweder die Prinzessin, einen Tiger oder eine leere Kammer enthüllt, damit meine Deduktion spürbares visuelles Feedback hat.
+- **Zugehörige Anforderungen:** `FR-03.4`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich wähle eine Tür und klicke `Open Door N`, **Wenn** sich dahinter ein Tiger befindet, **Dann** schwingt die Tür auf, rotes Licht erhellt die Nische und ein Fehlerbanner fordert zum Klicken auf `Reset` auf.
+  - **Gegeben**, ich öffne einen leeren Raum, **Wenn** die Tür aufschwingt, **Dann** erscheint eine leere Kammer und ich kann weitere Türen prüfen und öffnen.
+  - **Gegeben**, ich öffne die Tür der Prinzessin, **Wenn** die Tür aufschwingt, **Dann** erstrahlt die Prinzessin golden und das Siegesbanner leitet zu Level 3 weiter.
 
----
-
-## Epic 7: Level 6 — The Cat Sanctuary & 3D Asset Pipeline
-
-### US-21: Interact with the 3D Cat Exhibit
-- **Story:** As a **Player**, I want to spin, animate, and pet the 3D cat model in Level 6, so that I can enjoy the interactive 3D showcase after finishing the main logic campaign.
-- **Related Requirements:** `FR-07.1`, `FR-07.2`, `FR-07.3`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** Level 6 loads, **When** I click `Pause Spin` / `Resume Spin`, **Then** the turntable rotation toggles accordingly.
-  - **Given** I click `Play Animation` / `Pause Animation`, **Then** the cat's skeletal animation (`Take 001`) toggles playback.
-  - **Given** I click the 3D cat or press `Pet Cat` 5 times, **When** the 5th pet occurs, **Then** the cat hops on each pet and the `PURR-FECTION ACHIEVED` banner appears.
-
-### US-22: Replace Greybox Meshes with Inherited `.glb` Prefabs
-- **Story:** As a **Developer**, I want to import `.glb` models as inherited `.tscn` prefabs under `scenes/props/` while keeping exact node names and `ClickArea` / `Marker3D` children, so that visual upgrades never break controllers or automated tests.
-- **Related Requirements:** `FR-08.4`, `NFR-05`
-- **Status:** Planned (Pipeline established in Level 6; Levels 1–5 pending)
-- **Acceptance Criteria:**
-  - **Given** a new `.glb` asset is added under `assets/models/` and wrapped in `scenes/props/<Prop>.tscn`, **When** swapped into a level scene, **Then** `godot --headless --validate --quit` and all existing unit/integration tests pass without controller modifications.
+### US-11: Deduktiven Auto-Solver in Level 2 ausführen
+- **Story:** Als **Prüfer** möchte ich eine Schaltfläche `Auto-Solve (Debug)` in Level 2, damit ich verifizieren kann, dass jede zufällige Anordnung lösbar ist und der Solver die richtige Tür öffnet.
+- **Zugehörige Anforderungen:** `FR-03.5`, `NFR-04`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich klicke auf `Auto-Solve (Debug)`, **Wenn** der Solver läuft, **Dann** geht er schrittweise die uninspizierten Tafeln durch, deduziert den eindeutigen Raum der Prinzessin und öffnet diese Tür zum Lösen des Levels.
 
 ---
 
-## Epic 8: Developer & QA Engineering Experience
+## Epic 4: Level 3 — The Sun Courtyard (*Das 8-Damen-Problem*)
 
-### US-23: Run Headless Unit Tests for Pure Puzzle Logic
-- **Story:** As a **Developer**, I want to run automated headless tests for every puzzle logic class from the command line, so that I can verify mathematical correctness without opening the Godot Editor.
-- **Related Requirements:** `NFR-01`, `NFR-02`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** a headless environment without a GPU/display, **When** I run `godot --headless -s res://tests/Test<Logic>.gd`, **Then** all assertions execute and exit with code `0` on success or `1` on failure.
+### US-12: Damenstatuen auf dem $8 \times 8$-Innenhof platzieren und entfernen
+- **Story:** Als **Spieler** möchte ich Damenstatuen über ein $8 \times 8$-Raster umschalten und sie auf dem 3D-Marmorbrett erscheinen sehen, damit ich verschiedene konfliktfreie Aufstellungen ausprobieren kann.
+- **Zugehörige Anforderungen:** `FR-04.1`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, es stehen weniger als 8 Damen auf dem Brett, **Wenn** ich eine leere Zelle im $8 \times 8$-Raster anklicke, **Dann** erscheint eine 3D-Damenstatue auf der entsprechenden Marmorkachel und der Zähler erhöht sich (`Queens: N / 8`).
+  - **Gegeben**, auf einer Zelle steht bereits eine Dame, **Wenn** ich sie erneut anklicke, **Dann** wird die Statue entfernt und der Zähler verringert sich.
 
-### US-24: Validate 3D Scenes and UI Flows Headlessly
-- **Story:** As a **QA / Developer**, I want automated scene integration tests and syntax validation commands for all levels, so that broken node paths, missing resources, or UI regressions are caught before pushing.
-- **Related Requirements:** `NFR-02`, `NFR-06`
-- **Status:** Implemented
-- **Acceptance Criteria:**
-  - **Given** any change to a `.tscn` or controller `.gd` file, **When** I run `godot --headless --validate --quit <scene>` and `godot --headless -s res://tests/TestLevel0XScene.gd`, **Then** the scene loads with zero errors and all integration checks pass.
+### US-13: Echtzeit-Konfliktstrahlen zwischen bedrohenden Damen sehen
+- **Story:** Als **Spieler** möchte ich, dass sich bedrohende Damen karmesinrot färben und Laserstrahlen zwischen ihnen erscheinen, damit ich Zeilen-, Spalten- und Diagonalkonflikte sofort erkenne.
+- **Zugehörige Anforderungen:** `FR-04.2`, `FR-04.3`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, zwei Damen teilen sich eine Zeile, Spalte oder Diagonale, **Wenn** sie platziert werden, **Dann** färben sich beide Statuen karmesinrot, ein roter 3D-Strahl verbindet sie und ihre HUD-Zellen werden rot markiert.
+  - **Gegeben**, ich entferne die konfliktauslösende Dame, **Wenn** keine Angriffe mehr bestehen, **Dann** verschwindet der Strahl und sichere Damen leuchten golden.
+  - **Gegeben**, 8 Damen stehen ohne Konflikt auf dem Brett, **Wenn** die 8. Dame gesetzt wird, **Dann** färben sich alle Statuen grün und das Siegesbanner leitet zu Level 4 weiter.
+
+### US-14: 8-Damen-Rätsel automatisch lösen oder vervollständigen
+- **Story:** Als **Spieler oder Prüfer** möchte ich eine Schaltfläche `Auto-Solve (Debug)`, die meine gültige Teilaufstellung vervollständigt (oder bei Bedarf neu startet und löst), damit ich den Constraint-Solver testen kann.
+- **Zugehörige Anforderungen:** `FR-04.4`, `NFR-04`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich drücke `Auto-Solve (Debug)`, **Wenn** der Solver läuft, **Dann** platziert er schrittweise Damen bis zu einer gültigen 8-Damen-Lösung; ein Klick auf `Stop Solver` pausiert die Platzierung sofort.
 
 ---
 
-## Epic 9: Planned Future Enhancements (Backlog)
+## Epic 5: Level 4 — The Knight's Chasm (*Das Springerproblem*)
 
-### US-25: Explore Chambers in First-Person 3D
-- **Story:** As a **Player**, I want to walk through the 3D chambers in first-person using WASD and mouse look and press `[E]` to interact with plaques, levers, and statues, so that the game feels like an immersive 3D adventure.
-- **Related Requirements:** `FR-08.1`
-- **Status:** Planned
-- **Acceptance Criteria:**
-  - **Given** `Player.tscn` is active in a level, **When** I move with WASD, look with the mouse, and aim at an `Interactable3D`, **Then** a contextual prompt (e.g. `[E] Inspect Plaque`) appears and pressing `E` triggers the interaction.
+### US-15: Mit gültigen Springerzügen über schwebende Runenkacheln springen
+- **Story:** Als **Spieler** möchte ich gültige Springerzüge klar hervorgehoben sehen, während besuchte Kacheln hinter mir in die Lava sinken, damit ich die 64-Kacheln-Schlucht präzise überqueren kann.
+- **Zugehörige Anforderungen:** `FR-05.1`, `FR-05.2`, `FR-05.4`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, der Springer steht auf einer Kachel, **Wenn** ich das 3D-Brett und das HUD-Raster betrachte, **Dann** sind nur legale, unbesuchte Springerzüge aktiviert und stahlblau hervorgehoben, während das aktuelle Feld ocker-golden markiert ist.
+  - **Gegeben**, ich klicke eine gültige Zielzelle an, **Wenn** der Springer springt, **Dann** fliegt der 3D-Springer im Bogen auf das neue Feld, das vorherige Feld sinkt in die Lava und der Zähler aktualisiert sich (`Visits: N / 64`).
+  - **Gegeben**, ich erreiche `64 / 64` Besuche, **Wenn** der letzte Sprung abgeschlossen ist, **Dann** erheben sich alle 64 Kacheln zu einer leuchtenden Brücke und Level 5 startet.
 
-### US-26: Track Deductions in an In-Game Logic Journal
-- **Story:** As a **Player**, I want to open an in-game Journal with `[J]` or `[Tab]` that automatically logs every plaque and clue I have discovered, so that I can cross-reference logical statements without pen and paper.
-- **Related Requirements:** `FR-08.2`
-- **Status:** Planned
-- **Acceptance Criteria:**
-  - **Given** I have inspected door plaques in Level 2 or clues in Level 5, **When** I press `J` or `Tab`, **Then** the Journal overlay opens displaying all discovered entries and an optional deduction scratchpad.
+### US-16: Sprünge rückgängig machen und Sackgassen verlassen
+- **Story:** Als **Spieler** möchte ich vorherige Sprünge rückgängig machen können, wenn ich in eine Sackgasse gerate, damit ich zurückgehen kann, ohne die gesamte 64-Felder-Tour neu zu beginnen.
+- **Zugehörige Anforderungen:** `FR-05.3`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich habe mindestens einen Sprung ausgeführt, **Wenn** ich `Undo Last Jump` drücke, **Dann** kehrt der Springer auf die vorherige Kachel zurück, diese steigt wieder aus der Lava auf und der Besuchszähler sinkt um 1.
+  - **Gegeben**, es gibt vor 64 Besuchen keine gültigen Züge mehr, **Wenn** die Sackgasse eintritt, **Dann** weist ein Fehlerbanner darauf hin, einen Sprung rückgängig zu machen oder `Reset` zu drücken.
 
-### US-27: Play the Bonus Chamber — The Midnight Bridge
-- **Story:** As a **Player**, I want to play an optional Bonus Chamber based on the *Bridge & Torch Problem*, so that I can test my time-constrained resource planning skills against a 15-minute torch limit.
-- **Related Requirements:** `FR-08.3`
-- **Status:** Planned
-- **Acceptance Criteria:**
-  - **Given** four travelers with crossing times 1, 2, 5, and 8 minutes, **When** I escort pairs across the bridge with the torch, **Then** the elapsed time increments by the slower traveler's speed, exceeding 15 minutes fails the puzzle, and crossing all four in $\le 15$ minutes solves it.
+### US-17: Warnsdorff-Auto-Solver für die komplette Tour ausführen
+- **Story:** Als **Prüfer** möchte ich eine Schaltfläche `Auto-Solve (Debug)` in Level 4, damit ich überprüfen kann, dass die 64-Felder-Springertour vom aktuellen Pfad oder von A1 aus vollständig abgeschlossen wird.
+- **Zugehörige Anforderungen:** `FR-05.5`, `NFR-04`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich drücke `Auto-Solve (Debug)`, **Wenn** der Solver läuft, **Dann** absolviert der Springer schrittweise eine vollständige 64-Felder-Tour mit voller Pause-/Fortsetzen-Funktion über `Stop Solver`.
+
+---
+
+## Epic 6: Level 5 — The Night at Dreadbury Manor (*Wer tötete Tante Agatha?*)
+
+### US-18: Herrenhaus-Hinweise und formale Logikformeln untersuchen
+- **Story:** Als **Spieler** möchte ich alle 8 Hinweise im Herrenhaus untersuchen und sowohl die erzählerischen Aussagen als auch die prädikatenlogischen Formeln sehen, damit ich deduzieren kann, wer Tante Agatha getötet hat.
+- **Zugehörige Anforderungen:** `FR-06.1`, `FR-06.2`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich klicke eine Hinweis-Schaltfläche (`1..8`) an, **Wenn** der Hinweis untersucht wird, **Dann** zeigt `CluePanel` Titel, Fundort, Text und formale FOL-Formel, die Schaltfläche erhält ein `✓`, die 3D-Schriftrolle wechselt ihre Farbe und `Clues Examined: N / 8` wird aktualisiert.
+
+### US-19: Verdächtigen am Altar anklagen und bei Fehlern den Widerspruch sehen
+- **Story:** Als **Spieler** möchte ich eine Verdächtigen-Büste auswählen und den Dolch der Wahrheit platzieren, wobei mir bei einer falschen Anklage der genaue logische Widerspruch erklärt wird, damit ich meinen Denkfehler nachvollziehen kann.
+- **Zugehörige Anforderungen:** `FR-06.3`, `FR-06.4`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, es ist noch kein Verdächtiger ausgewählt, **Wenn** ich die Altar-Steuerung betrachte, **Dann** ist `Place Dagger of Truth` deaktiviert.
+  - **Gegeben**, ich wähle Charles oder den Butler aus und platziere den Dolch, **Wenn** die Anklage geprüft wird, **Dann** senkt sich der Dolch auf die Büste, die Büste färbt sich rot und das Fehlerbanner erklärt den exakten logischen Widerspruch (`contradiction_for()`).
+
+### US-20: Das Rätsel lösen und das Finale auslösen
+- **Story:** Als **Spieler** möchte ich, dass das Anklagen von Tante Agatha ihren versteckten Abschiedsbrief enthüllt und das Gewitter auflöst, damit der Kriminalfall stimmungsvoll abgeschlossen wird.
+- **Zugehörige Anforderungen:** `FR-06.5`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich wähle Tante Agatha aus und platziere den Dolch der Wahrheit (manuell oder per `Auto-Solve (Debug)`), **Wenn** die Anklage ausgewertet wird, **Dann** wird der versteckte 3D-Abschiedsbrief sichtbar, das Licht wechselt von Gewitterblau zu Morgensonne und das Siegesbanner verkündet die Auflösung.
+
+---
+
+## Epic 7: Level 6 — The Cat Sanctuary & 3D-Asset-Pipeline
+
+### US-21: Mit dem 3D-Katzen-Exponat interagieren
+- **Story:** Als **Spieler** möchte ich das 3D-Katzenmodell in Level 6 drehen, animieren und streicheln können, damit ich nach der Hauptkampagne das interaktive 3D-Showcase genießen kann.
+- **Zugehörige Anforderungen:** `FR-07.1`, `FR-07.2`, `FR-07.3`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, Level 6 ist geladen, **Wenn** ich auf `Pause Spin` / `Resume Spin` klicke, **Dann** wird die Drehung des Sockels entsprechend umgeschaltet.
+  - **Gegeben**, ich klicke auf `Play Animation` / `Pause Animation`, **Dann** wird die Skelettanimation (`Take 001`) der Katze umgeschaltet.
+  - **Gegeben**, ich klicke die 3D-Katze oder `Pet Cat` 5-mal an, **Wenn** das 5. Streicheln erfolgt, **Dann** hüpft die Katze bei jedem Streicheln und das Banner `PURR-FECTION ACHIEVED` erscheint.
+
+### US-22: Greybox-Meshes durch vererbte `.glb`-Prefabs ersetzen
+- **Story:** Als **Entwickler** möchte ich `.glb`-Modelle als vererbte `.tscn`-Prefabs unter `scenes/props/` einbinden und dabei exakte Knotennamen sowie `ClickArea`- und `Marker3D`-Kindknoten beibehalten, damit grafische Upgrades weder Controller noch Tests brechen.
+- **Zugehörige Anforderungen:** `FR-08.4`, `NFR-05`
+- **Status:** Geplant (Pipeline in Level 6 etabliert; Level 1–5 ausstehend)
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ein neues `.glb`-Asset wird unter `assets/models/` abgelegt und in `scenes/props/<Prop>.tscn` eingebunden, **Wenn** es in eine Levelszene eingesetzt wird, **Dann** bestehen `godot --headless --validate --quit` und alle bestehenden Unit- und Integrationstests ohne Änderungen am Controller.
+
+---
+
+## Epic 8: Entwickler- & QA-Workflow
+
+### US-23: Headless-Unit-Tests für reine Rätsellogik ausführen
+- **Story:** Als **Entwickler** möchte ich automatisierte Headless-Tests für jede Rätsellogik-Klasse über die Kommandozeile ausführen können, damit ich die mathematische Korrektheit ohne Öffnen des Godot-Editors prüfen kann.
+- **Zugehörige Anforderungen:** `NFR-01`, `NFR-02`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, eine Headless-Umgebung ohne GPU/Display, **Wenn** ich `godot --headless -s res://tests/Test<Logic>.gd` ausführe, **Dann** laufen alle Assertions durch und beenden sich mit Exit-Code `0` bei Erfolg bzw. `1` bei Fehler.
+
+### US-24: 3D-Szenen und UI-Abläufe Headless validieren
+- **Story:** Als **QA / Entwickler** möchte ich automatisierte Szenen-Integrationstests und Syntax-Validierungsbefehle für alle Level, damit fehlerhafte Knotenpfade, fehlende Ressourcen oder UI-Regressionen vor dem Push erkannt werden.
+- **Zugehörige Anforderungen:** `NFR-02`, `NFR-06`
+- **Status:** Implementiert
+- **Akzeptanzkriterien:**
+  - **Gegeben**, eine Änderung an einer `.tscn`- oder Controller-`.gd`-Datei, **Wenn** ich `godot --headless --validate --quit <scene>` und `godot --headless -s res://tests/TestLevel0XScene.gd` ausführe, **Dann** lädt die Szene fehlerfrei und alle Integrationsprüfungen bestehen.
+
+---
+
+## Epic 9: Geplante Erweiterungen (Backlog)
+
+### US-25: Kammern in der First-Person-3D-Perspektive erkunden
+- **Story:** Als **Spieler** möchte ich mich per WASD und Mausblick in der Ego-Perspektive durch die 3D-Kammern bewegen und mit `[E]` mit Tafeln, Hebeln und Statuen interagieren können, damit das Spiel wie ein immersives 3D-Abenteuer wirkt.
+- **Zugehörige Anforderungen:** `FR-08.1`
+- **Status:** Geplant
+- **Akzeptanzkriterien:**
+  - **Gegeben**, `Player.tscn` ist in einem Level aktiv, **Wenn** ich mich mit WASD bewege, mit der Maus umschaue und ein `Interactable3D` anvisiere, **Dann** erscheint eine kontextbezogene Eingabeaufforderung (z. B. `[E] Inspect Plaque`) und Drücken von `E` löst die Interaktion aus.
+
+### US-26: Deduktionen im In-Game-Logikjournal festhalten
+- **Story:** Als **Spieler** möchte ich mit `[J]` oder `[Tab]` ein In-Game-Journal öffnen können, das alle entdeckten Tafeln und Hinweise automatisch sammelt, damit ich logische Aussagen ohne Stift und Papier abgleichen kann.
+- **Zugehörige Anforderungen:** `FR-08.2`
+- **Status:** Geplant
+- **Akzeptanzkriterien:**
+  - **Gegeben**, ich habe Türtafeln in Level 2 oder Hinweise in Level 5 untersucht, **Wenn** ich `J` oder `Tab` drücke, **Dann** öffnet sich das Journal-Overlay mit allen entdeckten Einträgen und einer optionalen Deduktionsmatrix.
+
+### US-27: Die Bonuskammer — The Midnight Bridge spielen
+- **Story:** Als **Spieler** möchte ich eine optionale Bonuskammer auf Basis des *Brücken-und-Fackel-Problems* spielen können, damit ich meine zeitkritische Ressourcenplanung gegen ein 15-Minuten-Fackellimit testen kann.
+- **Zugehörige Anforderungen:** `FR-08.3`
+- **Status:** Geplant
+- **Akzeptanzkriterien:**
+  - **Gegeben**, vier Reisende mit Überquerungszeiten von 1, 2, 5 und 8 Minuten, **Wenn** ich Paare mit der Fackel über die Brücke führe, **Dann** erhöht sich die verstrichene Zeit um die Geschwindigkeit der langsameren Person, ein Überschreiten von 15 Minuten lässt das Rätsel scheitern, und das Überqueren aller vier in $\le 15$ Minuten löst es.
