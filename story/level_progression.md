@@ -206,8 +206,9 @@ Instead of answering text questions in static pop-up menus, the player solves th
     If Charles killed Agatha, Charles hated Agatha. Since Charles hates nobody Agatha hates, Agatha could not have hated herself. But Agatha hates everyone except the butler, so she must have hated herself—**Contradiction!**
   * *Could it be the Butler?*
     The killer cannot be richer than Agatha, so the butler is not richer than Agatha. Thus, the butler hates himself. The butler also hates everyone Agatha hates (which includes herself and Charles). That means the butler hates Agatha, Charles, and himself—he hates everyone! But no one hates everyone—**Contradiction!**
-  * *The Truth:* **Aunt Agatha committed suicide (killed herself).**
-* **Ending Cinematic:** Placing the dagger on Agatha's bust reveals the final hidden suicide note behind her portrait. The storm clears, morning sunlight breaks through the windows, and the mansion doors swing open to the outer world.
+  * *The Truth (Classic Case — The Tragic Secret):* **Aunt Agatha committed suicide (killed herself).**
+* **Multiple Replayable Outcomes:** On start and reset, Level 5 rotates across 3 first-order-logic-verified cases (`The Tragic Secret` → Aunt Agatha, `The Servant's Grudge` → The Butler, `The Heir's Vendetta` → Charles) with dynamically updated clues and contradiction explanations so every culprit can be uniquely deduced.
+* **Ending Cinematic:** Placing the dagger on the true killer's bust reveals hidden incriminating evidence behind that bust (Agatha's suicide note, the Butler's confession & poison ledger, or Charles's forged will), clears the storm with outcome-tinted morning sunlight, and opens the manor doors.
 
 ---
 

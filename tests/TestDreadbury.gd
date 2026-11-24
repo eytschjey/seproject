@@ -15,18 +15,14 @@ func assert_test(cond: bool, msg: String) -> void:
 
 func _init() -> void:
 	test_axioms_and_models()
-	test_solution_uniqueness()
+	test_all_cases_unique_killer()
+	test_randomized_reset_outcomes()
 	test_investigation_and_accusation_flow()
 	print("\n==== %d passed, %d failed ====" % [passed, failed])
 	quit(1 if failed > 0 else 0)
 
 func test_axioms_and_models() -> void:
 	print("\n[Test 1: First-order model checking]")
-	# Canonical valid interpretation:
-	# Agatha hates Agatha & Charles (not Butler).
-	# Butler hates Agatha & Charles (not Butler, since Butler is richer than Agatha).
-	# Charles hates nobody that Agatha hates.
-	# Richer than Agatha: Butler ([false, true, false]).
 	var valid_hates := [
 		[true, false, true],   # Agatha hates Agatha, Charles
 		[true, false, true],   # Butler hates Agatha, Charles (not himself)
@@ -35,11 +31,11 @@ func test_axioms_and_models() -> void:
 	var valid_richer := [false, true, false]
 
 	assert_test(
-		Logic.is_consistent_model(Logic.Suspect.AGATHA, valid_hates, valid_richer),
-		"Canonical valid model with Agatha as killer is consistent"
+		Logic.is_consistent_model(Logic.Suspect.AGATHA, valid_hates, valid_richer, Logic.Case.AGATHA),
+		"Canonical valid model with Agatha as killer is consistent (Case.AGATHA)"
 	)
 	assert_test(
-		not Logic.is_consistent_model(Logic.Suspect.CHARLES, valid_hates, [false, true, false]),
+		not Logic.is_consistent_model(Logic.Suspect.CHARLES, valid_hates, [false, true, false], Logic.Case.AGATHA),
 		"Rejects Charles as killer when Charles does not hate Agatha"
 	)
 	var charles_hates_agatha := [
@@ -48,8 +44,8 @@ func test_axioms_and_models() -> void:
 		[true, false, false],
 	]
 	assert_test(
-		not Logic.is_consistent_model(Logic.Suspect.CHARLES, charles_hates_agatha, [false, true, false]),
-		"Rejects Charles hating Agatha (violates Charles's Letter)"
+		not Logic.is_consistent_model(Logic.Suspect.CHARLES, charles_hates_agatha, [false, true, false], Logic.Case.AGATHA),
+		"Rejects Charles hating Agatha (violates Charles's Letter in Case.AGATHA)"
 	)
 	var butler_hates_all := [
 		[true, false, true],
@@ -57,11 +53,11 @@ func test_axioms_and_models() -> void:
 		[false, false, false],
 	]
 	assert_test(
-		not Logic.is_consistent_model(Logic.Suspect.BUTLER, butler_hates_all, [false, false, false]),
+		not Logic.is_consistent_model(Logic.Suspect.BUTLER, butler_hates_all, [false, false, false], Logic.Case.AGATHA),
 		"Rejects Butler hating everyone (violates Psychological Profile)"
 	)
 	assert_test(
-		not Logic.is_consistent_model(Logic.Suspect.AGATHA, valid_hates, [true, true, false]),
+		not Logic.is_consistent_model(Logic.Suspect.AGATHA, valid_hates, [true, true, false], Logic.Case.AGATHA),
 		"Rejects Agatha being richer than herself"
 	)
 	assert_test(
@@ -73,64 +69,89 @@ func test_axioms_and_models() -> void:
 		"Rejects malformed hates matrix"
 	)
 
-func test_solution_uniqueness() -> void:
-	print("\n[Test 2: Unique killer deduction]")
-	var models := Logic.enumerate_consistent_models()
-	assert_test(models.size() > 0, "At least one consistent first-order model exists (%d found)" % models.size())
-	var all_agatha := true
-	var butler_always_richer := true
-	for m in models:
-		if m["killer"] != Logic.Suspect.AGATHA:
-			all_agatha = false
-		if not m["richer_than_agatha"][Logic.Suspect.BUTLER]:
-			butler_always_richer = false
-	assert_test(all_agatha, "Every consistent model proves Aunt Agatha killed herself")
-	assert_test(butler_always_richer, "Every consistent model requires the Butler to be richer than Agatha")
-	assert_test(
-		Logic.killer_candidates() == [Logic.Suspect.AGATHA],
-		"killer_candidates() == [Suspect.AGATHA]"
-	)
-	assert_test(
-		Logic.contradiction_for(Logic.Suspect.CHARLES).contains("Contradiction"),
-		"Contradiction explanation provided for Charles"
-	)
-	assert_test(
-		Logic.contradiction_for(Logic.Suspect.BUTLER).contains("Contradiction"),
-		"Contradiction explanation provided for the Butler"
-	)
+func test_all_cases_unique_killer() -> void:
+	print("\n[Test 2: Unique killer deduction across all 3 outcomes]")
+	var expected_killers: Array[int] = [
+		Logic.Suspect.AGATHA,
+		Logic.Suspect.BUTLER,
+		Logic.Suspect.CHARLES,
+	]
+	for case_id in Logic.CASE_COUNT:
+		var models := Logic.enumerate_consistent_models(case_id)
+		var expected: int = expected_killers[case_id]
+		var name_str: String = Logic.suspect_name(expected)
+		assert_test(
+			models.size() > 0,
+			"Case %d (%s): at least one consistent model exists (%d found)" % [case_id, name_str, models.size()]
+		)
+		assert_test(
+			Logic.killer_candidates(case_id) == [expected],
+			"Case %d (%s): killer_candidates() uniquely deduces [%s]" % [case_id, name_str, name_str]
+		)
+		for s in Logic.SUSPECT_COUNT:
+			var exp_text := Logic.contradiction_for(s, case_id)
+			if s == expected:
+				assert_test(
+					exp_text.contains("Proven"),
+					"Case %d: proof explanation provided for true killer (%s)" % [case_id, Logic.suspect_name(s)]
+				)
+			else:
+				assert_test(
+					exp_text.contains("Contradiction"),
+					"Case %d: contradiction explanation provided for innocent suspect (%s)" % [case_id, Logic.suspect_name(s)]
+				)
+		assert_test(
+			Logic.victory_message_for(case_id).contains(name_str),
+			"Case %d: victory message names %s" % [case_id, name_str]
+		)
+
+func test_randomized_reset_outcomes() -> void:
+	print("\n[Test 3: Randomized case selection on start and reset]")
+	var logic := Logic.new()
+	var seen := {}
+	seen[logic.active_case] = true
+	var always_changed := true
+	for _i in 30:
+		var prev := logic.active_case
+		logic.reset()
+		if logic.active_case == prev:
+			always_changed = false
+		seen[logic.active_case] = true
+	assert_test(always_changed, "reset() always rotates to a different outcome than the previous one")
+	assert_test(seen.size() == Logic.CASE_COUNT, "All 3 outcomes (Agatha, Butler, Charles) occur across resets")
 
 func test_investigation_and_accusation_flow() -> void:
-	print("\n[Test 3: Investigation & accusation gameplay flow]")
-	var logic := Logic.new()
-	var state := {"clues": 0, "failed": "", "solved": false, "accusations": 0}
-	logic.clue_inspected.connect(func(_idx, _c): state.clues += 1)
-	logic.puzzle_failed.connect(func(r): state.failed = r)
-	logic.puzzle_solved.connect(func(): state.solved = true)
-	logic.accusation_made.connect(func(_s, _ok, _e): state.accusations += 1)
+	print("\n[Test 4: Investigation & accusation gameplay flow across all 3 outcomes]")
+	for case_id in Logic.CASE_COUNT:
+		var logic := Logic.new(case_id)
+		var killer: int = logic.solve_killer()
+		var innocent_a: int = (killer + 1) % Logic.SUSPECT_COUNT
+		var innocent_b: int = (killer + 2) % Logic.SUSPECT_COUNT
+		var state := {"clues": 0, "failed": "", "solved": false, "accusations": 0}
+		logic.clue_inspected.connect(func(_idx, _c): state.clues += 1)
+		logic.puzzle_failed.connect(func(r): state.failed = r)
+		logic.puzzle_solved.connect(func(): state.solved = true)
+		logic.accusation_made.connect(func(_s, _ok, _e): state.accusations += 1)
 
-	assert_test(logic.discovered_count() == 0 and not logic.all_clues_discovered(), "Starts with 0 discovered clues")
-	assert_test(not logic.inspect_clue(-1) and not logic.inspect_clue(8), "Rejects out-of-bounds clue index")
-	for i in Logic.CLUE_COUNT:
-		assert_test(logic.inspect_clue(i), "Inspect clue %d (%s)" % [i + 1, Logic.CLUES[i]["title"]])
-	assert_test(logic.all_clues_discovered() and logic.discovered_count() == 8, "All 8 clues discovered")
-	assert_test(state.clues == 8, "clue_inspected emitted 8 times")
+		assert_test(logic.discovered_count() == 0 and not logic.all_clues_discovered(), "Case %d: starts with 0 discovered clues" % case_id)
+		if case_id == 0:
+			assert_test(not logic.inspect_clue(-1) and not logic.inspect_clue(8), "Rejects out-of-bounds clue index")
+			assert_test(not logic.select_suspect(-1) and not logic.select_suspect(3), "Rejects invalid suspect selection")
+		for i in Logic.CLUE_COUNT:
+			logic.inspect_clue(i)
+		assert_test(logic.all_clues_discovered() and state.clues == 8, "Case %d: all 8 clues inspected and emitted" % case_id)
 
-	assert_test(not logic.select_suspect(-1) and not logic.select_suspect(3), "Rejects invalid suspect selection")
-	assert_test(logic.select_suspect(Logic.Suspect.CHARLES), "Selects Charles at the altar")
-	assert_test(logic.accuse_selected(), "Accuses selected suspect (Charles)")
-	assert_test(logic.is_failed and not logic.is_solved, "Accusing Charles fails the puzzle")
-	assert_test(state.failed.contains("Contradiction"), "Failure signal carries logical contradiction")
-	assert_test(not logic.accuse(Logic.Suspect.AGATHA), "Cannot accuse again after failure without reset")
+		assert_test(logic.select_suspect(innocent_a) and logic.accuse_selected(), "Case %d: accuses first innocent (%s)" % [case_id, Logic.suspect_name(innocent_a)])
+		assert_test(logic.is_failed and not logic.is_solved and state.failed.contains("Contradiction"), "Case %d: false accusation 1 fails with contradiction" % case_id)
+		assert_test(not logic.accuse(killer), "Case %d: cannot accuse again after failure without reset" % case_id)
 
-	logic.reset()
-	assert_test(not logic.is_failed and logic.discovered_count() == 0 and logic.selected_suspect == -1, "Reset restores initial state")
+		logic.reset(case_id)
+		assert_test(not logic.is_failed and logic.discovered_count() == 0 and logic.selected_suspect == -1, "Case %d: reset restores initial state" % case_id)
 
-	assert_test(logic.accuse(Logic.Suspect.BUTLER), "Accusing the Butler executes")
-	assert_test(logic.is_failed and state.failed.contains("Contradiction"), "Accusing the Butler fails with contradiction")
+		assert_test(logic.accuse(innocent_b) and logic.is_failed and state.failed.contains("Contradiction"), "Case %d: false accusation 2 (%s) fails with contradiction" % [case_id, Logic.suspect_name(innocent_b)])
 
-	logic.reset()
-	assert_test(logic.select_suspect(Logic.Suspect.AGATHA), "Selects Aunt Agatha at the altar")
-	assert_test(logic.accuse_selected(), "Accuses Aunt Agatha")
-	assert_test(logic.is_solved and state.solved, "Accusing Aunt Agatha solves the puzzle")
-	assert_test(not logic.accuse(Logic.Suspect.CHARLES), "No actions allowed after puzzle is solved")
-	assert_test(state.accusations == 3, "accusation_made emitted for each accusation")
+		logic.reset(case_id)
+		assert_test(logic.select_suspect(killer) and logic.accuse_selected(), "Case %d: accuses true killer (%s)" % [case_id, Logic.suspect_name(killer)])
+		assert_test(logic.is_solved and state.solved, "Case %d: accusing %s solves the puzzle" % [case_id, Logic.suspect_name(killer)])
+		assert_test(not logic.accuse(innocent_a), "Case %d: no actions allowed after puzzle is solved" % case_id)
+		assert_test(state.accusations == 3, "Case %d: accusation_made emitted 3 times" % case_id)

@@ -166,27 +166,28 @@ Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Fun
 
 ## Epic 6: Level 5 — The Night at Dreadbury Manor (*Wer tötete Tante Agatha?*)
 
-### US-18: Herrenhaus-Hinweise und formale Logikformeln untersuchen
-- **Story:** Als **Spieler** möchte ich alle 8 Hinweise im Herrenhaus untersuchen und sowohl die erzählerischen Aussagen als auch die prädikatenlogischen Formeln sehen, damit ich deduzieren kann, wer Tante Agatha getötet hat.
+### US-18: Herrenhaus-Hinweise und formale Logikformeln über verschiedene Fälle untersuchen
+- **Story:** Als **Spieler** möchte ich alle 8 Hinweise des aktuell generierten Falls untersuchen und sowohl die erzählerischen Aussagen als auch die prädikatenlogischen Formeln sehen, damit ich bei jedem Durchlauf den jeweiligen Täter (Tante Agatha, den Butler oder Charles) neu deduzieren kann.
 - **Zugehörige Anforderungen:** `FR-06.1`, `FR-06.2`
 - **Status:** Implementiert
 - **Akzeptanzkriterien:**
-  - **Gegeben**, ich klicke eine Hinweis-Schaltfläche (`1..8`) an, **Wenn** der Hinweis untersucht wird, **Dann** zeigt `CluePanel` Titel, Fundort, Text und formale FOL-Formel, die Schaltfläche erhält ein `✓`, die 3D-Schriftrolle wechselt ihre Farbe und `Clues Examined: N / 8` wird aktualisiert.
+  - **Gegeben**, ich starte Level 5 oder drücke `Reset`, **Wenn** der Fall geladen wird, **Dann** wird einer von 3 logisch eindeutigen Fällen (`The Tragic Secret`, `The Servant's Grudge`, `The Heir's Vendetta`) mit passenden Hinweisen aktiviert (bei `Reset` stets ein anderer Fall als zuvor).
+  - **Gegeben**, ich klicke eine Hinweis-Schaltfläche (`1..8`) an, **Wenn** der Hinweis untersucht wird, **Dann** zeigt `CluePanel` Titel, Fundort, Text und formale FOL-Formel des aktiven Falls, die Schaltfläche erhält ein `✓`, die 3D-Schriftrolle wechselt ihre Farbe und `Clues Examined: N / 8` wird aktualisiert.
 
 ### US-19: Verdächtigen am Altar anklagen und bei Fehlern den Widerspruch sehen
-- **Story:** Als **Spieler** möchte ich eine Verdächtigen-Büste auswählen und den Dolch der Wahrheit platzieren, wobei mir bei einer falschen Anklage der genaue logische Widerspruch erklärt wird, damit ich meinen Denkfehler nachvollziehen kann.
+- **Story:** Als **Spieler** möchte ich eine Verdächtigen-Büste auswählen und den Dolch der Wahrheit platzieren, wobei mir bei einer falschen Anklage der genaue logische Widerspruch des aktuellen Falls erklärt wird, damit ich meinen Denkfehler nachvollziehen kann.
 - **Zugehörige Anforderungen:** `FR-06.3`, `FR-06.4`
 - **Status:** Implementiert
 - **Akzeptanzkriterien:**
   - **Gegeben**, es ist noch kein Verdächtiger ausgewählt, **Wenn** ich die Altar-Steuerung betrachte, **Dann** ist `Place Dagger of Truth` deaktiviert.
-  - **Gegeben**, ich wähle Charles oder den Butler aus und platziere den Dolch, **Wenn** die Anklage geprüft wird, **Dann** senkt sich der Dolch auf die Büste, die Büste färbt sich rot und das Fehlerbanner erklärt den exakten logischen Widerspruch (`contradiction_for()`).
+  - **Gegeben**, ich wähle einen im aktuellen Fall unschuldigen Verdächtigen aus und platziere den Dolch, **Wenn** die Anklage geprüft wird, **Dann** senkt sich der Dolch auf die Büste, die Büste färbt sich rot und das Fehlerbanner erklärt den exakten logischen Widerspruch (`contradiction_for()`).
 
-### US-20: Das Rätsel lösen und das Finale auslösen
-- **Story:** Als **Spieler** möchte ich, dass das Anklagen von Tante Agatha ihren versteckten Abschiedsbrief enthüllt und das Gewitter auflöst, damit der Kriminalfall stimmungsvoll abgeschlossen wird.
+### US-20: Das Rätsel lösen und das fallspezifische Finale auslösen
+- **Story:** Als **Spieler** möchte ich, dass das Anklagen des wahren Täters das passende versteckte Beweisstück hinter dessen Büste enthüllt und das Gewitter auflöst, damit jeder der drei möglichen Ausgänge eine eigene Auflösung bietet.
 - **Zugehörige Anforderungen:** `FR-06.5`
 - **Status:** Implementiert
 - **Akzeptanzkriterien:**
-  - **Gegeben**, ich wähle Tante Agatha aus und platziere den Dolch der Wahrheit (manuell oder per `Auto-Solve (Debug)`), **Wenn** die Anklage ausgewertet wird, **Dann** wird der versteckte 3D-Abschiedsbrief sichtbar, das Licht wechselt von Gewitterblau zu Morgensonne und das Siegesbanner verkündet die Auflösung.
+  - **Gegeben**, ich wähle den wahren Täter des aktiven Falls aus und platziere den Dolch der Wahrheit (manuell oder per `Auto-Solve (Debug)`), **Wenn** die Anklage ausgewertet wird, **Dann** erscheint das versteckte 3D-Beweisstück hinter der Büste des Täters, das Licht wechselt auf die ausgangsspezifische Morgenbeleuchtung und das Siegesbanner verkündet die passende Auflösung (Abschiedsbrief für Agatha, Giftbuch für den Butler oder gefälschtes Testament für Charles).
 
 ---
 

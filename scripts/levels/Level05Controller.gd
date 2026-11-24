@@ -82,6 +82,7 @@ func _ready() -> void:
 	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.48, 0.38, 0.54, 0.65))
 	_apply_storm_lighting()
+	status_label.text = "Case: %s — Examine the 8 clues and place the Dagger of Truth on the killer's bust." % logic.get_case_title()
 	_on_state_changed(logic.discovered_clues.duplicate(), logic.selected_clue, logic.selected_suspect)
 
 func _make_box_style(bg: Color, border: Color, border_w: int = 1, radius: int = 5) -> StyleBoxFlat:
@@ -244,7 +245,7 @@ func _build_dagger() -> void:
 
 func _build_buttons() -> void:
 	for i in Logic.CLUE_COUNT:
-		var info: Dictionary = Logic.clue_info(i)
+		var info: Dictionary = logic.get_clue(i)
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(170, 36)
 		b.text = "%d. %s" % [i + 1, info["title"]]
@@ -294,7 +295,7 @@ func _on_reset_pressed() -> void:
 	suicide_note.visible = false
 	_apply_storm_lighting()
 	clue_label.text = "Select a clue to inspect the evidence."
-	status_label.text = "The storm rumbles over Dreadbury Manor. Examine the clues and identify the killer."
+	status_label.text = "New Case: %s — Examine the clues and identify who killed Aunt Agatha." % logic.get_case_title()
 
 func _on_solve_pressed() -> void:
 	if is_auto_solving:
@@ -322,9 +323,8 @@ func start_auto_solve() -> void:
 			await get_tree().create_timer(auto_solve_delay).timeout
 
 	if is_auto_solving and not logic.is_solved:
-		var candidates: Array[int] = Logic.killer_candidates()
-		if not candidates.is_empty():
-			var killer: int = candidates[0]
+		var killer: int = logic.solve_killer()
+		if killer >= 0:
 			logic.select_suspect(killer)
 			await get_tree().create_timer(auto_solve_delay).timeout
 			if is_auto_solving and not logic.is_solved:
@@ -361,9 +361,10 @@ func _on_state_changed(discovered: Array, selected_clue: int, selected_suspect: 
 
 	for i in clue_buttons.size():
 		var b: Button = clue_buttons[i]
-		var info: Dictionary = Logic.clue_info(i)
+		var info: Dictionary = logic.get_clue(i)
 		var mark: String = "✓ " if discovered[i] else ""
 		b.text = "%s%d. %s" % [mark, i + 1, info["title"]]
+		b.tooltip_text = info["location"]
 		b.modulate = Color(1.0, 0.92, 0.55) if discovered[i] else Color(1, 1, 1)
 		var sb: StyleBoxFlat = style_clue_unread
 		if i == selected_clue:
@@ -425,16 +426,24 @@ func _apply_storm_lighting() -> void:
 		storm_light.light_color = Color(0.6, 0.7, 0.95)
 		storm_light.light_energy = 0.65
 
-func _apply_morning_lighting() -> void:
+func _apply_morning_lighting(killer: int = Logic.Suspect.AGATHA) -> void:
 	if is_instance_valid(storm_light):
-		storm_light.light_color = Color(1.0, 0.9, 0.65)
-		storm_light.light_energy = 1.35
+		match killer:
+			Logic.Suspect.BUTLER:
+				storm_light.light_color = Color(0.92, 0.96, 1.0)
+				storm_light.light_energy = 1.3
+			Logic.Suspect.CHARLES:
+				storm_light.light_color = Color(1.0, 0.78, 0.58)
+				storm_light.light_energy = 1.4
+			_:
+				storm_light.light_color = Color(1.0, 0.9, 0.65)
+				storm_light.light_energy = 1.35
 
 func _on_puzzle_failed(reason: String) -> void:
 	if is_auto_solving:
 		stop_auto_solve()
 	banner.visible = true
-	banner_label.text = "FALSE ACCUSATION!\n%s\nPress Reset to try again." % reason
+	banner_label.text = "FALSE ACCUSATION!\n%s\nPress Reset to try a new case." % reason
 	banner_label.modulate = Color(1.0, 0.35, 0.35)
 
 func _on_puzzle_solved() -> void:
@@ -442,16 +451,14 @@ func _on_puzzle_solved() -> void:
 		stop_auto_solve()
 	if is_instance_valid(btn_solve):
 		btn_solve.disabled = true
+	if logic.accused_suspect >= 0:
+		suicide_note.global_position = bust_position(logic.accused_suspect) + Vector3(0.0, 1.2, -0.6)
 	suicide_note.visible = true
-	_apply_morning_lighting()
+	_apply_morning_lighting(logic.accused_suspect)
 	banner.visible = true
-	banner_label.text = (
-		"MYSTERY SOLVED!\n"
-		+ "Aunt Agatha killed herself! Placing the Dagger of Truth on Agatha's bust\n"
-		+ "reveals her hidden suicide note. The storm clears and the manor doors swing open!"
-	)
+	banner_label.text = logic.get_victory_message()
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
-	status_label.text = "Victory! The curse of Dreadbury Manor is broken."
+	status_label.text = "Victory! %s exposed — the curse of Dreadbury Manor is broken." % Logic.suspect_name(logic.accused_suspect)
 	await get_tree().create_timer(NEXT_LEVEL_DELAY).timeout
 	if is_inside_tree() and logic.is_solved:
 		get_tree().change_scene_to_file(NEXT_LEVEL_SCENE)

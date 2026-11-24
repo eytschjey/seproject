@@ -14,7 +14,7 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 2 (Hall of Nine Portals):** Headless logic ([`NinePortalsLogic.gd`](scripts/logic/NinePortalsLogic.gd)) with randomized layout and matching dynamic door inscriptions on start and reset, 30 unit assertions ([`TestNinePortals.gd`](tests/TestNinePortals.gd)), 3D scene ([`Level02_NinePortals.tscn`](scenes/levels/Level02_NinePortals.tscn)) with direct 3D door click selection (hover scale, cursor feedback, and plaque/frame highlight), subtle Warm Stone & Antique Brass HUD theme, Auto-Solve debug button, and integration test ([`TestLevel02Scene.gd`](tests/TestLevel02Scene.gd)).
 - [x] **Level 3 (Sun Courtyard):** Headless logic ([`QueensLogic.gd`](scripts/logic/QueensLogic.gd), 29 assertions in [`TestQueens.gd`](tests/TestQueens.gd)), 3D board scene ([`Level03_SunCourtyard.tscn`](scenes/levels/Level03_SunCourtyard.tscn)) with subtle Sandstone & Warm Umber HUD theme, Auto-Solve debug button, and [`TestLevel03Scene.gd`](tests/TestLevel03Scene.gd).
 - [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)) with non-overlapping Charcoal-Slate & Muted Steel-Blue HUD styling against the black & orange lava background, Auto-Solve debug button, and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
-- [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 39 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)), 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)) with subtle Dusk-Plum & Muted Pewter HUD theme, Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
+- [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 62 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)) supporting 3 randomized, uniquely deducible outcomes (Aunt Agatha, The Butler, or Charles) with dynamic clues, contradiction proofs, and outcome-specific endings; 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)) with subtle Dusk-Plum & Muted Pewter HUD theme, Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
 - [x] **Level 6 (The Cat Sanctuary):** 3D model showcase scene ([`Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn)) presenting the imported [`cat.glb`](assets/models/characters/cat.glb) asset and prefab ([`Cat.tscn`](scenes/props/Cat.tscn)) with turntable spin, skeletal animation playback, 3D mouse picking, subtle Warm Taupe & Dusty Rose HUD theme, and [`TestLevel06Scene.gd`](tests/TestLevel06Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with subtle Slate-Indigo styling, muted per-level accent borders, Levels 1–6 unlocked, and a non-overlapping `< Menu` button in each level.
 - [ ] **Next Up:** 3D asset integration (replacing CSG greyboxes with glTF models), first-person character navigation, journal UI, Bonus Chamber (The Midnight Bridge).
@@ -106,7 +106,7 @@ seproject/
 │   ├── TestLevel03Scene.gd        # Integration test for Level 3 UI
 │   ├── TestKnightsTour.gd         # Unit tests for Knight's Tour logic (26 assertions)
 │   ├── TestLevel04Scene.gd        # Integration test for Level 4 UI
-│   ├── TestDreadbury.gd           # Unit tests for Dreadbury Manor logic (39 assertions)
+│   ├── TestDreadbury.gd           # Unit tests for Dreadbury Manor logic (62 assertions)
 │   ├── TestLevel05Scene.gd        # Integration test for Level 5 UI
 │   ├── TestLevel06Scene.gd        # Integration test for Level 6 Cat Showcase UI
 │   └── TestMainMenu.gd            # Menu lists levels, loads them, back button works
@@ -142,7 +142,7 @@ godot --headless -s res://tests/TestRiverCrossing.gd   # Level 1 (41 assertions)
 godot --headless -s res://tests/TestNinePortals.gd     # Level 2 (30 assertions)
 godot --headless -s res://tests/TestQueens.gd          # Level 3 (29 assertions)
 godot --headless -s res://tests/TestKnightsTour.gd     # Level 4 (26 assertions)
-godot --headless -s res://tests/TestDreadbury.gd       # Level 5 (39 assertions)
+godot --headless -s res://tests/TestDreadbury.gd       # Level 5 (62 assertions)
 ```
 
 ### 3D Scene & UI Integration Tests:

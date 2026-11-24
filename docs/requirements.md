@@ -96,11 +96,11 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 
 | ID | Anforderung | Priorität | Status |
 | :--- | :--- | :--- | :--- |
-| **FR-06.1** | **Prädikatenlogischer Modellprüfer:** `DreadburyLogic` formalisiert die 3 Bewohner (`AGATHA`, `BUTLER`, `CHARLES`), 8 Herrenhaus-Hinweise sowie die Prädikate (`killed`, `hates`, `richer_than_agatha`) und verifiziert erschöpfend, dass Tante Agatha in allen konsistenten Modellen die eindeutige Täterin ist (`killer_candidates() == [Suspect.AGATHA]`). | Muss | Implementiert |
-| **FR-06.2** | **Hinweisuntersuchung:** Spieler können alle 8 Hinweise untersuchen und Titel, Fundort, Erzähltext sowie formale prädikatenlogische Formel einsehen, während der Fortschritt (`Clues Examined: N / 8`) verfolgt wird. | Muss | Implementiert |
+| **FR-06.1** | **Prädikatenlogischer Modellprüfer & multiple Ausgänge:** `DreadburyLogic` formalisiert die 3 Bewohner (`AGATHA`, `BUTLER`, `CHARLES`), 3 randomisierte prädikatenlogische Fälle (`Case.AGATHA`, `Case.BUTLER`, `Case.CHARLES`) mit jeweils 8 dynamischen Hinweisen sowie die Prädikate (`killed`, `hates`, `richer_than_agatha`) und verifiziert erschöpfend, dass in jedem Fall genau ein eindeutiger Täter deduzierbar ist (`killer_candidates(case_id).size() == 1`). | Muss | Implementiert |
+| **FR-06.2** | **Hinweisuntersuchung:** Spieler können alle 8 Hinweise des aktuellen Falls untersuchen und Titel, Fundort, Erzähltext sowie formale prädikatenlogische Formel einsehen, während der Fortschritt (`Clues Examined: N / 8`) verfolgt wird. | Muss | Implementiert |
 | **FR-06.3** | **Anklagealtar & Dolch der Wahrheit:** Spieler wählen eine Verdächtigen-Büste aus und platzieren den animierten Dolch der Wahrheit, um eine Anklage einzureichen. | Muss | Implementiert |
-| **FR-06.4** | **Widerspruchs-Feedback:** Das Anklagen von Charles oder dem Butler löst `puzzle_failed` aus und zeigt den formalen logischen Widerspruch (`contradiction_for()`), warum der gewählte Verdächtige nicht der Täter sein kann. | Muss | Implementiert |
-| **FR-06.5** | **Siegesenthüllung & Auto-Solver:** Das Anklagen von Tante Agatha enthüllt den versteckten 3D-Abschiedsbrief, wechselt die Beleuchtung von Gewitternacht zu Morgensonne und löst `puzzle_solved` aus. `Auto-Solve (Debug)` untersucht alle Hinweise und löst den Fall automatisch. | Soll | Implementiert |
+| **FR-06.4** | **Widerspruchs-Feedback:** Das Anklagen eines unschuldigen Verdächtigen löst `puzzle_failed` aus und zeigt den fallspezifischen formalen logischen Widerspruch (`contradiction_for(suspect, case_id)`), warum dieser Verdächtige nicht der Täter sein kann. Ein `Reset` wechselt zu einem anderen Fall. | Muss | Implementiert |
+| **FR-06.5** | **Fallspezifische Siegesenthüllung & Auto-Solver:** Das Anklagen des wahren Täters enthüllt das versteckte 3D-Beweisstück hinter der Büste des Täters, wechselt die Beleuchtung auf eine ausgangsspezifische Morgenbeleuchtung, zeigt die jeweilige Auflösung (`victory_message_for()`) und löst `puzzle_solved` aus. `Auto-Solve (Debug)` untersucht alle Hinweise und löst den aktiven Fall automatisch. | Soll | Implementiert |
 
 ---
 
@@ -147,6 +147,6 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 | **FR-03** (Level 2) | `scripts/logic/NinePortalsLogic.gd`, `scenes/levels/Level02_NinePortals.tscn`, `scripts/levels/Level02Controller.gd` | `tests/TestNinePortals.gd` (30), `tests/TestLevel02Scene.gd` (21) | Implementiert |
 | **FR-04** (Level 3) | `scripts/logic/QueensLogic.gd`, `scenes/levels/Level03_SunCourtyard.tscn`, `scripts/levels/Level03Controller.gd` | `tests/TestQueens.gd` (29), `tests/TestLevel03Scene.gd` (15) | Implementiert |
 | **FR-05** (Level 4) | `scripts/logic/KnightsTourLogic.gd`, `scenes/levels/Level04_KnightsChasm.tscn`, `scripts/levels/Level04Controller.gd` | `tests/TestKnightsTour.gd` (26), `tests/TestLevel04Scene.gd` (18) | Implementiert |
-| **FR-06** (Level 5) | `scripts/logic/DreadburyLogic.gd`, `scenes/levels/Level05_DreadburyManor.tscn`, `scripts/levels/Level05Controller.gd` | `tests/TestDreadbury.gd` (39), `tests/TestLevel05Scene.gd` (15) | Implementiert |
+| **FR-06** (Level 5) | `scripts/logic/DreadburyLogic.gd`, `scenes/levels/Level05_DreadburyManor.tscn`, `scripts/levels/Level05Controller.gd` | `tests/TestDreadbury.gd` (62), `tests/TestLevel05Scene.gd` (20) | Implementiert |
 | **FR-07** (Level 6) | `scenes/props/Cat.tscn`, `scenes/levels/Level06_Cat.tscn`, `scripts/levels/Level06Controller.gd` | `tests/TestLevel06Scene.gd` (17) | Implementiert |
 | **FR-08** (Backlog) | `story/level_progression.md`, `HANDOVER.md` | Geplant | Geplant |
