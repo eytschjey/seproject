@@ -7,6 +7,8 @@ extends Control
 
 const JOURNAL_SCENE_PATH: String = "res://scenes/ui/Journal.tscn"
 
+signal journal_toggled(is_open: bool)
+
 @onready var btn_toggle: Button = %BtnToggleJournal
 @onready var overlay: ColorRect = %Overlay
 @onready var journal_panel: PanelContainer = %JournalPanel
@@ -74,10 +76,12 @@ func open() -> void:
 	is_open = true
 	overlay.visible = true
 	_refresh_view()
+	journal_toggled.emit(true)
 
 func close() -> void:
 	is_open = false
 	overlay.visible = false
+	journal_toggled.emit(false)
 
 func toggle() -> void:
 	if is_open:

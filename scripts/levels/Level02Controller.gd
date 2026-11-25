@@ -7,13 +7,17 @@ extends Node3D
 const Logic = preload("res://scripts/logic/NinePortalsLogic.gd")
 const JournalModel = preload("res://scripts/logic/JournalState.gd")
 const JournalUI = preload("res://scripts/ui/JournalController.gd")
+const PlayerScene = preload("res://scenes/player/Player.tscn")
+const InteractableScript = preload("res://scripts/core/Interactable3D.gd")
 
 const JOURNAL_LEVEL_ID: String = "level02"
+const PLAYER_SPAWN_POS: Vector3 = Vector3(0.0, 0.05, 5.0)
 
 @onready var camera: Camera3D = $Camera3D
 @onready var btn_open: Button = %BtnOpen
 @onready var btn_reset: Button = %BtnReset
 @onready var btn_solve: Button = %BtnSolve
+@onready var btn_view_mode: Button = %BtnViewMode
 @onready var status_label: Label = %StatusLabel
 @onready var plaque_label: Label = %PlaqueLabel
 @onready var banner: PanelContainer = %Banner
@@ -34,7 +38,10 @@ const COLOR_FRAME_SELECTED := Color(0.55, 0.45, 0.22)
 var logic: RefCounted
 var journal_state: RefCounted
 var journal_ui: Control
-var door_areas: Dictionary = {}        # Area3D -> room number (1..9)
+var player: CharacterBody3D = null
+var is_first_person: bool = false
+var door_areas: Dictionary = {}          # Area3D -> room number (1..9)
+var door_interactables: Dictionary = {}  # room (1..9) -> Interactable3D
 var plaque_materials: Dictionary = {}  # room -> StandardMaterial3D
 var frame_materials: Dictionary = {}   # room -> StandardMaterial3D
 var selected: int = 0                  # 0 = nothing selected, else room number 1..9
@@ -52,12 +59,16 @@ func _ready() -> void:
 	logic.move_executed.connect(_on_move_executed)
 
 	_setup_door_interactions()
+	_setup_player()
 	btn_open.pressed.connect(_on_open_pressed)
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
+	btn_view_mode.pressed.connect(_on_view_mode_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.56, 0.48, 0.34, 0.65))
 	journal_state = JournalModel.new()
 	journal_ui = JournalUI.attach($UI/RootControl, journal_state, JOURNAL_LEVEL_ID, "Hall of Nine Portals", Color(0.56, 0.48, 0.34, 0.70))
+	journal_ui.journal_toggled.connect(_on_journal_toggled)
+	set_first_person_mode(false)
 	_apply_gui_theme()
 	_update_ui()
 
@@ -88,7 +99,7 @@ func _apply_gui_theme() -> void:
 	var btn_hover := _make_box_style(Color(0.25, 0.17, 0.18, 0.94), Color(0.65, 0.55, 0.40, 0.75), 1, 6)
 	var btn_pressed := _make_box_style(Color(0.31, 0.20, 0.22, 0.96), Color(0.75, 0.64, 0.46, 0.85), 1, 6)
 	var btn_disabled := _make_box_style(Color(0.11, 0.08, 0.09, 0.75), Color(0.32, 0.27, 0.22, 0.45), 1, 6)
-	for btn in [btn_open, btn_reset, btn_solve]:
+	for btn in [btn_open, btn_reset, btn_solve, btn_view_mode]:
 		if btn == null:
 			continue
 		btn.add_theme_stylebox_override("normal", btn_normal)
@@ -129,19 +140,65 @@ func _setup_door_interactions() -> void:
 		frame_box.material = frame_mat
 		frame_materials[n] = frame_mat
 
-		var area := Area3D.new()
+		var area: Area3D = InteractableScript.new()
 		area.name = "ClickArea"
+		area.prompt_text = "Inspect Door %d" % n
 		var col := CollisionShape3D.new()
 		col.shape = hitbox_shape
 		col.position = Vector3(0, 1.9, 0.0)
 		area.add_child(col)
 		door_node.add_child(area)
 		door_areas[area] = n
+		door_interactables[n] = area
 
+		area.interacted.connect(_on_door_interacted.bind(n))
 		area.mouse_entered.connect(_on_door_mouse_entered.bind(n))
 		area.mouse_exited.connect(_on_door_mouse_exited.bind(n))
 
+func _setup_player() -> void:
+	player = PlayerScene.instantiate()
+	player.name = "Player"
+	player.capture_mouse_on_ready = false
+	player.position = PLAYER_SPAWN_POS
+	add_child(player)
+
+func _on_view_mode_pressed() -> void:
+	set_first_person_mode(not is_first_person)
+
+func set_first_person_mode(enabled: bool) -> void:
+	is_first_person = enabled
+	if player == null:
+		return
+	player.set_physics_process(enabled)
+	player.set_process_unhandled_input(enabled)
+	var hud: CanvasLayer = player.get_node_or_null("PlayerHUD")
+	if hud != null:
+		hud.visible = enabled
+	if enabled:
+		player.camera.make_current()
+		var journal_open: bool = journal_ui != null and journal_ui.is_open
+		player.set_mouse_captured(not journal_open)
+		btn_view_mode.text = "Overview Camera [V]"
+		status_label.text = "First-Person Mode: Walk with WASD, look at a door and press [E] to inspect its plaque, [J] for Journal, [V] for Overview."
+	else:
+		player.set_mouse_captured(false)
+		camera.make_current()
+		btn_view_mode.text = "First-Person [V]"
+
+func _on_journal_toggled(opened: bool) -> void:
+	if is_first_person and player != null:
+		player.set_mouse_captured(not opened)
+
+func _on_door_interacted(_player_node: Node, n: int) -> void:
+	click_door(n)
+
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_V:
+		set_first_person_mode(not is_first_person)
+		get_viewport().set_input_as_handled()
+		return
+	if is_first_person:
+		return
 	if event is InputEventMouseButton and event.pressed and not event.is_echo() and event.button_index == MOUSE_BUTTON_LEFT:
 		_handle_screen_click(event.position)
 
@@ -339,6 +396,8 @@ func _spawn_content(room: int, content: int) -> void:
 func _on_puzzle_failed(_reason: String) -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	if is_first_person and player != null:
+		player.set_mouse_captured(false)
 	banner.visible = true
 	banner_label.text = "You failed!\nPress Reset to try again."
 	banner_label.modulate = Color(1.0, 0.35, 0.35)
@@ -347,6 +406,8 @@ func _on_puzzle_failed(_reason: String) -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	if is_first_person and player != null:
+		player.set_mouse_captured(false)
 	if is_instance_valid(btn_solve):
 		btn_solve.disabled = true
 	banner.visible = true
