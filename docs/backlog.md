@@ -2,7 +2,7 @@
 
 **Projekt:** SEProject — Ein 3D-Logikrätsel-Abenteuer (Godot 4)  
 **Verknüpfte Dokumente:** [`docs/requirements.md`](requirements.md) | [`docs/user_stories.md`](user_stories.md) | [`HANDOVER.md`](../HANDOVER.md)  
-**Zuletzt aktualisiert:** 24. November 2026
+**Zuletzt aktualisiert:** 25. November 2026
 
 ---
 
@@ -26,22 +26,22 @@ Die Einträge im Product Backlog (**Product Backlog Items**, `PBI-*`) werden nac
 
 Sortiert von höchster zu niedrigster Priorität:
 
-| Rang | PBI-ID | Titel | Epic | Verknüpfte US / Req | Priorität | Story Points | Abhängigkeiten | Status |
-| :---: | :--- | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
-| **1** | **PBI-01** | **In-Game-Logikjournal (UI & automatisches Protokollieren)** | Epic 9 | `US-26`, `FR-08.2` | **P1 (Soll)** | **5** | — | Offen |
-| **2** | **PBI-02** | **First-Person-3D-Spielersteuerung (`Player.tscn`) & `Interactable3D`** | Epic 9 | `US-25`, `FR-08.1` | **P1 (Soll)** | **8** | — | Offen |
-| **3** | **PBI-03** | **3D-Asset-Austausch Level 1 (Wolf, Ziege, Kohlkopf, Floß & Flussufer)** | Epic 7 | `US-22`, `FR-08.4`, `NFR-05` | **P1 (Soll)** | **5** | — | Offen |
-| **4** | **PBI-04** | **Integration First-Person & Journal in Level 2 (Tafelinspektion in 3D)** | Epic 3 / 9 | `US-25`, `US-26`, `FR-08.1` | **P2 (Soll)** | **5** | `PBI-01`, `PBI-02` | Offen |
-| **5** | **PBI-05** | **3D-Asset-Austausch Level 2 (Türen, Rahmen, Tiger- & Prinzessinnen-Modelle)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
-| **6** | **PBI-06** | **3D-Asset-Austausch Level 3 (Damenstatuen-Prefab, Marmor & Sonnenkristall)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
-| **7** | **PBI-07** | **3D-Asset-Austausch Level 4 (Springer-Prefab, Runensteine & Lava-Shader)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
-| **8** | **PBI-08** | **3D-Asset-Austausch Level 5 (Büsten, Dolch der Wahrheit & Bibliothek)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
-| **9** | **PBI-09** | **Deduktions-Scratchpad-Matrix im Logikjournal** | Epic 9 | `US-26`, `FR-08.2` | **P2 (Kann)** | **3** | `PBI-01` | Offen |
-| **10** | **PBI-10** | **Bonuskammer: The Midnight Bridge (*Brücke & Fackel*, Headless-Logik + Tests)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-01` | **P2 (Kann)** | **5** | — | Offen |
-| **11** | **PBI-11** | **Bonuskammer: The Midnight Bridge (3D-Szene, Fackel-Timer & Integrationstest)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-02` | **P2 (Kann)** | **8** | `PBI-10` | Offen |
-| **12** | **PBI-12** | **Audio & Atmosphäre (Soundeffekte für Züge, Türen, Lava, Gewitter & Sieg)** | Polish | `NFR-03` | **P3 (Kann)** | **5** | — | Offen |
-| **13** | **PBI-13** | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
-| **14** | **PBI-14** | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
+| Rang | PBI-ID | GitHub Issue | Titel | Epic | Verknüpfte US / Req | Priorität | Story Points | Abhängigkeiten | Status |
+| :---: | :--- | :---: | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
+| **1** | **PBI-01** | `#1` | **In-Game-Logikjournal (UI & automatisches Protokollieren)** | Epic 9 | `US-26`, `FR-08.2` | **P1 (Soll)** | **5** | — | Offen |
+| **2** | **PBI-02** | `#2` | **First-Person-3D-Spielersteuerung (`Player.tscn`) & `Interactable3D`** | Epic 9 | `US-25`, `FR-08.1` | **P1 (Soll)** | **8** | — | Offen |
+| **3** | **PBI-03** | `#3` | **3D-Asset-Austausch Level 1 (Wolf, Ziege, Kohlkopf, Floß & Flussufer)** | Epic 7 | `US-22`, `FR-08.4`, `NFR-05` | **P1 (Soll)** | **5** | — | Offen |
+| **4** | **PBI-04** | `#4` | **Integration First-Person & Journal in Level 2 (Tafelinspektion in 3D)** | Epic 3 / 9 | `US-25`, `US-26`, `FR-08.1` | **P2 (Soll)** | **5** | `PBI-01`, `PBI-02` | Offen |
+| **5** | **PBI-05** | `#5` | **3D-Asset-Austausch Level 2 (Türen, Rahmen, Tiger- & Prinzessinnen-Modelle)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
+| **6** | **PBI-06** | `#6` | **3D-Asset-Austausch Level 3 (Damenstatuen-Prefab, Marmor & Sonnenkristall)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
+| **7** | **PBI-07** | `#7` | **3D-Asset-Austausch Level 4 (Springer-Prefab, Runensteine & Lava-Shader)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
+| **8** | **PBI-08** | `#8` | **3D-Asset-Austausch Level 5 (Büsten, Dolch der Wahrheit & Bibliothek)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
+| **9** | **PBI-09** | `#9` | **Deduktions-Scratchpad-Matrix im Logikjournal** | Epic 9 | `US-26`, `FR-08.2` | **P2 (Kann)** | **3** | `PBI-01` | Offen |
+| **10** | **PBI-10** | `#10` | **Bonuskammer: The Midnight Bridge (*Brücke & Fackel*, Headless-Logik + Tests)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-01` | **P2 (Kann)** | **5** | — | Offen |
+| **11** | **PBI-11** | `#11` | **Bonuskammer: The Midnight Bridge (3D-Szene, Fackel-Timer & Integrationstest)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-02` | **P2 (Kann)** | **8** | `PBI-10` | Offen |
+| **12** | **PBI-12** | `#12` | **Audio & Atmosphäre (Soundeffekte für Züge, Türen, Lava, Gewitter & Sieg)** | Polish | `NFR-03` | **P3 (Kann)** | **5** | — | Offen |
+| **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
+| **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
 
 **Summe offener Aufwand:** `65 Story Points`
 
@@ -100,6 +100,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-07** | Level 5 (*Dreadbury Manor*) mit FOL-Modellprüfer, 3 randomisierten Ausgängen (Agatha/Butler/Charles), spoilerfreier Fallanzeige, 8 dynamischen Hinweisen & Auto-Solver | `TestDreadbury.gd` (62), `TestLevel05Scene.gd` (22) |
 | **DONE-08** | Level 6 (*The Cat Sanctuary*) als `.glb`-Prefab-Showcase mit Animation & Picking | `TestLevel06Scene.gd` (17) |
 | **DONE-09** | Überlappungsfreies HUD-Layout, dezente Farbschemata pro Szene & SRS/User-Stories | Alle 6 Szenen validiert, `docs/requirements.md`, `docs/user_stories.md` |
+| **DONE-10** | GitHub-Issues (`#1`–`#14`), Standard-Labels & Git-Branching-/PR-Workflow | `AGENTS.md`, `gh issue list -R eytschjey/seproject` |
 
 ---
 
@@ -117,4 +118,4 @@ Ein PBI gilt erst als abgeschlossen, wenn:
 2. **Automatisierte Tests grün:** Passende Unit- und/oder Szenen-Integrationstests (`tests/Test*.gd`) bestehen mit `0` Fehlern.
 3. **Szenen validiert:** Jede geänderte `.tscn`-Datei besteht `godot --headless --validate --quit <Szene>`.
 4. **HUD- & Asset-Standards erfüllt:** Keine 2D/3D-Label-Überlappungen; `.glb`-Assets nur über vererbte Prefabs in `scenes/props/`.
-5. **Dokumentation & Git synchron:** `README.md`, `HANDOVER.md`, `AGENTS.md` und `docs/` sind aktualisiert; Änderungen wurden gepullt, committet und gepusht.
+5. **Dokumentation, Git-Branch & Issue synchron:** `README.md`, `HANDOVER.md`, `AGENTS.md` und `docs/` sind aktualisiert; Änderungen wurden auf einem eigenen Branch entwickelt, per Pull Request in `main` integriert und das zugehörige GitHub-Issue nach Verifikation geschlossen.

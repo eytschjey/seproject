@@ -1,7 +1,7 @@
 # User Stories & Akzeptanzkriterien — SEProject
 
 **Projekt:** SEProject — Ein 3D-Logikrätsel-Abenteuer  
-**Zuletzt aktualisiert:** 24. November 2026
+**Zuletzt aktualisiert:** 25. November 2026
 
 Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Funktion>`, **damit** `<Nutzen>`) mit testbaren **Gegeben / Wenn / Dann**-Akzeptanzkriterien sowie Verweisen auf [`docs/requirements.md`](requirements.md).
 
@@ -221,7 +221,7 @@ Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Fun
   - **Gegeben**, eine Headless-Umgebung ohne GPU/Display, **Wenn** ich `godot --headless -s res://tests/Test<Logic>.gd` ausführe, **Dann** laufen alle Assertions durch und beenden sich mit Exit-Code `0` bei Erfolg bzw. `1` bei Fehler.
 
 ### US-24: 3D-Szenen und UI-Abläufe Headless validieren
-- **Story:** Als **QA / Entwickler** möchte ich automatisierte Szenen-Integrationstests und Syntax-Validierungsbefehle für alle Level, damit fehlerhafte Knotenpfade, fehlende Ressourcen oder UI-Regressionen vor dem Push erkannt werden.
+- **Story:** Als **QA / Entwickler** möchte ich automatisierte Szenen-Integrationstests und Syntax-Validierungsbefehle für alle Level, damit fehlerhafte Knotenpfade, fehlende Ressourcen oder UI-Regressionen vor dem Push bzw. Pull Request erkannt werden.
 - **Zugehörige Anforderungen:** `NFR-02`, `NFR-06`
 - **Status:** Implementiert
 - **Akzeptanzkriterien:**
