@@ -42,8 +42,9 @@ Sortiert von höchster zu niedrigster Priorität:
 | **12** | **PBI-12** | `#12` | **Audio & Atmosphäre (Soundeffekte für Züge, Türen, Lava, Gewitter & Sieg)** | Polish | `NFR-03` | **P3 (Kann)** | **5** | — | Offen |
 | **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Erledigt |
 | **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Erledigt |
+| **15** | **PBI-15** | `#27` | **First-Person-Integration in allen übrigen Leveln (nach 3D-Asset-Austausch)** | Epic 9 | `US-25`, `FR-08.1` | **P2 (Soll–Kann)** | **8** | `PBI-03`, `PBI-05`–`PBI-08` | Offen |
 
-**Summe offener Aufwand:** `25 Story Points`
+**Summe offener Aufwand:** `33 Story Points`
 
 ---
 
