@@ -50,7 +50,7 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
   ```
 
 ### 4. Documentation & Git Synchronization
-- **Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes** so documentation stays in lockstep with the codebase.
+- **Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, `docs/backlog.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes** so documentation stays in lockstep with the codebase.
 - **Git Workflow:** Always run `git pull` before making any changes, and `git commit` + `git push` after completing and verifying changes.
 
 ### 5. 3D Asset Pipeline & Greybox Replacement Standards
@@ -60,6 +60,17 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
 - **Dynamic Spawners:** For pieces spawned at runtime (e.g. queen statues in Level 3, knight piece in Level 4, suspect busts in Level 5), preload the prefab (`const PropScene = preload(...)`) and instantiate it, applying material overrides for state changes (such as safe vs conflict coloring).
 - **Import Suffixes:** Leverage Godot's import hints on mesh objects in Blender: `-col` (generates convex collision shape) and `-colonly` (generates invisible collision geometry).
 - **Headless Validation:** Always validate modified scenes (`godot --headless --validate --quit scenes/levels/<SceneName>.tscn`) to guarantee no missing texture or resource dependencies exist.
+
+### 6. GitHub Issues & Labels Workflow
+All agents **must** actively track and synchronize work with GitHub Issues and Labels in `eytschjey/seproject` via the GitHub CLI (`gh`):
+- **Inspect Issues Before Starting:** Run `gh issue list -R eytschjey/seproject` before picking up new work to check active PBIs, priorities, and existing context.
+- **Sync with `docs/backlog.md`:** Backlog items (`PBI-*`) correspond to GitHub Issues (`[PBI-XX] ...`). When discovering a new bug, feature request, or backlog task, create a matching issue with `gh issue create -R eytschjey/seproject` including acceptance criteria and relevant labels.
+- **Use the Standard Label Taxonomy:** Always apply at least one priority label and one type/domain label from the existing set (`gh label list -R eytschjey/seproject`) rather than creating duplicate labels:
+  - **Priority:** `P1` (High / Soll), `P2` (Medium / Soll–Kann), `P3` (Low / Polish / Kann)
+  - **Domain / Type:** `gameplay`, `ui`, `3d-assets`, `bonus`, `ci`, `bug`, `enhancement`, `documentation`
+- **Track Progress & Close on Completion:**
+  - Leave concise progress or verification comments (`gh issue comment <num> -R eytschjey/seproject --body "..."`) when starting significant work or hitting blockers.
+  - Reference issue numbers in commit messages (e.g. `Closes #1` or `Fixes #12`) and verify the issue is closed (`gh issue close <num> -R eytschjey/seproject`) only **after** all automated headless tests, scene validations, and markdown docs (`docs/backlog.md`, `HANDOVER.md`, `README.md`) are updated and passing.
 
 ---
 
