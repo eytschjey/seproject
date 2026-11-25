@@ -158,7 +158,7 @@
 
 ## 🔧 Essential Commands for Testing & Validation
 
-All tests can be executed in one shot via [`scripts/ci/run_tests.sh`](scripts/ci/run_tests.sh) (`GODOT_BIN=/path/to/godot ./scripts/ci/run_tests.sh`), or individually via Godot CLI:
+All tests can be executed in one shot from either the repo root or directly inside `scripts/ci/` via [`scripts/ci/run_tests.sh`](scripts/ci/run_tests.sh) (Linux/macOS) or [`scripts/ci/run_tests.bat`](scripts/ci/run_tests.bat) (Windows), or individually via Godot CLI:
 
 ```bash
 cd <path-to-seproject>

@@ -160,8 +160,19 @@ seproject/
 You can run automated tests either directly in the Godot Editor or headlessly via terminal:
 
 ### Run All Tests & Scene Validations (CI Runner):
+Both scripts automatically resolve the repository root, so they can be executed either from the repo root or directly inside `scripts/ci/`:
 ```bash
+# Linux / macOS:
 GODOT_BIN=godot ./scripts/ci/run_tests.sh
+# or from scripts/ci/:
+cd scripts/ci && ./run_tests.sh
+```
+```bat
+REM Windows (cmd):
+set GODOT_BIN=godot
+scripts\ci\run_tests.bat
+REM or directly inside scripts\ci\:
+cd scripts\ci && run_tests.bat
 ```
 
 ### Pure Logic Unit Tests:
