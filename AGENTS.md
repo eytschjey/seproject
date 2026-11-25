@@ -49,9 +49,25 @@ Welcome, AI Agent or developer! This repository houses **SEProject**, an atmosph
   godot --headless --validate --quit scenes/levels/<SceneName>.tscn
   ```
 
-### 4. Documentation & Git Synchronization
-- **Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, `docs/backlog.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes** so documentation stays in lockstep with the codebase.
-- **Git Workflow:** Always run `git pull` before making any changes, and `git commit` + `git push` after completing and verifying changes.
+### 4. Documentation & Git Branching Workflow
+- **Documentation Lockstep:** Always update the markdown files (`README.md`, `HANDOVER.md`, `AGENTS.md`, `docs/backlog.md`, and `story/level_progression.md` when applicable) whenever making code, scene, or test changes so documentation stays synchronized with the codebase.
+- **Never Develop Directly on `main`:** Keep `main` clean and always passing. All feature, bugfix, asset, refactor, and documentation work **must** be developed on a dedicated Git branch and integrated via Pull Request.
+- **Sync Before Branching:** Always start from an up-to-date `main`:
+  ```bash
+  git checkout main && git pull
+  git checkout -b <type>/<issue>-<short-slug>
+  ```
+- **Branch Naming Convention:**
+  - `feat/<issue>-<short-slug>` — new features or PBIs (e.g. `feat/1-logic-journal`)
+  - `fix/<issue>-<short-slug>` — bug fixes (e.g. `fix/15-raft-click-overlap`)
+  - `assets/<issue>-<short-slug>` — 3D `.glb` model & prefab replacements (e.g. `assets/3-level1-models`)
+  - `docs/<short-slug>` — documentation-only updates (e.g. `docs/git-branching-rules`)
+  - `chore/<short-slug>` — CI, tooling, or maintenance (e.g. `chore/14-github-actions-ci`)
+- **Commit, Verify, Push & Pull Request:**
+  - Keep commits focused and reference the corresponding issue number (e.g. `Closes #1` or `Fixes #12`).
+  - Run all relevant headless unit tests, scene integration tests, and `godot --headless --validate --quit` checks before pushing.
+  - Push the branch (`git push -u origin <branch-name>`) and open a Pull Request targeting `main` (`gh pr create -R eytschjey/seproject --base main`) including a brief summary, linked issue, and verification output.
+  - Never force-push (`--force`) to `main`. After a PR is reviewed/verified and merged, delete the merged branch (`git branch -d <branch-name>`).
 
 ### 5. 3D Asset Pipeline & Greybox Replacement Standards
 - **Standard Format:** Use **glTF 2.0 Binary (`.glb`)** exclusively under `assets/models/`. Self-contained `.glb` files package PBR textures, meshes, and materials without requiring external DCC software (e.g. Blender) during headless test runs or CI builds.
