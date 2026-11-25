@@ -1,14 +1,15 @@
 extends SceneTree
 
-# Plays through Level 2 via direct 3D door clicks: wrong door (tiger), reset, empty door, and auto-solver.
-var checks_failed: int = 0
+# Plays through Level 2 via direct 3D door clicks: wrong door (tiger), reset, empty door, auto-solver, and first-person mode.
+const Runner = preload("res://tests/TestRunner.gd")
+
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestLevel02Scene (Level 2 3D, Auto-Solve & First-Person)")
 	var s = load("res://scenes/levels/Level02_NinePortals.tscn").instantiate()
 	root.add_child(s)
 	await physics_frame
@@ -96,5 +97,4 @@ func _init() -> void:
 	s.btn_view_mode.pressed.emit()
 	check(not s.is_first_person and s.camera.current, "Toggling view mode returns to overview camera")
 
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)

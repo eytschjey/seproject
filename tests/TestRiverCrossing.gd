@@ -1,42 +1,25 @@
 extends SceneTree
 
 const Logic = preload("res://scripts/logic/RiverCrossingLogic.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var total_assertions: int = 0
-var failed_assertions: int = 0
+var t: RefCounted
 
 func _init() -> void:
-	print("==================================================")
-	print("🧪 Running River Crossing Logic Verification Tests")
-	print("==================================================")
-	
+	t = Runner.new("TestRiverCrossing (Level 1 Logic)")
 	test_initial_state()
 	test_illegal_move_wolf_eats_goat()
 	test_illegal_move_goat_eats_cabbage()
 	test_valid_solution_path()
 	test_reset()
 	test_find_solution()
-	
-	print("==================================================")
-	if failed_assertions == 0:
-		print("🎉 ALL %d ASSERTIONS PASSED SUCCESSFULLY!" % total_assertions)
-		print("==================================================")
-		quit(0)
-	else:
-		push_error("❌ %d ASSERTION(S) FAILED!" % failed_assertions)
-		print("==================================================")
-		quit(1)
+	t.finish(self)
 
 func assert_test(condition: bool, message: String) -> void:
-	total_assertions += 1
-	if not condition:
-		failed_assertions += 1
-		push_error("  ❌ FAILED: " + message)
-	else:
-		print("  ✔ " + message)
+	t.check(condition, message)
 
 func test_initial_state() -> void:
-	print("\n[Test 1: Initial State]")
+	t.section("Test 1: Initial State")
 	var logic = Logic.new()
 	assert_test(logic.boat_side == Logic.Side.WEST, "Boat starts on West shore")
 	assert_test(logic.item_on_boat == null, "Boat starts empty")
@@ -46,7 +29,7 @@ func test_initial_state() -> void:
 	assert_test(not logic.is_failed, "Puzzle is not in fail state")
 
 func test_illegal_move_wolf_eats_goat() -> void:
-	print("\n[Test 2: Leaving Wolf & Goat Alone on Shore]")
+	t.section("Test 2: Leaving Wolf & Goat Alone on Shore")
 	var logic = Logic.new()
 	var signal_data = { "emitted": false, "reason": "" }
 	logic.puzzle_failed.connect(func(reason: String):
@@ -63,7 +46,7 @@ func test_illegal_move_wolf_eats_goat() -> void:
 	assert_test("wolf ate the goat" in signal_data.reason.to_lower(), "Reason: %s" % signal_data.reason)
 
 func test_illegal_move_goat_eats_cabbage() -> void:
-	print("\n[Test 3: Leaving Goat & Cabbage Alone on Shore]")
+	t.section("Test 3: Leaving Goat & Cabbage Alone on Shore")
 	var logic = Logic.new()
 	var signal_data = { "emitted": false, "reason": "" }
 	logic.puzzle_failed.connect(func(reason: String):
@@ -80,7 +63,7 @@ func test_illegal_move_goat_eats_cabbage() -> void:
 	assert_test("goat ate the cabbage" in signal_data.reason.to_lower(), "Reason: %s" % signal_data.reason)
 
 func test_valid_solution_path() -> void:
-	print("\n[Test 4: Full Valid Solution Sequence]")
+	t.section("Test 4: Full Valid Solution Sequence")
 	var logic = Logic.new()
 	var solved_data = { "emitted": false }
 	logic.puzzle_solved.connect(func(): solved_data.emitted = true)
@@ -122,7 +105,7 @@ func test_valid_solution_path() -> void:
 	assert_test(logic.west_items.is_empty(), "West shore is empty")
 
 func test_reset() -> void:
-	print("\n[Test 5: Reset Functionality]")
+	t.section("Test 5: Reset Functionality")
 	var logic = Logic.new()
 	# Cause fail
 	logic.load_item(Logic.Item.CABBAGE)
@@ -135,7 +118,7 @@ func test_reset() -> void:
 	assert_test(logic.boat_side == Logic.Side.WEST, "Boat restored to West")
 
 func test_find_solution() -> void:
-	print("\n[Test 6: BFS Auto-Solver]")
+	t.section("Test 6: BFS Auto-Solver")
 	var logic = Logic.new()
 	var path: Array[Dictionary] = logic.find_solution()
 	assert_test(path.size() == 17, "find_solution finds optimal 17-step sequence")

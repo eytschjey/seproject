@@ -6,29 +6,28 @@ extends SceneTree
 
 const JournalModel = preload("res://scripts/logic/JournalState.gd")
 const JournalUI = preload("res://scripts/ui/JournalController.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var checks_failed: int = 0
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
-	print("=== TestJournal: Headless Model ===")
+	t = Runner.new("TestJournal (Logic Journal & Matrix)")
+	t.section("Headless Model")
 	_test_headless_model()
 
-	print("=== TestJournal: UI Scene & Toggle ===")
+	t.section("UI Scene & Toggle")
 	await _test_journal_ui()
 
-	print("=== TestJournal: Level 2 Integration ===")
+	t.section("Level 2 Integration")
 	await _test_level02_integration()
 
-	print("=== TestJournal: Level 5 Integration ===")
+	t.section("Level 5 Integration")
 	await _test_level05_integration()
 
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)
 
 func _test_headless_model() -> void:
 	var js = JournalModel.new()

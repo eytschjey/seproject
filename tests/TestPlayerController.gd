@@ -4,23 +4,22 @@ extends SceneTree
 # First-Person 3D Player Controller (Player.tscn) & Interactable3D component.
 
 const InteractableScript = preload("res://scripts/core/Interactable3D.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var checks_failed: int = 0
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
-	print("=== TestPlayerController: Interactable3D Unit Checks ===")
+	t = Runner.new("TestPlayerController (First-Person & Interactable3D)")
+	t.section("Interactable3D Unit Checks")
 	_test_interactable_unit()
 
-	print("=== TestPlayerController: Player.tscn Movement, Look & Raycast ===")
+	t.section("Player.tscn Movement, Look & Raycast")
 	await _test_player_scene()
 
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)
 
 func _test_interactable_unit() -> void:
 	var item = InteractableScript.new()

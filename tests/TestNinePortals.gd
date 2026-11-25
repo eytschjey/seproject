@@ -1,27 +1,22 @@
 extends SceneTree
 
 const Logic = preload("res://scripts/logic/NinePortalsLogic.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var passed: int = 0
-var failed: int = 0
+var t: RefCounted
 
 func assert_test(cond: bool, msg: String) -> void:
-	if cond:
-		passed += 1
-		print("  PASS: ", msg)
-	else:
-		failed += 1
-		print("  FAIL: ", msg)
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestNinePortals (Level 2 Logic)")
 	test_consistency()
 	test_solution_uniqueness()
 	test_game_flow()
-	print("\n==== %d passed, %d failed ====" % [passed, failed])
-	quit(1 if failed > 0 else 0)
+	t.finish(self)
 
 func test_consistency() -> void:
-	print("\n[Test 1: Protocol consistency]")
+	t.section("Test 1: Protocol consistency")
 	var layout: Array[int] = Logic.DEFAULT_LAYOUT
 	assert_test(Logic.is_consistent(layout), "Default layout is consistent")
 	assert_test(layout[4] == Logic.Content.PRINCESS, "Default layout: princess in Room 5")
@@ -41,7 +36,7 @@ func test_consistency() -> void:
 	assert_test(not Logic.is_consistent(short), "Rejects wrong-sized layout")
 
 func test_solution_uniqueness() -> void:
-	print("\n[Test 2: Princess is uniquely determined]")
+	t.section("Test 2: Princess is uniquely determined")
 	var all := Logic.enumerate_consistent()
 	assert_test(all.size() > 0, "At least one consistent layout (%d found)" % all.size())
 	var always_5 := true
@@ -67,7 +62,7 @@ func test_solution_uniqueness() -> void:
 	assert_test(Logic.princess_candidates(logic.roles) == [logic.princess_room()], "Reset layout uniquely determines the Princess's room")
 
 func test_game_flow() -> void:
-	print("\n[Test 3: Game flow]")
+	t.section("Test 3: Game flow")
 	var logic = Logic.new()
 	var data := {"failed": "", "solved": false, "opened": 0}
 	logic.puzzle_failed.connect(func(r): data.failed = r)

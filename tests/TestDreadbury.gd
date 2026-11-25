@@ -1,28 +1,23 @@
 extends SceneTree
 
 const Logic = preload("res://scripts/logic/DreadburyLogic.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var passed: int = 0
-var failed: int = 0
+var t: RefCounted
 
 func assert_test(cond: bool, msg: String) -> void:
-	if cond:
-		passed += 1
-		print("  PASS: ", msg)
-	else:
-		failed += 1
-		print("  FAIL: ", msg)
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestDreadbury (Level 5 Logic)")
 	test_axioms_and_models()
 	test_all_cases_unique_killer()
 	test_randomized_reset_outcomes()
 	test_investigation_and_accusation_flow()
-	print("\n==== %d passed, %d failed ====" % [passed, failed])
-	quit(1 if failed > 0 else 0)
+	t.finish(self)
 
 func test_axioms_and_models() -> void:
-	print("\n[Test 1: First-order model checking]")
+	t.section("Test 1: First-order model checking")
 	var valid_hates := [
 		[true, false, true],   # Agatha hates Agatha, Charles
 		[true, false, true],   # Butler hates Agatha, Charles (not himself)
@@ -70,7 +65,7 @@ func test_axioms_and_models() -> void:
 	)
 
 func test_all_cases_unique_killer() -> void:
-	print("\n[Test 2: Unique killer deduction across all 3 outcomes]")
+	t.section("Test 2: Unique killer deduction across all 3 outcomes")
 	var expected_killers: Array[int] = [
 		Logic.Suspect.AGATHA,
 		Logic.Suspect.BUTLER,
@@ -106,7 +101,7 @@ func test_all_cases_unique_killer() -> void:
 		)
 
 func test_randomized_reset_outcomes() -> void:
-	print("\n[Test 3: Randomized case selection on start and reset]")
+	t.section("Test 3: Randomized case selection on start and reset")
 	var logic := Logic.new()
 	var seen := {}
 	seen[logic.active_case] = true
@@ -121,7 +116,7 @@ func test_randomized_reset_outcomes() -> void:
 	assert_test(seen.size() == Logic.CASE_COUNT, "All 3 outcomes (Agatha, Butler, Charles) occur across resets")
 
 func test_investigation_and_accusation_flow() -> void:
-	print("\n[Test 4: Investigation & accusation gameplay flow across all 3 outcomes]")
+	t.section("Test 4: Investigation & accusation gameplay flow across all 3 outcomes")
 	for case_id in Logic.CASE_COUNT:
 		var logic := Logic.new(case_id)
 		var killer: int = logic.solve_killer()

@@ -3,14 +3,13 @@ extends SceneTree
 # Headless unit & UI integration test for PBI-13: ProgressStore & Main Menu progress display.
 
 const ProgressStoreScript = preload("res://scripts/logic/ProgressStore.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 const TEST_SAVE_PATH: String = "user://test_progress_store.cfg"
 
-var checks_failed: int = 0
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _cleanup_save() -> void:
 	var abs_path: String = ProjectSettings.globalize_path(TEST_SAVE_PATH)
@@ -19,15 +18,15 @@ func _cleanup_save() -> void:
 
 func _init() -> void:
 	_cleanup_save()
-	print("=== TestProgressStore: Headless Persistence ===")
+	t = Runner.new("TestProgressStore (Save & Progress)")
+	t.section("Headless Persistence")
 	_test_store_persistence()
 
-	print("=== TestProgressStore: Main Menu Integration ===")
+	t.section("Main Menu Integration")
 	await _test_main_menu_progress()
 
 	_cleanup_save()
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)
 
 func _test_store_persistence() -> void:
 	var store = ProgressStoreScript.new(TEST_SAVE_PATH)

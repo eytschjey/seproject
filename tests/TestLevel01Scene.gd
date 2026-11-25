@@ -1,16 +1,15 @@
 extends SceneTree
 
-var checks_failed: int = 0
+const Runner = preload("res://tests/TestRunner.gd")
+
+var t: RefCounted
 
 func check(condition: bool, message: String) -> void:
-	if not condition:
-		push_error("  FAIL: " + message)
-		checks_failed += 1
-	else:
-		print("  PASS: " + message)
+	t.check(condition, message)
 
 # Plays the full solution through direct 3D object clicks, checks visuals, and verifies auto-solver.
 func _init() -> void:
+	t = Runner.new("TestLevel01Scene (Level 1 3D & Auto-Solve)")
 	var s = load("res://scenes/levels/Level01_Tutorial.tscn").instantiate()
 	root.add_child(s)
 	await process_frame
@@ -86,6 +85,4 @@ func _init() -> void:
 	
 	check(s.logic.is_solved, "Manual sequence completed puzzle successfully")
 	check(s.east_wolf_pos != null and s.wolf_node.global_position.x > 0, "Passengers landed on East shore")
-	
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)

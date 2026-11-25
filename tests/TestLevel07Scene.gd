@@ -1,15 +1,15 @@
 extends SceneTree
 
 # Headless integration test for PBI-11: Bonus Chamber — The Midnight Bridge (Level07_MidnightBridge.tscn).
+const Runner = preload("res://tests/TestRunner.gd")
 
-var checks_failed: int = 0
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestLevel07Scene (Bonus: Midnight Bridge 3D & Torch)")
 	var s = load("res://scenes/levels/Level07_MidnightBridge.tscn").instantiate()
 	root.add_child(s)
 	s.crossing_tween_duration = 0.01
@@ -83,6 +83,4 @@ func _init() -> void:
 	check(s.logic.is_solved and s.logic.elapsed_minutes == 15, "Auto-solver completes Midnight Bridge in exactly 15 minutes")
 	check(s.banner.visible and s.banner_label.text.contains("BONUS CHAMBER CLEARED"), "Victory banner displayed")
 	check(s.btn_solve.disabled, "Auto-solve disabled after victory")
-
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)
