@@ -10,6 +10,7 @@ const LEVELS: Array[Dictionary] = [
 	{"title": "Level 4: The Knight's Chasm", "scene": "res://scenes/levels/Level04_KnightsChasm.tscn"},
 	{"title": "Level 5: Dreadbury Manor", "scene": "res://scenes/levels/Level05_DreadburyManor.tscn"},
 	{"title": "Level 6: The Cat (Showcase)", "scene": "res://scenes/levels/Level06_Cat.tscn"},
+	{"title": "Bonus: The Midnight Bridge", "scene": "res://scenes/levels/Level07_MidnightBridge.tscn"},
 ]
 
 @onready var level_list: VBoxContainer = %LevelList
@@ -24,6 +25,7 @@ const LEVEL_ACCENTS: Array[Color] = [
 	Color(0.38, 0.50, 0.60, 0.65), # Level 4: Muted Steel-Blue
 	Color(0.48, 0.38, 0.54, 0.65), # Level 5: Dusty Plum
 	Color(0.56, 0.42, 0.46, 0.65), # Level 6: Dusty Rose
+	Color(0.68, 0.48, 0.26, 0.70), # Bonus: Ember-Amber
 ]
 
 func _make_button_style(bg: Color, border: Color) -> StyleBoxFlat:

@@ -1,0 +1,401 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/Level07Controller.gd" id="1_ctrl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_Midnight"]
+sky_top_color = Color(0.02, 0.03, 0.07, 1)
+sky_horizon_color = Color(0.06, 0.08, 0.14, 1)
+ground_horizon_color = Color(0.04, 0.05, 0.09, 1)
+ground_bottom_color = Color(0.01, 0.01, 0.03, 1)
+
+[sub_resource type="Sky" id="Sky_Res"]
+sky_material = SubResource("Sky_Midnight")
+
+[sub_resource type="Environment" id="Env_Midnight"]
+background_mode = 2
+sky = SubResource("Sky_Res")
+ambient_light_source = 3
+ambient_light_color = Color(0.24, 0.30, 0.44, 1)
+ambient_light_sky_contribution = 0.25
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.05, 0.06, 0.11, 1)
+fog_density = 0.018
+
+[sub_resource type="StandardMaterial3D" id="Mat_Cliff"]
+albedo_color = Color(0.18, 0.19, 0.23, 1)
+roughness = 0.92
+
+[sub_resource type="StandardMaterial3D" id="Mat_Abyss"]
+albedo_color = Color(0.02, 0.03, 0.05, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_BridgeWood"]
+albedo_color = Color(0.36, 0.24, 0.14, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_Rope"]
+albedo_color = Color(0.55, 0.44, 0.28, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Ariela"]
+albedo_color = Color(0.30, 0.78, 0.72, 1)
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_Brian"]
+albedo_color = Color(0.36, 0.60, 0.92, 1)
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_Charly"]
+albedo_color = Color(0.84, 0.56, 0.28, 1)
+metallic = 0.35
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_Dumpy"]
+albedo_color = Color(0.68, 0.48, 0.78, 1)
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="Mat_TorchHandle"]
+albedo_color = Color(0.32, 0.20, 0.10, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_TorchFlame"]
+albedo_color = Color(1.0, 0.72, 0.22, 1)
+emission_enabled = true
+emission = Color(1.0, 0.58, 0.15, 1)
+emission_energy_multiplier = 2.6
+
+[sub_resource type="BoxShape3D" id="Shape_Traveler"]
+size = Vector3(1.1, 1.8, 1.1)
+
+[node name="Level07_MidnightBridge" type="Node3D"]
+script = ExtResource("1_ctrl")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_Midnight")
+
+[node name="MoonLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.92, -0.22, 0.32, 0.0, 0.82, 0.57, -0.39, -0.52, 0.76, 0, 12, 8)
+light_color = Color(0.65, 0.75, 0.98, 1)
+light_energy = 0.48
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.838671, 0.544639, 0, -0.544639, 0.838671, 0, 9.2, 13.8)
+fov = 48.0
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="AbyssFloor" type="CSGBox3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.0, 0)
+size = Vector3(36, 1, 24)
+material = SubResource("Mat_Abyss")
+
+[node name="WestCliff" type="CSGBox3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2, -2.5, 0)
+size = Vector3(6.4, 5.0, 9.0)
+material = SubResource("Mat_Cliff")
+
+[node name="ArielaPos" type="Marker3D" parent="Environment/WestCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 2.5, -2.5)
+
+[node name="BrianPos" type="Marker3D" parent="Environment/WestCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 2.5, -0.9)
+
+[node name="CharlyPos" type="Marker3D" parent="Environment/WestCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 2.5, 0.9)
+
+[node name="DumpyPos" type="Marker3D" parent="Environment/WestCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 2.5, 2.5)
+
+[node name="TorchPos" type="Marker3D" parent="Environment/WestCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3.3, 0.0)
+
+[node name="EastCliff" type="CSGBox3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.2, -2.5, 0)
+size = Vector3(6.4, 5.0, 9.0)
+material = SubResource("Mat_Cliff")
+
+[node name="ArielaPos" type="Marker3D" parent="Environment/EastCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 2.5, -2.5)
+
+[node name="BrianPos" type="Marker3D" parent="Environment/EastCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 2.5, -0.9)
+
+[node name="CharlyPos" type="Marker3D" parent="Environment/EastCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 2.5, 0.9)
+
+[node name="DumpyPos" type="Marker3D" parent="Environment/EastCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 2.5, 2.5)
+
+[node name="TorchPos" type="Marker3D" parent="Environment/EastCliff"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 3.3, 0.0)
+
+[node name="RopeBridge" type="Node3D" parent="Environment"]
+
+[node name="Deck" type="CSGBox3D" parent="Environment/RopeBridge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 0)
+size = Vector3(10.2, 0.16, 2.2)
+material = SubResource("Mat_BridgeWood")
+
+[node name="NorthRail" type="CSGBox3D" parent="Environment/RopeBridge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.05)
+size = Vector3(10.2, 0.08, 0.08)
+material = SubResource("Mat_Rope")
+
+[node name="SouthRail" type="CSGBox3D" parent="Environment/RopeBridge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.05)
+size = Vector3(10.2, 0.08, 0.08)
+material = SubResource("Mat_Rope")
+
+[node name="BridgeCenter" type="Marker3D" parent="Environment/RopeBridge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0, 0)
+
+[node name="Travelers" type="Node3D" parent="."]
+
+[node name="Ariela" type="Node3D" parent="Travelers"]
+
+[node name="Body" type="CSGCylinder3D" parent="Travelers/Ariela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+radius = 0.28
+height = 1.1
+material = SubResource("Mat_Ariela")
+
+[node name="Head" type="CSGSphere3D" parent="Travelers/Ariela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
+radius = 0.22
+material = SubResource("Mat_Ariela")
+
+[node name="NameLabel" type="Label3D" parent="Travelers/Ariela"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.78, 0)
+billboard = 1
+text = "Ariela (1m)"
+font_size = 36
+pixel_size = 0.008
+
+[node name="ClickArea" type="Area3D" parent="Travelers/Ariela"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Travelers/Ariela/ClickArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_Traveler")
+
+[node name="Brian" type="Node3D" parent="Travelers"]
+
+[node name="Body" type="CSGCylinder3D" parent="Travelers/Brian"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+radius = 0.31
+height = 1.2
+material = SubResource("Mat_Brian")
+
+[node name="Head" type="CSGSphere3D" parent="Travelers/Brian"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38, 0)
+radius = 0.24
+material = SubResource("Mat_Brian")
+
+[node name="NameLabel" type="Label3D" parent="Travelers/Brian"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.88, 0)
+billboard = 1
+text = "Brian (2m)"
+font_size = 36
+pixel_size = 0.008
+
+[node name="ClickArea" type="Area3D" parent="Travelers/Brian"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Travelers/Brian/ClickArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_Traveler")
+
+[node name="Charly" type="Node3D" parent="Travelers"]
+
+[node name="Body" type="CSGBox3D" parent="Travelers/Charly"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+size = Vector3(0.75, 1.3, 0.55)
+material = SubResource("Mat_Charly")
+
+[node name="Head" type="CSGSphere3D" parent="Travelers/Charly"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 0)
+radius = 0.25
+material = SubResource("Mat_Charly")
+
+[node name="NameLabel" type="Label3D" parent="Travelers/Charly"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.98, 0)
+billboard = 1
+text = "Charly (5m)"
+font_size = 36
+pixel_size = 0.008
+
+[node name="ClickArea" type="Area3D" parent="Travelers/Charly"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Travelers/Charly/ClickArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_Traveler")
+
+[node name="Dumpy" type="Node3D" parent="Travelers"]
+
+[node name="Body" type="CSGCylinder3D" parent="Travelers/Dumpy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+radius = 0.36
+height = 1.0
+material = SubResource("Mat_Dumpy")
+
+[node name="Head" type="CSGSphere3D" parent="Travelers/Dumpy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18, 0)
+radius = 0.24
+material = SubResource("Mat_Dumpy")
+
+[node name="NameLabel" type="Label3D" parent="Travelers/Dumpy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68, 0)
+billboard = 1
+text = "Dumpy (8m)"
+font_size = 36
+pixel_size = 0.008
+
+[node name="ClickArea" type="Area3D" parent="Travelers/Dumpy"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Travelers/Dumpy/ClickArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_Traveler")
+
+[node name="Torch" type="Node3D" parent="."]
+
+[node name="Handle" type="CSGCylinder3D" parent="Torch"]
+radius = 0.07
+height = 0.85
+material = SubResource("Mat_TorchHandle")
+
+[node name="Flame" type="CSGSphere3D" parent="Torch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0)
+radius = 0.22
+material = SubResource("Mat_TorchFlame")
+
+[node name="TorchLight" type="OmniLight3D" parent="Torch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+light_color = Color(1.0, 0.68, 0.28, 1)
+light_energy = 3.2
+omni_range = 14.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="RootControl" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HeaderPanel" type="PanelContainer" parent="UI/RootControl"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 112.0
+offset_top = 12.0
+offset_right = -20.0
+offset_bottom = 106.0
+grow_horizontal = 2
+
+[node name="HeaderBox" type="VBoxContainer" parent="UI/RootControl/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="TitleLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.84, 0.64, 1)
+theme_override_font_sizes/font_size = 21
+text = "Bonus Chamber: The Midnight Bridge"
+horizontal_alignment = 1
+
+[node name="TorchTimerLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.78, 0.36, 1)
+theme_override_font_sizes/font_size = 16
+text = "Torch Remaining: 15:00  |  Elapsed: 0 / 15 min  |  Torch Side: West"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="UI/RootControl/HeaderPanel/HeaderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.87, 0.92, 1)
+theme_override_font_sizes/font_size = 14
+text = "Select 1 or 2 travelers on the torch's cliff (click in 3D or below) and cross before the 15-minute torch burns out."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Banner" type="PanelContainer" parent="UI/RootControl"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -280.0
+offset_top = 126.0
+offset_right = 280.0
+offset_bottom = 226.0
+grow_horizontal = 2
+
+[node name="BannerLabel" type="Label" parent="UI/RootControl/Banner"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Notification"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ActionBar" type="PanelContainer" parent="UI/RootControl"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = -124.0
+offset_right = -36.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ActionBox" type="VBoxContainer" parent="UI/RootControl/ActionBar"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TravelerButtons" type="HBoxContainer" parent="UI/RootControl/ActionBar/ActionBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ControlButtons" type="HBoxContainer" parent="UI/RootControl/ActionBar/ActionBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="BtnCross" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 38)
+layout_mode = 2
+disabled = true
+text = "Cross Bridge"
+
+[node name="BtnUndo" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 38)
+layout_mode = 2
+disabled = true
+text = "Undo"
+
+[node name="BtnReset" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 38)
+layout_mode = 2
+text = "Reset"
+
+[node name="BtnSolve" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(165, 38)
+layout_mode = 2
+text = "Auto-Solve (Debug)"

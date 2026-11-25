@@ -77,9 +77,10 @@
    * **Player Scene & Controller:** [`scenes/player/Player.tscn`](scenes/player/Player.tscn) + [`scripts/player/PlayerController.gd`](scripts/player/PlayerController.gd) (`CharacterBody3D`, capsule collider, `CameraPivot`, `Camera3D`, centered `InteractionRay`, WASD/Shift/Space movement, clamped mouse look with `Esc` capture toggle, crosshair & contextual `[E] ...` prompt HUD).
    * **Automated Test:** [`tests/TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks passing) verifying `Interactable3D` signals, 3D raycast detection/range/prompting, mouse look clamping, `Esc` capture toggle, and walk/sprint velocities.
 
-13. **Bonus Chamber — The Midnight Bridge Headless Logic (`PBI-10` / `#10`):**
-   * **Headless Model & Solver:** [`scripts/logic/MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd) enforces Bridge & Torch rules (Ariela 1m, Brian 2m, Charly 5m, Dumpy 8m; 1–2 travelers per crossing with the torch; strict 15-minute torch limit), supports `undo()` recovery from burnout, and includes a Dijkstra shortest-time solver (`find_optimal_solution()`) from both start and mid-game states.
-   * **Automated Unit Tests:** [`tests/TestMidnightBridge.gd`](tests/TestMidnightBridge.gd) (45 assertions passing). Next step: 3D scene & torch countdown UI (`PBI-11` / `#11`).
+13. **Bonus Chamber — The Midnight Bridge (`PBI-10` / `#10` & `PBI-11` / `#11`):**
+   * **Headless Model & Solver:** [`scripts/logic/MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd) enforces Bridge & Torch rules (Ariela 1m, Brian 2m, Charly 5m, Dumpy 8m; 1–2 travelers per crossing with the torch; strict 15-minute torch limit), supports `undo()` recovery from burnout, and includes a Dijkstra shortest-time solver (`find_optimal_solution()`).
+   * **3D Scene & Controller:** [`scenes/levels/Level07_MidnightBridge.tscn`](scenes/levels/Level07_MidnightBridge.tscn) + [`scripts/levels/Level07Controller.gd`](scripts/levels/Level07Controller.gd) with staggered 2×2 cliff positions for unobstructed 3D mouse picking, animated bridge crossings, a dynamically flickering `OmniLight3D` torch that shrinks with remaining time and extinguishes on burnout, `Undo`/`Reset`/`Auto-Solve (Debug)`, Midnight Navy & Ember-Amber HUD theme, and Main Menu entry.
+   * **Automated Tests:** [`tests/TestMidnightBridge.gd`](tests/TestMidnightBridge.gd) (45 unit assertions) & [`tests/TestLevel07Scene.gd`](tests/TestLevel07Scene.gd) (17 integration checks).
 
 ---
 
@@ -141,9 +142,8 @@
      * Add Victorian furniture: armchair for Aunt Agatha, mahogany bookshelves, fireplace fire particle effect.
 * **Validation Requirement:** Always run `godot --headless --validate --quit scenes/levels/<Level>.tscn` and run all test suites (`godot --headless -s res://tests/<TestSuite>.gd`) after replacing any visual assets.
 
-### Task 5: Bonus Chamber — The Midnight Bridge (Bridge & Torch Problem) (In Progress)
-* ✅ Headless logic ([`scripts/logic/MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd)) & 45 unit assertions ([`tests/TestMidnightBridge.gd`](tests/TestMidnightBridge.gd)) completed (`PBI-10` / `#10`).
-* ⬜ 3D scene (`Level07_MidnightBridge.tscn`), flickering torch countdown, auto-solver & integration test (`PBI-11` / `#11`). See [`story/level_progression.md`](story/level_progression.md) and [`story/logical_riddles.md`](story/logical_riddles.md#19-the-bridge-and-torch-problem).
+### ~~Task 5: Bonus Chamber — The Midnight Bridge (Bridge & Torch Problem)~~ ✅ DONE (`PBI-10` / `#10` & `PBI-11` / `#11`)
+* Implemented headless logic ([`MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd)), 3D scene ([`Level07_MidnightBridge.tscn`](scenes/levels/Level07_MidnightBridge.tscn)), controller ([`Level07Controller.gd`](scripts/levels/Level07Controller.gd)), Main Menu entry, and 62 automated checks ([`TestMidnightBridge.gd`](tests/TestMidnightBridge.gd) & [`TestLevel07Scene.gd`](tests/TestLevel07Scene.gd)).
 
 ---
 
@@ -175,9 +175,10 @@ godot --headless -s res://tests/TestLevel04Scene.gd
 godot --headless -s res://tests/TestDreadbury.gd
 godot --headless -s res://tests/TestLevel05Scene.gd
 
-# 6. Level 6: The Cat (3D Model Showcase) & Bonus Chamber Logic
+# 6. Level 6: The Cat (3D Model Showcase) & Bonus Chamber (The Midnight Bridge)
 godot --headless -s res://tests/TestLevel06Scene.gd
 godot --headless -s res://tests/TestMidnightBridge.gd
+godot --headless -s res://tests/TestLevel07Scene.gd
 
 # 7. Global Navigation, UI & Player
 godot --headless -s res://tests/TestMainMenu.gd
@@ -195,6 +196,7 @@ godot --headless --validate --quit scenes/levels/Level03_SunCourtyard.tscn
 godot --headless --validate --quit scenes/levels/Level04_KnightsChasm.tscn
 godot --headless --validate --quit scenes/levels/Level05_DreadburyManor.tscn
 godot --headless --validate --quit scenes/levels/Level06_Cat.tscn
+godot --headless --validate --quit scenes/levels/Level07_MidnightBridge.tscn
 
 # 9. Launch Godot game directly to test interactively
 godot

@@ -19,9 +19,9 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with subtle Slate-Indigo styling, muted per-level accent borders, Levels 1–6 unlocked, and a non-overlapping `< Menu` button in each level.
 - [x] **In-Game Logic Journal & Deduction Matrix:** Headless [`JournalState.gd`](scripts/logic/JournalState.gd) + toggleable overlay ([`Journal.tscn`](scenes/ui/Journal.tscn) via `[J]`/`[Tab]` or HUD button) automatically logging discovered door inscriptions in Level 2 (with a 9×4 deduction matrix) and clues/FOL formulas in Level 5 (with a 3×4 suspect matrix), verified by [`TestJournal.gd`](tests/TestJournal.gd) (53 checks).
 - [x] **First-Person 3D Player Controller:** Reusable [`Player.tscn`](scenes/player/Player.tscn), [`PlayerController.gd`](scripts/player/PlayerController.gd) (WASD, Sprint, Jump, mouse look with `Esc` toggle, centered `RayCast3D` & `[E]` prompt HUD), and [`Interactable3D.gd`](scripts/core/Interactable3D.gd), verified by [`TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks).
-- [x] **Bonus Chamber Logic (The Midnight Bridge):** Headless Bridge & Torch state machine, undo, and Dijkstra optimal 15-minute solver ([`MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd), 45 assertions in [`TestMidnightBridge.gd`](tests/TestMidnightBridge.gd)); 3D scene tracked in `#11`.
-- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`, `PBI-05`–`PBI-08`, `PBI-11`–`PBI-14`) tracked as GitHub Issues with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
-- [ ] **Next Up:** Bonus Chamber 3D scene (*The Midnight Bridge*, `#11`), 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), Audio (`#12`), Save/Progress (`#13`), and CI (`#14`).
+- [x] **Bonus Chamber (The Midnight Bridge):** Headless Bridge & Torch state machine, undo, and Dijkstra optimal 15-minute solver ([`MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd), 45 assertions in [`TestMidnightBridge.gd`](tests/TestMidnightBridge.gd)), playable 3D midnight ravine scene ([`Level07_MidnightBridge.tscn`](scenes/levels/Level07_MidnightBridge.tscn)) with 3D picking, flickering shrinking torch light, 15:00 countdown, Auto-Solve debug button, Main Menu entry, and integration test ([`TestLevel07Scene.gd`](tests/TestLevel07Scene.gd), 17 checks).
+- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`, `PBI-05`–`PBI-08`, `PBI-12`–`PBI-14`) tracked as GitHub Issues with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
+- [ ] **Next Up:** 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), Audio (`#12`), Save/Progress (`#13`), and CI (`#14`).
 
 ---
 
@@ -41,7 +41,7 @@ Rather than solving abstract logic puzzles on paper or through 2D menus, players
 | **Level 4: The Knight's Chasm** | *The Knight's Tour* (Ch. 5, §5.6.2) | Subterranean Lava Cavern | **Platforming & Pathfinding:** Leaping across an $8 \times 8$ grid of floating stone runes using only chess knight ($L$-shaped) moves; visited tiles crumble. | **Playable Prototype** |
 | **Level 5: Dreadbury Manor** | *Who Killed Aunt Agatha?* (Ch. 6, §6.5.2) | Stormy Victorian Mansion | **Detective Investigation:** Interrogating suspects (Charles & the Butler), collecting written clues, and proving the truth at an accusation altar. | **Playable Prototype** |
 | **Level 6: The Cat Sanctuary** | *3D Asset Exhibit & Demo* | Marble Gallery Pavilion | **3D Inspection & Interaction:** Turntable orbit, animation playback ('Take 001'), and direct 3D mouse petting. | **Playable Exhibit** |
-| **Bonus: The Midnight Bridge** | *Bridge & Torch Problem* (Ch. 5, Ex. 25) | Dark Ravine Rope Bridge | **Resource & Time Management:** Guiding 4 characters of differing speeds across a swaying bridge before a 15-minute torch burns out. | Logic & Tests Done (`#11` 3D Scene Next) |
+| **Bonus: The Midnight Bridge** | *Bridge & Torch Problem* (Ch. 5, Ex. 25) | Dark Ravine Rope Bridge | **Resource & Time Management:** Guiding 4 characters of differing speeds across a swaying bridge before a 15-minute torch burns out. | **Playable Prototype** |
 
 Full game design specifications and exact riddle texts are located in [`story/level_progression.md`](story/level_progression.md).
 
@@ -81,7 +81,8 @@ seproject/
 │       ├── Level03_SunCourtyard.tscn # Playable 3D greybox scene for Level 3
 │       ├── Level04_KnightsChasm.tscn # Playable 3D greybox scene for Level 4
 │       ├── Level05_DreadburyManor.tscn # Playable 3D greybox scene for Level 5
-│       └── Level06_Cat.tscn       # Playable 3D exhibit scene for Level 6
+│       ├── Level06_Cat.tscn       # Playable 3D exhibit scene for Level 6
+│       └── Level07_MidnightBridge.tscn # Playable 3D bonus chamber (Bridge & Torch)
 │
 ├── scripts/
 │   ├── core/
@@ -98,7 +99,8 @@ seproject/
 │   │   ├── Level03Controller.gd   # 3D visuals & UI controller for Level 3
 │   │   ├── Level04Controller.gd   # 3D visuals & UI controller for Level 4
 │   │   ├── Level05Controller.gd   # 3D visuals & UI controller for Level 5
-│   │   └── Level06Controller.gd   # 3D visuals & UI controller for Level 6
+│   │   ├── Level06Controller.gd   # 3D visuals & UI controller for Level 6
+│   │   └── Level07Controller.gd   # 3D visuals, torch flicker & UI controller for Bonus Chamber
 │   └── logic/
 │       ├── RiverCrossingLogic.gd  # Headless rules validator for Wolf, Goat & Cabbage
 │       ├── NinePortalsLogic.gd    # Headless rules & solver for the Nine Portals
@@ -124,7 +126,8 @@ seproject/
 │   ├── TestLevel06Scene.gd        # Integration test for Level 6 Cat Showcase UI
 │   ├── TestJournal.gd             # Unit & integration tests for the Logic Journal & Matrix (53 checks)
 │   ├── TestPlayerController.gd    # Unit & physics tests for Player.tscn & Interactable3D (21 checks)
-│   └── TestMidnightBridge.gd      # Unit tests for Midnight Bridge logic & solver (45 assertions)
+│   ├── TestMidnightBridge.gd      # Unit tests for Midnight Bridge logic & solver (45 assertions)
+│   └── TestLevel07Scene.gd        # Integration test for Bonus Chamber 3D scene & torch (17 checks)
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon
@@ -172,6 +175,7 @@ godot --headless -s res://tests/TestLevel03Scene.gd      # Level 3 UI & Auto-Sol
 godot --headless -s res://tests/TestLevel04Scene.gd      # Level 4 UI & Auto-Solve
 godot --headless -s res://tests/TestLevel05Scene.gd      # Level 5 UI & Auto-Solve
 godot --headless -s res://tests/TestLevel06Scene.gd      # Level 6 Cat Showcase UI & Petting
+godot --headless -s res://tests/TestLevel07Scene.gd      # Bonus: Midnight Bridge 3D Scene, Torch & Auto-Solve
 godot --headless -s res://tests/TestMainMenu.gd          # Level Select & Navigation
 godot --headless -s res://tests/TestJournal.gd           # Logic Journal Model, UI & Level 2/5 Integration
 godot --headless -s res://tests/TestPlayerController.gd  # First-Person Player & Interactable3D Physics Tests
