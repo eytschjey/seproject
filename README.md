@@ -20,8 +20,9 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **In-Game Logic Journal & Deduction Matrix:** Headless [`JournalState.gd`](scripts/logic/JournalState.gd) + toggleable overlay ([`Journal.tscn`](scenes/ui/Journal.tscn) via `[J]`/`[Tab]` or HUD button) automatically logging discovered door inscriptions in Level 2 (with a 9×4 deduction matrix) and clues/FOL formulas in Level 5 (with a 3×4 suspect matrix), verified by [`TestJournal.gd`](tests/TestJournal.gd) (53 checks).
 - [x] **First-Person 3D Player Controller:** Reusable [`Player.tscn`](scenes/player/Player.tscn), [`PlayerController.gd`](scripts/player/PlayerController.gd) (WASD, Sprint, Jump, mouse look with `Esc` toggle, centered `RayCast3D` & `[E]` prompt HUD), and [`Interactable3D.gd`](scripts/core/Interactable3D.gd), verified by [`TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks).
 - [x] **Bonus Chamber (The Midnight Bridge):** Headless Bridge & Torch state machine, undo, and Dijkstra optimal 15-minute solver ([`MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd), 45 assertions in [`TestMidnightBridge.gd`](tests/TestMidnightBridge.gd)), playable 3D midnight ravine scene ([`Level07_MidnightBridge.tscn`](scenes/levels/Level07_MidnightBridge.tscn)) with 3D picking, flickering shrinking torch light, 15:00 countdown, Auto-Solve debug button, Main Menu entry, and integration test ([`TestLevel07Scene.gd`](tests/TestLevel07Scene.gd), 17 checks).
-- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`, `PBI-05`–`PBI-08`, `PBI-12`, `PBI-14`) tracked as GitHub Issues with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
-- [ ] **Next Up:** 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), Audio (`#12`), and CI (`#14`).
+- [x] **GitHub Actions CI Pipeline:** Automated workflow ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) and shared runner ([`scripts/ci/run_tests.sh`](scripts/ci/run_tests.sh)) executing all 18 headless test suites and validating all 11 scenes on every push and PR to `main`.
+- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`, `PBI-05`–`PBI-08`, `PBI-12`) tracked as GitHub Issues with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
+- [ ] **Next Up:** 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`) and Audio & Atmosphere (`#12`).
 
 ---
 
@@ -157,6 +158,11 @@ seproject/
 ## 🧪 Running Tests
 
 You can run automated tests either directly in the Godot Editor or headlessly via terminal:
+
+### Run All Tests & Scene Validations (CI Runner):
+```bash
+GODOT_BIN=godot ./scripts/ci/run_tests.sh
+```
 
 ### Pure Logic Unit Tests:
 ```bash

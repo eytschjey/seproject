@@ -1,0 +1,48 @@
+name: Godot Headless CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.7.2"
+  GODOT_RELEASE: "stable"
+
+jobs:
+  headless-tests-and-validation:
+    name: Headless Tests & Scene Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Godot binary
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/godot-ci
+          key: godot-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ env.GODOT_RELEASE }}
+
+      - name: Download Godot ${{ env.GODOT_VERSION }}-${{ env.GODOT_RELEASE }}
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.cache/godot-ci
+          ZIP_NAME="Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64.zip"
+          curl -fsSL "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}/${ZIP_NAME}" -o "/tmp/${ZIP_NAME}"
+          unzip -o "/tmp/${ZIP_NAME}" -d ~/.cache/godot-ci
+          chmod +x ~/.cache/godot-ci/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64
+          rm -f "/tmp/${ZIP_NAME}"
+
+      - name: Import project resources headlessly
+        run: |
+          GODOT_BIN="$HOME/.cache/godot-ci/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64"
+          "$GODOT_BIN" --headless --import --quit
+
+      - name: Run all headless test suites and scene validations
+        run: |
+          chmod +x scripts/ci/run_tests.sh
+          GODOT_BIN="$HOME/.cache/godot-ci/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64" ./scripts/ci/run_tests.sh
