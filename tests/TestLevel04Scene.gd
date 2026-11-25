@@ -1,14 +1,15 @@
 extends SceneTree
 
 # Plays Level 4 through the real HUD buttons: illegal-looking cells are disabled, a full tour solves it.
-var checks_failed: int = 0
+const Runner = preload("res://tests/TestRunner.gd")
+
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestLevel04Scene (Level 4 Knight's Tour UI & Auto-Solve)")
 	var s = load("res://scenes/levels/Level04_KnightsChasm.tscn").instantiate()
 	root.add_child(s)
 	await process_frame
@@ -52,5 +53,4 @@ func _init() -> void:
 	check(s.logic.is_solved, "Auto-solver completed full tour")
 	check(s.banner.visible and s.banner_label.text.contains("SOLVED"), "Victory banner shown")
 	check(s.btn_solve.disabled, "Solve button disabled after puzzle is solved")
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)

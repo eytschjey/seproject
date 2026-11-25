@@ -1,7 +1,10 @@
 extends SceneTree
 
 # Solves Level 1 through the logic and checks that the game auto-advances to Level 2.
+const Runner = preload("res://tests/TestRunner.gd")
+
 func _init() -> void:
+	var t = Runner.new("TestLevel01Transition (Level 1 -> Level 2)")
 	var s = load("res://scenes/levels/Level01_Tutorial.tscn").instantiate()
 	root.add_child(s)
 	current_scene = s
@@ -19,12 +22,9 @@ func _init() -> void:
 			s.logic.unload_item()
 		else:
 			s.logic.load_item(st[0])
-	var solved: bool = s.logic.is_solved
 	var delay: float = s.NEXT_LEVEL_DELAY
-	print("level 1 solved: ", solved)
+	t.check(s.logic.is_solved, "Level 1 solved via optimal sequence")
 	await create_timer(delay + 1.0).timeout
 	var name_now: String = current_scene.name if current_scene else ""
-	print("current scene: ", name_now)
-	var ok: bool = solved and name_now == "Level02_NinePortals"
-	print("PASS" if ok else "FAIL")
-	quit(0 if ok else 1)
+	t.check(name_now == "Level02_NinePortals", "Auto-advances to Level02_NinePortals after delay")
+	t.finish(self)

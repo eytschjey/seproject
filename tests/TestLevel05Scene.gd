@@ -1,14 +1,15 @@
 extends SceneTree
 
 # Plays Level 5 through the real HUD buttons: clue inspection, false accusation, randomized reset, and auto-solver victory.
-var checks_failed: int = 0
+const Runner = preload("res://tests/TestRunner.gd")
+
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestLevel05Scene (Level 5 Dreadbury Manor UI & Auto-Solve)")
 	var s = load("res://scenes/levels/Level05_DreadburyManor.tscn").instantiate()
 	root.add_child(s)
 	await process_frame
@@ -73,6 +74,4 @@ func _init() -> void:
 	check(s.suicide_note.visible, "Hidden evidence 3D prop is revealed on victory")
 	check(s.banner.visible and s.banner_label.text.contains("MYSTERY SOLVED") and s.banner_label.text.contains(s.Logic.suspect_name(target_killer)), "Outcome-specific victory banner shown")
 	check(s.btn_solve.disabled, "Solve button disabled after puzzle is solved")
-
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)

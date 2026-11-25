@@ -1,28 +1,23 @@
 extends SceneTree
 
 const Logic = preload("res://scripts/logic/QueensLogic.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var passed: int = 0
-var failed: int = 0
+var t: RefCounted
 
 func assert_test(cond: bool, msg: String) -> void:
-	if cond:
-		passed += 1
-		print("  PASS: ", msg)
-	else:
-		failed += 1
-		print("  FAIL: ", msg)
+	t.check(cond, msg)
 
 func _init() -> void:
+	t = Runner.new("TestQueens (Level 3 Logic)")
 	test_attacks()
 	test_placement()
 	test_solutions()
 	test_game_flow()
-	print("\n==== %d passed, %d failed ====" % [passed, failed])
-	quit(1 if failed > 0 else 0)
+	t.finish(self)
 
 func test_attacks() -> void:
-	print("\n[Test 1: Attack rules]")
+	t.section("Test 1: Attack rules")
 	assert_test(Logic.attacks(Vector2i(0, 0), Vector2i(0, 5)), "Same column attacks")
 	assert_test(Logic.attacks(Vector2i(1, 3), Vector2i(6, 3)), "Same row attacks")
 	assert_test(Logic.attacks(Vector2i(2, 2), Vector2i(5, 5)), "Diagonal attacks")
@@ -31,7 +26,7 @@ func test_attacks() -> void:
 	assert_test(not Logic.attacks(Vector2i(3, 3), Vector2i(3, 3)), "A queen does not attack itself")
 
 func test_placement() -> void:
-	print("\n[Test 2: Placement rules]")
+	t.section("Test 2: Placement rules")
 	var l = Logic.new()
 	assert_test(l.place_queen(Vector2i(0, 0)), "Place a queen")
 	assert_test(not l.place_queen(Vector2i(0, 0)), "Cannot place on occupied cell")
@@ -52,7 +47,7 @@ func test_placement() -> void:
 	assert_test(not l.is_solved, "Eight attacking queens is not a solution")
 
 func test_solutions() -> void:
-	print("\n[Test 3: Solver]")
+	t.section("Test 3: Solver")
 	var all := Logic.solve_all()
 	assert_test(all.size() == 92, "Exactly 92 solutions (found %d)" % all.size())
 	var all_valid := true
@@ -67,7 +62,7 @@ func test_solutions() -> void:
 	assert_test(comp_bad.is_empty(), "find_completion returns empty on conflicting input")
 
 func test_game_flow() -> void:
-	print("\n[Test 4: Game flow]")
+	t.section("Test 4: Game flow")
 	var l = Logic.new()
 	var data := {"solved": false, "changes": 0}
 	l.puzzle_solved.connect(func(): data.solved = true)

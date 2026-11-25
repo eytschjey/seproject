@@ -3,23 +3,21 @@ extends SceneTree
 # Headless unit test suite for MidnightBridgeLogic (PBI-10: The Midnight Bridge / Bridge & Torch).
 
 const Logic = preload("res://scripts/logic/MidnightBridgeLogic.gd")
+const Runner = preload("res://tests/TestRunner.gd")
 
-var checks_failed: int = 0
+var t: RefCounted
 
 func check(cond: bool, msg: String) -> void:
-	print(("  PASS: " if cond else "  FAIL: ") + msg)
-	if not cond:
-		checks_failed += 1
+	t.check(cond, msg)
 
 func _init() -> void:
-	print("=== TestMidnightBridge ===")
+	t = Runner.new("TestMidnightBridge (Bonus Logic)")
 	_test_initial_state()
 	_test_validation_and_rejections()
 	_test_optimal_15_minute_solution()
 	_test_torch_burnout_and_undo()
 	_test_dijkstra_solver_from_start_and_midgame()
-	print("checks failed: ", checks_failed)
-	quit(1 if checks_failed > 0 else 0)
+	t.finish(self)
 
 func _test_initial_state() -> void:
 	var m = Logic.new()
