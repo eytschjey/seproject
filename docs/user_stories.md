@@ -248,6 +248,6 @@ Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Fun
 ### US-27: Die Bonuskammer — The Midnight Bridge spielen
 - **Story:** Als **Spieler** möchte ich eine optionale Bonuskammer auf Basis des *Brücken-und-Fackel-Problems* spielen können, damit ich meine zeitkritische Ressourcenplanung gegen ein 15-Minuten-Fackellimit testen kann.
 - **Zugehörige Anforderungen:** `FR-08.3`
-- **Status:** Geplant
+- **Status:** In Arbeit *(Headless-Logik `MidnightBridgeLogic.gd` & 45 Unit-Tests fertig; 3D-Szene in `PBI-11`)*
 - **Akzeptanzkriterien:**
   - **Gegeben**, vier Reisende mit Überquerungszeiten von 1, 2, 5 und 8 Minuten, **Wenn** ich Paare mit der Fackel über die Brücke führe, **Dann** erhöht sich die verstrichene Zeit um die Geschwindigkeit der langsameren Person, ein Überschreiten von 15 Minuten lässt das Rätsel scheitern, und das Überqueren aller vier in $\le 15$ Minuten löst es.
