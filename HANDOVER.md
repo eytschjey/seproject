@@ -1,6 +1,6 @@
 # HANDOVER.md — Project State & Backlog for Incoming Agent
 
-**Timestamp:** November 11, 2026  
+**Timestamp:** November 25, 2026  
 **Repository:** `https://github.com/eytschjey/seproject.git` (Branch: `main`)  
 **Context:** 3D logic puzzle-adventure game built with Godot 4, translating classical mathematical logic riddles into 3D environmental gameplay.
 
@@ -61,6 +61,10 @@
    * **3D Scene & Controller:** Created [`scenes/levels/Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn) and [`scripts/levels/Level06Controller.gd`](scripts/levels/Level06Controller.gd) featuring turntable orbit spin (`cat_pivot.rotate_y`), animation playback toggle for `"Take 001"`, `< Menu` button, subtle **Warm Taupe & Dusty Rose** HUD color scheme, and interactive mouse petting with hop tweens and "PURR-FECTION ACHIEVED" banner.
    * **Automated Integration Test:** [`tests/TestLevel06Scene.gd`](tests/TestLevel06Scene.gd) (17 checks passing) verifying scene hierarchy, spin toggles, animation playback, pet count increments, banner visibility, and reset.
    * **Menu & Progression:** Added to [`MainMenuController.gd`](scripts/ui/MainMenuController.gd) and linked as `NEXT_LEVEL_SCENE` in [`Level05Controller.gd`](scripts/levels/Level05Controller.gd).
+
+10. **GitHub Issues, Labels & Git Branching Workflow:**
+   * **Issue & Backlog Sync:** All 14 open backlog items (`PBI-01`–`PBI-14` in [`docs/backlog.md`](docs/backlog.md)) are tracked as GitHub Issues `#1`–`#14` in `eytschjey/seproject` with standardized priority (`P1`–`P3`) and domain/type labels (`gameplay`, `ui`, `3d-assets`, `bonus`, `ci`, `enhancement`, `bug`, `documentation`).
+   * **Branching & PR Policy:** [`AGENTS.md`](AGENTS.md) enforces branch-based development (`feat/`, `fix/`, `assets/`, `docs/`, `chore/`), forbids developing directly on `main`, and requires Pull Requests with headless verification before merging.
 
 ---
 
@@ -145,7 +149,7 @@
 All tests can be executed directly in the terminal via Godot CLI:
 
 ```bash
-cd "/Users/jan/Desktop/Software Engineering/seproject"
+cd <path-to-seproject>
 
 # 1. Level 1: River Crossing
 godot --headless -s res://tests/TestRiverCrossing.gd
@@ -192,5 +196,5 @@ godot
 
 ## 💡 Important Tips & Gotchas
 * **Model-View Separation:** Never put puzzle rules directly inside a 3D scene script. Always write the logic in `scripts/logic/` first with a matching test in `tests/`.
-* **Testing without Display:** When running commands on macOS via automated environments, always pass `--headless` to prevent window-manager blocking.
-* **Working Directory:** All project work lives under `/Users/jan/Desktop/Software Engineering/seproject`.
+* **Testing without Display:** When running commands in headless/automated environments, always pass `--headless` to prevent window-manager blocking.
+* **Branching & Issues:** Never develop directly on `main`. Sync `main`, create a feature/docs/fix branch, reference the corresponding GitHub Issue (`#1`–`#14`), and open a Pull Request (see [`AGENTS.md`](AGENTS.md)).

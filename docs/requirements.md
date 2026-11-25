@@ -3,7 +3,7 @@
 **Projekt:** SEProject — Ein 3D-Logikrätsel-Abenteuer  
 **Engine:** Godot Engine 4.x (Forward+ Renderer, Jolt 3D Physics, GDScript 2.0)  
 **Quellmaterial:** Prof. Dr. Karl Stroetmann, *Theoretical Computer Science: Logic & Puzzles*  
-**Zuletzt aktualisiert:** 24. November 2026
+**Zuletzt aktualisiert:** 25. November 2026
 
 ---
 
@@ -134,7 +134,7 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 | **NFR-03** | **Benutzerfreundlichkeit & UI** | **Überlappungsfreies & dezentes HUD:** Kein 2D-HUD-Panel (`BackToMenuButton`, `HeaderPanel`, `SidePanel`, `Banner`, `ActionBar`) darf ein anderes HUD-Label oder kritische 3D-`Label3D`-Objekte bei Standardauflösung `1152×648` (`canvas_items` / `expand`) überlappen. Jede Szene nutzt eine eigene dezente, gut lesbare Farbpalette. | Automatisierte Layout-Prüfungen & Integrationstests (`TestLevel04Scene.gd`). |
 | **NFR-04** | **Reaktionsfähigkeit** | **Flüssige Interaktion & Abbruchfähigkeit:** Animationen (`Tween`) und Auto-Solver-Coroutinen dürfen den UI-Thread nicht blockieren, und jeder Spielerklick oder Reset muss laufende Auto-Solver-Schleifen über Zustandsflags sicher abbrechen. | Szenen-Integrationstests (`TestLevel01Scene.gd`–`TestLevel05Scene.gd`). |
 | **NFR-05** | **Portabilität** | **Plattformübergreifend & eigenständige Assets:** Das Projekt läuft unter Godot 4.3+ (4.7.2 getestet) auf Linux, macOS und Windows mit Forward+ und Jolt Physics. 3D-Assets nutzen eigenständige `.glb`-Dateien ohne Laufzeitabhängigkeit zu Blender oder externen DCC-Tools. | Headless-Import & Validierung auf dem Zielsystem. |
-| **NFR-06** | **Wartbarkeit** | **Dokumentations- & Git-Synchronisation:** Alle Code-, Szenen- und Teständerungen halten `README.md`, `HANDOVER.md`, `AGENTS.md` und `docs/` synchron und folgen strikt dem Workflow `git pull` -> Verifikation -> `git commit` + `git push`. | Repository-Prüfung & Git-Historie. |
+| **NFR-06** | **Wartbarkeit** | **Dokumentations-, Branching- & Issue-Synchronisation:** Alle Code-, Szenen- und Teständerungen halten `README.md`, `HANDOVER.md`, `AGENTS.md` und `docs/` synchron, werden auf dedizierten Git-Branches (nie direkt auf `main`) per Pull Request integriert und mit den entsprechenden GitHub-Issues und Labels in `eytschjey/seproject` verknüpft. | Repository-Prüfung, PR-/Git-Historie & Issue-Tracking. |
 
 ---
 

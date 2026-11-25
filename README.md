@@ -17,7 +17,8 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 62 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)) supporting 3 randomized, uniquely deducible outcomes (Aunt Agatha, The Butler, or Charles) with dynamic clues, contradiction proofs, and outcome-specific endings; 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)) with subtle Dusk-Plum & Muted Pewter HUD theme, Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
 - [x] **Level 6 (The Cat Sanctuary):** 3D model showcase scene ([`Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn)) presenting the imported [`cat.glb`](assets/models/characters/cat.glb) asset and prefab ([`Cat.tscn`](scenes/props/Cat.tscn)) with turntable spin, skeletal animation playback, 3D mouse picking, subtle Warm Taupe & Dusty Rose HUD theme, and [`TestLevel06Scene.gd`](tests/TestLevel06Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with subtle Slate-Indigo styling, muted per-level accent borders, Levels 1–6 unlocked, and a non-overlapping `< Menu` button in each level.
-- [ ] **Next Up:** 3D asset integration (replacing CSG greyboxes with glTF models), first-person character navigation, journal UI, Bonus Chamber (The Midnight Bridge).
+- [x] **Project Tracking & Workflow:** All 14 open PBIs (`PBI-01`–`PBI-14`) tracked as GitHub Issues (`#1`–`#14`) with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
+- [ ] **Next Up:** In-game Logic Journal (`#1`), first-person character navigation (`#2`), 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), and Bonus Chamber (*The Midnight Bridge*, `#10`–`#11`).
 
 ---
 
@@ -96,7 +97,7 @@ seproject/
 │       └── DreadburyLogic.gd      # Headless first-order model checker for Dreadbury Manor
 │
 ├── tests/
-│   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (41 assertions)
+│   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (46 assertions)
 │   ├── TestLevel01Scene.gd        # Integration test for 3D UI & solution playback
 │   ├── TestMainMenu.gd            # Menu lists levels, loads them, back button works
 │   ├── TestLevel01Transition.gd   # Level 1 win auto-advances to Level 2
@@ -108,13 +109,14 @@ seproject/
 │   ├── TestLevel04Scene.gd        # Integration test for Level 4 UI
 │   ├── TestDreadbury.gd           # Unit tests for Dreadbury Manor logic (62 assertions)
 │   ├── TestLevel05Scene.gd        # Integration test for Level 5 UI
-│   ├── TestLevel06Scene.gd        # Integration test for Level 6 Cat Showcase UI
-│   └── TestMainMenu.gd            # Menu lists levels, loads them, back button works
+│   └── TestLevel06Scene.gd        # Integration test for Level 6 Cat Showcase UI
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon
 ├── .editorconfig                  # Formatting configurations
 ├── .gitignore                     # Git ignore rules (.godot/, etc.)
+├── AGENTS.md                      # Contributor & AI agent guidelines (architecture, Git & issues)
+├── HANDOVER.md                    # Current state & prioritized handover notes
 └── README.md                      # Project documentation & status
 ```
 
@@ -138,7 +140,7 @@ You can run automated tests either directly in the Godot Editor or headlessly vi
 
 ### Pure Logic Unit Tests:
 ```bash
-godot --headless -s res://tests/TestRiverCrossing.gd   # Level 1 (41 assertions)
+godot --headless -s res://tests/TestRiverCrossing.gd   # Level 1 (46 assertions)
 godot --headless -s res://tests/TestNinePortals.gd     # Level 2 (30 assertions)
 godot --headless -s res://tests/TestQueens.gd          # Level 3 (29 assertions)
 godot --headless -s res://tests/TestKnightsTour.gd     # Level 4 (26 assertions)

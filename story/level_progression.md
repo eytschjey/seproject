@@ -227,7 +227,7 @@ Instead of answering text questions in static pop-up menus, the player solves th
 # Bonus Secret Room: The Midnight Bridge (Chasm of Shadows)
 
 * **Riddle:** *The Bridge and Torch Problem* (Chapter 5, Exercise 25)
-* **Theme / Setting:** A optional challenge cavern where the player discovers an underground underground canyon crossed by a rickety rope bridge.
+* **Theme / Setting:** An optional challenge cavern where the player discovers an underground canyon crossed by a rickety rope bridge.
 * **Objective:** Escort four lost travelers across the gorge before their single enchanted torch burns out.
 
 ### The Riddle & Rules
