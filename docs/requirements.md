@@ -120,7 +120,7 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 | :--- | :--- | :--- | :--- |
 | **FR-08.1** | **First-Person-3D-Spielersteuerung:** Implementierung eines `CharacterBody3D`-Spielers (`Player.tscn`) mit WASD-Bewegung, Sprint, Mausblick (`Esc`-Toggle), Sprung und zentriertem `RayCast3D` zur Interaktion mit `Interactable3D`-Komponenten über `[E]`. | Soll | Implementiert |
 | **FR-08.2** | **In-Game-Logikjournal:** Implementierung eines umschaltbaren Notizbuchs (`[J]` / `[Tab]`), das entdeckte Türinschriften (Level 2) und Hinweise (Level 5) automatisch protokolliert, inkl. interaktiver Deduktions-Scratchpad-Matrix (`✓` / `✗`). | Soll | Implementiert |
-| **FR-08.3** | **Bonuskammer — The Midnight Bridge:** Implementierung des *Brücken-und-Fackel-Problems* (4 Reisende mit Geschwindigkeiten 1, 2, 5 und 8 Minuten; max. 2 Personen gleichzeitig auf der Brücke; striktes 15-Minuten-Fackellimit) mit Headless-Logik, 3D-Szene und Tests. | Kann | Teilweise *(Headless-Logik & Tests implementiert; 3D-Szene in `PBI-11`)* |
+| **FR-08.3** | **Bonuskammer — The Midnight Bridge:** Implementierung des *Brücken-und-Fackel-Problems* (4 Reisende mit Geschwindigkeiten 1, 2, 5 und 8 Minuten; max. 2 Personen gleichzeitig auf der Brücke; striktes 15-Minuten-Fackellimit) mit Headless-Logik, 3D-Szene und Tests. | Kann | Implementiert |
 | **FR-08.4** | **3D-Asset-Austausch:** Schrittweiser Ersatz der CSG-Greybox-Geometrie in Level 1–5 durch vererbte `.glb`-Prefabs unter Beibehaltung von Knotenpfaden, Kollisions-Pickern und Animations-Pivots. | Kann | Geplant |
 
 ---
@@ -151,5 +151,5 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 | **FR-07** (Level 6) | `scenes/props/Cat.tscn`, `scenes/levels/Level06_Cat.tscn`, `scripts/levels/Level06Controller.gd` | `tests/TestLevel06Scene.gd` (17) | Implementiert |
 | **FR-08.1** (Player) | `scenes/player/Player.tscn`, `scripts/player/PlayerController.gd`, `scripts/core/Interactable3D.gd` | `tests/TestPlayerController.gd` (21) | Implementiert |
 | **FR-08.2** (Journal) | `scripts/logic/JournalState.gd`, `scenes/ui/Journal.tscn`, `scripts/ui/JournalController.gd` | `tests/TestJournal.gd` (53) | Implementiert |
-| **FR-08.3** (Midnight Bridge Logik) | `scripts/logic/MidnightBridgeLogic.gd` | `tests/TestMidnightBridge.gd` (45) | Teilweise *(Logik fertig; 3D-Szene in `PBI-11`)* |
+| **FR-08.3** (Midnight Bridge) | `scripts/logic/MidnightBridgeLogic.gd`, `scenes/levels/Level07_MidnightBridge.tscn`, `scripts/levels/Level07Controller.gd` | `tests/TestMidnightBridge.gd` (45), `tests/TestLevel07Scene.gd` (17) | Implementiert |
 | **FR-08** (Übriges Backlog) | `story/level_progression.md`, `HANDOVER.md`, `docs/backlog.md` | Geplant | Geplant |
