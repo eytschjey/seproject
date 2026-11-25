@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="1_player"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_Player"]
+radius = 0.35
+height = 1.75
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("CapsuleShape_Player")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+fov = 72.0
+
+[node name="InteractionRay" type="RayCast3D" parent="CameraPivot/Camera3D"]
+target_position = Vector3(0, 0, -3.5)
+collide_with_areas = true
+
+[node name="PlayerHUD" type="CanvasLayer" parent="."]
+
+[node name="RootControl" type="Control" parent="PlayerHUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Crosshair" type="ColorRect" parent="PlayerHUD/RootControl"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.92, 0.94, 0.98, 0.65)
+
+[node name="PromptPanel" type="PanelContainer" parent="PlayerHUD/RootControl"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = 24.0
+offset_right = 120.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PromptLabel" type="Label" parent="PlayerHUD/RootControl/PromptPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "[E] Interact"
+horizontal_alignment = 1
+vertical_alignment = 1
