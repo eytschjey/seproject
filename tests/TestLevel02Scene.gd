@@ -61,5 +61,40 @@ func _init() -> void:
 	check(s.logic.is_solved, "Auto-solver deduces and opens Princess door")
 	check(s.banner_label.text.contains("SOLVED") and s.banner_label.text.contains("Door %d" % princess_rm), "Victory banner shown")
 	check(s.btn_solve.disabled, "Solve button disabled after puzzle is solved")
+
+	# PBI-04: First-Person & Journal integration in Level 2
+	while s.is_animating:
+		await process_frame
+	s.btn_reset.pressed.emit()
+	await physics_frame
+	check(s.player != null and s.door_interactables.size() == 9, "First-person Player and 9 Interactable3D doors initialized")
+	check(not s.is_first_person, "Starts in overview camera mode")
+
+	s.btn_view_mode.pressed.emit()
+	await physics_frame
+	check(s.is_first_person and s.player.camera.current, "View mode toggle activates first-person camera")
+
+	# Position player facing Door 5 within interaction range
+	s.player.position = Vector3(0.0, 0.05, 2.2)
+	s.player.rotation = Vector3.ZERO
+	s.player.camera_pivot.rotation = Vector3.ZERO
+	await physics_frame
+	await physics_frame
+	s.player.update_interaction_focus()
+	check(s.player.focused_interactable == s.door_interactables[5], "First-person raycast focuses Door 5 Interactable3D")
+	check(s.player.prompt_label.text == "[E] Inspect Door 5", "Contextual prompt shows '[E] Inspect Door 5'")
+
+	check(s.player.try_interact(), "Pressing interact inspects Door 5 in first-person")
+	check(s.selected == 5 and s.journal_state.has_entry("level02", "door_5"), "First-person door inspection selects door and logs plaque to Journal")
+
+	# Opening journal in first-person releases mouse capture; closing restores it
+	s.journal_ui.open()
+	check(not s.player.is_mouse_captured, "Opening journal releases first-person mouse capture")
+	s.journal_ui.close()
+	check(s.player.is_mouse_captured, "Closing journal restores first-person mouse capture")
+
+	s.btn_view_mode.pressed.emit()
+	check(not s.is_first_person and s.camera.current, "Toggling view mode returns to overview camera")
+
 	print("checks failed: ", checks_failed)
 	quit(1 if checks_failed > 0 else 0)

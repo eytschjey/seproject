@@ -234,7 +234,7 @@ Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Fun
 ### US-25: Kammern in der First-Person-3D-Perspektive erkunden
 - **Story:** Als **Spieler** möchte ich mich per WASD und Mausblick in der Ego-Perspektive durch die 3D-Kammern bewegen und mit `[E]` mit Tafeln, Hebeln und Statuen interagieren können, damit das Spiel wie ein immersives 3D-Abenteuer wirkt.
 - **Zugehörige Anforderungen:** `FR-08.1`
-- **Status:** Implementiert *(Kern-Komponenten `Player.tscn` & `Interactable3D`; Level-2-Integration in `PBI-04`)*
+- **Status:** Implementiert *(Kern-Komponenten `Player.tscn` & `Interactable3D` sowie First-Person-Integration in Level 2 via `[V]`/`[E]`)*
 - **Akzeptanzkriterien:**
   - **Gegeben**, `Player.tscn` ist in einem Level aktiv, **Wenn** ich mich mit WASD bewege, mit der Maus umschaue und ein `Interactable3D` anvisiere, **Dann** erscheint eine kontextbezogene Eingabeaufforderung (z. B. `[E] Inspect Plaque`) und Drücken von `E` löst die Interaktion aus.
 

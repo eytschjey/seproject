@@ -31,7 +31,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **1** | **PBI-01** | `#1` | **In-Game-Logikjournal (UI & automatisches Protokollieren)** | Epic 9 | `US-26`, `FR-08.2` | **P1 (Soll)** | **5** | — | Erledigt |
 | **2** | **PBI-02** | `#2` | **First-Person-3D-Spielersteuerung (`Player.tscn`) & `Interactable3D`** | Epic 9 | `US-25`, `FR-08.1` | **P1 (Soll)** | **8** | — | Erledigt |
 | **3** | **PBI-03** | `#3` | **3D-Asset-Austausch Level 1 (Wolf, Ziege, Kohlkopf, Floß & Flussufer)** | Epic 7 | `US-22`, `FR-08.4`, `NFR-05` | **P1 (Soll)** | **5** | — | Offen |
-| **4** | **PBI-04** | `#4` | **Integration First-Person & Journal in Level 2 (Tafelinspektion in 3D)** | Epic 3 / 9 | `US-25`, `US-26`, `FR-08.1` | **P2 (Soll)** | **5** | `PBI-01`, `PBI-02` | Offen |
+| **4** | **PBI-04** | `#4` | **Integration First-Person & Journal in Level 2 (Tafelinspektion in 3D)** | Epic 3 / 9 | `US-25`, `US-26`, `FR-08.1` | **P2 (Soll)** | **5** | `PBI-01`, `PBI-02` | Erledigt |
 | **5** | **PBI-05** | `#5` | **3D-Asset-Austausch Level 2 (Türen, Rahmen, Tiger- & Prinzessinnen-Modelle)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
 | **6** | **PBI-06** | `#6` | **3D-Asset-Austausch Level 3 (Damenstatuen-Prefab, Marmor & Sonnenkristall)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
 | **7** | **PBI-07** | `#7` | **3D-Asset-Austausch Level 4 (Springer-Prefab, Runensteine & Lava-Shader)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
@@ -43,7 +43,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
 | **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
 
-**Summe offener Aufwand:** `52 Story Points`
+**Summe offener Aufwand:** `47 Story Points`
 
 ---
 
@@ -93,6 +93,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-10** | GitHub-Issues (`#1`–`#14`), Standard-Labels & Git-Branching-/PR-Workflow | `AGENTS.md`, `gh issue list -R eytschjey/seproject` |
 | **DONE-11** | In-Game-Logikjournal (`PBI-01` / `#1`) mit Headless-`JournalState`, `[J]`/`[Tab]`-Overlay & Auto-Logging in Level 2 & 5 | `tests/TestJournal.gd` (36), `scenes/ui/Journal.tscn` validiert |
 | **DONE-12** | First-Person-3D-Spielersteuerung (`Player.tscn`, `PlayerController.gd`) & `Interactable3D` (`PBI-02` / `#2`) | `tests/TestPlayerController.gd` (21), `scenes/player/Player.tscn` validiert |
+| **DONE-13** | Integration First-Person (`Player.tscn` + `Interactable3D`-Türen) & Journal-Maus-Sync in Level 2 (`PBI-04` / `#4`) | `tests/TestLevel02Scene.gd` (31), `Level02_NinePortals.tscn` validiert |
 
 ---
 

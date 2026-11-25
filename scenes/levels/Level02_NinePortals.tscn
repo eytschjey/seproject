@@ -60,11 +60,13 @@ fov = 55.0
 
 [node name="Floor" type="CSGBox3D" parent="Hall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 2)
+use_collision = true
 size = Vector3(24, 1, 12)
 material = SubResource("Mat_Floor")
 
 [node name="BackWall" type="CSGBox3D" parent="Hall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1.2)
+use_collision = true
 size = Vector3(22, 7, 0.6)
 material = SubResource("Mat_Stone")
 
@@ -569,3 +571,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 42)
 layout_mode = 2
 text = "Auto-Solve (Debug)"
+
+[node name="BtnViewMode" type="Button" parent="UI/RootControl/ActionBar/ActionBox/ControlButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(165, 42)
+layout_mode = 2
+text = "First-Person [V]"
