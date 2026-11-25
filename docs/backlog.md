@@ -41,9 +41,9 @@ Sortiert von höchster zu niedrigster Priorität:
 | **11** | **PBI-11** | `#11` | **Bonuskammer: The Midnight Bridge (3D-Szene, Fackel-Timer & Integrationstest)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-02` | **P2 (Kann)** | **8** | `PBI-10` | Erledigt |
 | **12** | **PBI-12** | `#12` | **Audio & Atmosphäre (Soundeffekte für Züge, Türen, Lava, Gewitter & Sieg)** | Polish | `NFR-03` | **P3 (Kann)** | **5** | — | Offen |
 | **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Erledigt |
-| **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
+| **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Erledigt |
 
-**Summe offener Aufwand:** `28 Story Points`
+**Summe offener Aufwand:** `25 Story Points`
 
 ---
 
@@ -96,6 +96,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-15** | Bonuskammer *The Midnight Bridge* — Headless-Logik (`MidnightBridgeLogic.gd`), Undo & Dijkstra-Solver (`PBI-10` / `#10`) | `tests/TestMidnightBridge.gd` (45 Assertions) |
 | **DONE-16** | Bonuskammer *The Midnight Bridge* — 3D-Szene (`Level07_MidnightBridge.tscn`), flackernde Fackel, Auto-Solver & Menü-Integration (`PBI-11` / `#11`) | `tests/TestLevel07Scene.gd` (17), `TestMainMenu.gd`, Szene validiert |
 | **DONE-17** | Speicherstand (`ProgressStore.gd` via `user://save.cfg`) & Fortschrittsanzeige (`✓`, Counter & Reset) im Hauptmenü (`PBI-13` / `#13`) | `tests/TestProgressStore.gd` (19), `TestMainMenu.gd`, `MainMenu.tscn` validiert |
+| **DONE-18** | GitHub Actions CI-Pipeline (`.github/workflows/ci.yml`) & lokaler Test-Runner (`scripts/ci/run_tests.sh`) für alle 18 Testsuiten & 11 Szenen (`PBI-14` / `#14`) | `./scripts/ci/run_tests.sh` (18 Testsuiten + 11 Szenen grün) |
 
 ---
 

@@ -87,6 +87,10 @@
    * **Main Menu UI:** [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn) + [`scripts/ui/MainMenuController.gd`](scripts/ui/MainMenuController.gd) displays `Progress: N / 7 Completed`, highlights completed levels with a `✓ ` badge, and provides a `Reset Progress` button.
    * **Automated Test:** [`tests/TestProgressStore.gd`](tests/TestProgressStore.gd) (19 checks passing).
 
+15. **GitHub Actions CI Pipeline (`PBI-14` / `#14`):**
+   * **Workflow & Runner:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) downloads/caches Godot `4.7.2-stable`, runs `--headless --import --quit`, and executes [`scripts/ci/run_tests.sh`](scripts/ci/run_tests.sh) on every push to `main` and every Pull Request targeting `main`.
+   * **Coverage:** Runs all 18 headless unit & integration test suites and validates all 11 `.tscn` scenes in one command (`GODOT_BIN=/path/to/godot ./scripts/ci/run_tests.sh`).
+
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
@@ -154,7 +158,7 @@
 
 ## 🔧 Essential Commands for Testing & Validation
 
-All tests can be executed directly in the terminal via Godot CLI:
+All tests can be executed in one shot via [`scripts/ci/run_tests.sh`](scripts/ci/run_tests.sh) (`GODOT_BIN=/path/to/godot ./scripts/ci/run_tests.sh`), or individually via Godot CLI:
 
 ```bash
 cd <path-to-seproject>
