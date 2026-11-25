@@ -16,12 +16,12 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 4 (Knight's Chasm):** Headless logic ([`KnightsTourLogic.gd`](scripts/logic/KnightsTourLogic.gd), 26 assertions in [`TestKnightsTour.gd`](tests/TestKnightsTour.gd)), 3D lava cavern scene ([`Level04_KnightsChasm.tscn`](scenes/levels/Level04_KnightsChasm.tscn)) with non-overlapping Charcoal-Slate & Muted Steel-Blue HUD styling against the black & orange lava background, Auto-Solve debug button, and [`TestLevel04Scene.gd`](tests/TestLevel04Scene.gd).
 - [x] **Level 5 (Dreadbury Manor):** Headless first-order logic model checker ([`DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), 62 assertions in [`TestDreadbury.gd`](tests/TestDreadbury.gd)) supporting 3 randomized, uniquely deducible outcomes (Aunt Agatha, The Butler, or Charles) with dynamic clues, contradiction proofs, and outcome-specific endings; 3D Victorian manor scene ([`Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn)) with subtle Dusk-Plum & Muted Pewter HUD theme, Auto-Solve debug button, and [`TestLevel05Scene.gd`](tests/TestLevel05Scene.gd).
 - [x] **Level 6 (The Cat Sanctuary):** 3D model showcase scene ([`Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn)) presenting the imported [`cat.glb`](assets/models/characters/cat.glb) asset and prefab ([`Cat.tscn`](scenes/props/Cat.tscn)) with turntable spin, skeletal animation playback, 3D mouse picking, subtle Warm Taupe & Dusty Rose HUD theme, and [`TestLevel06Scene.gd`](tests/TestLevel06Scene.gd).
-- [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with subtle Slate-Indigo styling, muted per-level accent borders, Levels 1–6 unlocked, and a non-overlapping `< Menu` button in each level.
+- [x] **Main Menu & Persistent Progress:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), startup scene) with subtle Slate-Indigo styling, muted per-level accent borders, Levels 1–6 + Bonus Chamber unlocked, persistent completion tracking ([`ProgressStore.gd`](scripts/logic/ProgressStore.gd) via `user://save.cfg`, `✓` badges, progress counter, `Reset Progress`, 19 checks in [`TestProgressStore.gd`](tests/TestProgressStore.gd)), and a non-overlapping `< Menu` button in each level.
 - [x] **In-Game Logic Journal & Deduction Matrix:** Headless [`JournalState.gd`](scripts/logic/JournalState.gd) + toggleable overlay ([`Journal.tscn`](scenes/ui/Journal.tscn) via `[J]`/`[Tab]` or HUD button) automatically logging discovered door inscriptions in Level 2 (with a 9×4 deduction matrix) and clues/FOL formulas in Level 5 (with a 3×4 suspect matrix), verified by [`TestJournal.gd`](tests/TestJournal.gd) (53 checks).
 - [x] **First-Person 3D Player Controller:** Reusable [`Player.tscn`](scenes/player/Player.tscn), [`PlayerController.gd`](scripts/player/PlayerController.gd) (WASD, Sprint, Jump, mouse look with `Esc` toggle, centered `RayCast3D` & `[E]` prompt HUD), and [`Interactable3D.gd`](scripts/core/Interactable3D.gd), verified by [`TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks).
 - [x] **Bonus Chamber (The Midnight Bridge):** Headless Bridge & Torch state machine, undo, and Dijkstra optimal 15-minute solver ([`MidnightBridgeLogic.gd`](scripts/logic/MidnightBridgeLogic.gd), 45 assertions in [`TestMidnightBridge.gd`](tests/TestMidnightBridge.gd)), playable 3D midnight ravine scene ([`Level07_MidnightBridge.tscn`](scenes/levels/Level07_MidnightBridge.tscn)) with 3D picking, flickering shrinking torch light, 15:00 countdown, Auto-Solve debug button, Main Menu entry, and integration test ([`TestLevel07Scene.gd`](tests/TestLevel07Scene.gd), 17 checks).
-- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`, `PBI-05`–`PBI-08`, `PBI-12`–`PBI-14`) tracked as GitHub Issues with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
-- [ ] **Next Up:** 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), Audio (`#12`), Save/Progress (`#13`), and CI (`#14`).
+- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`, `PBI-05`–`PBI-08`, `PBI-12`, `PBI-14`) tracked as GitHub Issues with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
+- [ ] **Next Up:** 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), Audio (`#12`), and CI (`#14`).
 
 ---
 
@@ -108,7 +108,8 @@ seproject/
 │       ├── KnightsTourLogic.gd    # Headless rules & solver for Knight's Tour
 │       ├── DreadburyLogic.gd      # Headless first-order model checker for Dreadbury Manor
 │       ├── JournalState.gd        # Headless data model for the In-Game Logic Journal
-│       └── MidnightBridgeLogic.gd # Headless Bridge & Torch rules & Dijkstra solver
+│       ├── MidnightBridgeLogic.gd # Headless Bridge & Torch rules & Dijkstra solver
+│       └── ProgressStore.gd       # Headless persistent progress store (user://save.cfg)
 │
 ├── tests/
 │   ├── TestRiverCrossing.gd       # Unit tests for pure logic rules (46 assertions)
@@ -127,7 +128,8 @@ seproject/
 │   ├── TestJournal.gd             # Unit & integration tests for the Logic Journal & Matrix (53 checks)
 │   ├── TestPlayerController.gd    # Unit & physics tests for Player.tscn & Interactable3D (21 checks)
 │   ├── TestMidnightBridge.gd      # Unit tests for Midnight Bridge logic & solver (45 assertions)
-│   └── TestLevel07Scene.gd        # Integration test for Bonus Chamber 3D scene & torch (17 checks)
+│   ├── TestLevel07Scene.gd        # Integration test for Bonus Chamber 3D scene & torch (17 checks)
+│   └── TestProgressStore.gd       # Persistence & Main Menu progress UI tests (19 checks)
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon
@@ -177,6 +179,7 @@ godot --headless -s res://tests/TestLevel05Scene.gd      # Level 5 UI & Auto-Sol
 godot --headless -s res://tests/TestLevel06Scene.gd      # Level 6 Cat Showcase UI & Petting
 godot --headless -s res://tests/TestLevel07Scene.gd      # Bonus: Midnight Bridge 3D Scene, Torch & Auto-Solve
 godot --headless -s res://tests/TestMainMenu.gd          # Level Select & Navigation
+godot --headless -s res://tests/TestProgressStore.gd     # Save State & Main Menu Progress Display
 godot --headless -s res://tests/TestJournal.gd           # Logic Journal Model, UI & Level 2/5 Integration
 godot --headless -s res://tests/TestPlayerController.gd  # First-Person Player & Interactable3D Physics Tests
 ```

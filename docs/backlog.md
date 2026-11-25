@@ -40,10 +40,10 @@ Sortiert von höchster zu niedrigster Priorität:
 | **10** | **PBI-10** | `#10` | **Bonuskammer: The Midnight Bridge (*Brücke & Fackel*, Headless-Logik + Tests)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-01` | **P2 (Kann)** | **5** | — | Erledigt |
 | **11** | **PBI-11** | `#11` | **Bonuskammer: The Midnight Bridge (3D-Szene, Fackel-Timer & Integrationstest)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-02` | **P2 (Kann)** | **8** | `PBI-10` | Erledigt |
 | **12** | **PBI-12** | `#12` | **Audio & Atmosphäre (Soundeffekte für Züge, Türen, Lava, Gewitter & Sieg)** | Polish | `NFR-03` | **P3 (Kann)** | **5** | — | Offen |
-| **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
+| **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Erledigt |
 | **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
 
-**Summe offener Aufwand:** `31 Story Points`
+**Summe offener Aufwand:** `28 Story Points`
 
 ---
 
@@ -95,6 +95,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-14** | Deduktions-Scratchpad-Matrix (`✓`/`✗`) im Logikjournal für Level 2 (9×4) & Level 5 (3×4) (`PBI-09` / `#9`) | `tests/TestJournal.gd` (53), `scenes/ui/Journal.tscn` validiert |
 | **DONE-15** | Bonuskammer *The Midnight Bridge* — Headless-Logik (`MidnightBridgeLogic.gd`), Undo & Dijkstra-Solver (`PBI-10` / `#10`) | `tests/TestMidnightBridge.gd` (45 Assertions) |
 | **DONE-16** | Bonuskammer *The Midnight Bridge* — 3D-Szene (`Level07_MidnightBridge.tscn`), flackernde Fackel, Auto-Solver & Menü-Integration (`PBI-11` / `#11`) | `tests/TestLevel07Scene.gd` (17), `TestMainMenu.gd`, Szene validiert |
+| **DONE-17** | Speicherstand (`ProgressStore.gd` via `user://save.cfg`) & Fortschrittsanzeige (`✓`, Counter & Reset) im Hauptmenü (`PBI-13` / `#13`) | `tests/TestProgressStore.gd` (19), `TestMainMenu.gd`, `MainMenu.tscn` validiert |
 
 ---
 

@@ -82,6 +82,11 @@
    * **3D Scene & Controller:** [`scenes/levels/Level07_MidnightBridge.tscn`](scenes/levels/Level07_MidnightBridge.tscn) + [`scripts/levels/Level07Controller.gd`](scripts/levels/Level07Controller.gd) with staggered 2×2 cliff positions for unobstructed 3D mouse picking, animated bridge crossings, a dynamically flickering `OmniLight3D` torch that shrinks with remaining time and extinguishes on burnout, `Undo`/`Reset`/`Auto-Solve (Debug)`, Midnight Navy & Ember-Amber HUD theme, and Main Menu entry.
    * **Automated Tests:** [`tests/TestMidnightBridge.gd`](tests/TestMidnightBridge.gd) (45 unit assertions) & [`tests/TestLevel07Scene.gd`](tests/TestLevel07Scene.gd) (17 integration checks).
 
+14. **Persistent Save State & Main Menu Progress (`PBI-13` / `#13`):**
+   * **Headless Persistence Model:** [`scripts/logic/ProgressStore.gd`](scripts/logic/ProgressStore.gd) persists completed level IDs (`level01`–`level07`) via Godot `ConfigFile` (`user://save.cfg`) with signals (`level_completed`, `progress_changed`) and a `record_completion()` helper wired into all 7 level controllers.
+   * **Main Menu UI:** [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn) + [`scripts/ui/MainMenuController.gd`](scripts/ui/MainMenuController.gd) displays `Progress: N / 7 Completed`, highlights completed levels with a `✓ ` badge, and provides a `Reset Progress` button.
+   * **Automated Test:** [`tests/TestProgressStore.gd`](tests/TestProgressStore.gd) (19 checks passing).
+
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
@@ -182,6 +187,7 @@ godot --headless -s res://tests/TestLevel07Scene.gd
 
 # 7. Global Navigation, UI & Player
 godot --headless -s res://tests/TestMainMenu.gd
+godot --headless -s res://tests/TestProgressStore.gd
 godot --headless -s res://tests/TestJournal.gd
 godot --headless -s res://tests/TestPlayerController.gd
 

@@ -4,6 +4,7 @@ extends Node3D
 ## Decoupled from the rules: all decisions are made by DreadburyLogic.
 
 const Logic = preload("res://scripts/logic/DreadburyLogic.gd")
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
 const JournalModel = preload("res://scripts/logic/JournalState.gd")
 const JournalUI = preload("res://scripts/ui/JournalController.gd")
 
@@ -474,6 +475,7 @@ func _on_puzzle_failed(reason: String) -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	ProgressStore.record_completion("level05")
 	if is_instance_valid(btn_solve):
 		btn_solve.disabled = true
 	if logic.accused_suspect >= 0:

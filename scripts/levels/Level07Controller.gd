@@ -4,6 +4,7 @@ extends Node3D
 ## Decoupled from the rules: all state transitions and optimal solving live in MidnightBridgeLogic.
 
 const Logic = preload("res://scripts/logic/MidnightBridgeLogic.gd")
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
 
 @onready var camera: Camera3D = $Camera3D
 @onready var torch_node: Node3D = $Torch
@@ -306,6 +307,7 @@ func _on_puzzle_failed(reason: String) -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	ProgressStore.record_completion("level07")
 	banner.visible = true
 	banner_label.text = "BONUS CHAMBER CLEARED!\nAll four travelers crossed the Midnight Bridge in %d / %d minutes!" % [logic.elapsed_minutes, Logic.MAX_MINUTES]
 	banner_label.modulate = Color(0.35, 1.0, 0.45)
