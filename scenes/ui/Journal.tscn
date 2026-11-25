@@ -1,0 +1,108 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/JournalController.gd" id="1_journal"]
+
+[node name="Journal" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_journal")
+
+[node name="BtnToggleJournal" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 62.0
+offset_right = 100.0
+offset_bottom = 96.0
+theme_override_font_sizes/font_size = 12
+text = "Journal (0)"
+
+[node name="Overlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.03, 0.05, 0.62)
+
+[node name="Center" type="CenterContainer" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="JournalPanel" type="PanelContainer" parent="Overlay/Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(680, 480)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Overlay/Center/JournalPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderRow" type="HBoxContainer" parent="Overlay/Center/JournalPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="Overlay/Center/JournalPanel/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.94, 0.92, 0.88, 1)
+theme_override_font_sizes/font_size = 22
+text = "Logic Journal"
+
+[node name="CountLabel" type="Label" parent="Overlay/Center/JournalPanel/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.77, 0.82, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 entries"
+
+[node name="BtnClose" type="Button" parent="Overlay/Center/JournalPanel/VBox/HeaderRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(118, 32)
+layout_mode = 2
+text = "Close [J / Esc]"
+
+[node name="SubtitleLabel" type="Label" parent="Overlay/Center/JournalPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.74, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Discovered inscriptions and clues are logged automatically. Press [J] or [Tab] to toggle."
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="Overlay/Center/JournalPanel/VBox"]
+layout_mode = 2
+
+[node name="EmptyLabel" type="Label" parent="Overlay/Center/JournalPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.67, 0.73, 1)
+theme_override_font_sizes/font_size = 14
+text = "No entries recorded yet. Inspect plaques or clues in the chamber to log them automatically."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Overlay/Center/JournalPanel/VBox"]
+custom_minimum_size = Vector2(0, 340)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="EntriesList" type="VBoxContainer" parent="Overlay/Center/JournalPanel/VBox/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8

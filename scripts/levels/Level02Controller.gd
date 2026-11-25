@@ -5,6 +5,10 @@ extends Node3D
 ## Direct 3D interaction: Click any door or plaque in the 3D hall to select and inspect it.
 
 const Logic = preload("res://scripts/logic/NinePortalsLogic.gd")
+const JournalModel = preload("res://scripts/logic/JournalState.gd")
+const JournalUI = preload("res://scripts/ui/JournalController.gd")
+
+const JOURNAL_LEVEL_ID: String = "level02"
 
 @onready var camera: Camera3D = $Camera3D
 @onready var btn_open: Button = %BtnOpen
@@ -28,6 +32,8 @@ const COLOR_FRAME_IDLE := Color(0.2, 0.18, 0.17)
 const COLOR_FRAME_SELECTED := Color(0.55, 0.45, 0.22)
 
 var logic: RefCounted
+var journal_state: RefCounted
+var journal_ui: Control
 var door_areas: Dictionary = {}        # Area3D -> room number (1..9)
 var plaque_materials: Dictionary = {}  # room -> StandardMaterial3D
 var frame_materials: Dictionary = {}   # room -> StandardMaterial3D
@@ -50,6 +56,8 @@ func _ready() -> void:
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.56, 0.48, 0.34, 0.65))
+	journal_state = JournalModel.new()
+	journal_ui = JournalUI.attach($UI/RootControl, journal_state, JOURNAL_LEVEL_ID, "Hall of Nine Portals", Color(0.56, 0.48, 0.34, 0.70))
 	_apply_gui_theme()
 	_update_ui()
 
@@ -138,7 +146,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_handle_screen_click(event.position)
 
 func _handle_screen_click(screen_pos: Vector2) -> void:
-	if is_animating or camera == null:
+	if is_animating or camera == null or (journal_ui != null and journal_ui.is_open):
 		return
 	var from := camera.project_ray_origin(screen_pos)
 	var to := from + camera.project_ray_normal(screen_pos) * 100.0
@@ -181,7 +189,10 @@ func click_door(n: int) -> void:
 func _select_door(n: int) -> void:
 	selected = n
 	inspected[n] = true
-	plaque_label.text = "Door %d:\n\"%s\"" % [n, logic.get_inscription(n)]
+	var inscription: String = logic.get_inscription(n)
+	plaque_label.text = "Door %d:\n\"%s\"" % [n, inscription]
+	if journal_state != null:
+		journal_state.add_entry(JOURNAL_LEVEL_ID, "door_%d" % n, "Door %d" % n, inscription, "Hall of Nine Portals", "", n)
 	_update_ui()
 
 func _on_open_pressed() -> void:
@@ -201,6 +212,8 @@ func _on_reset_pressed() -> void:
 func _reset_hall() -> void:
 	logic.reset()
 	inspected.clear()
+	if journal_state != null:
+		journal_state.clear_level(JOURNAL_LEVEL_ID)
 	if selected != 0:
 		plaque_label.text = "Door %d:\n\"%s\"" % [selected, logic.get_inscription(selected)]
 	for n in content_nodes:

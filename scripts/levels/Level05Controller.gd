@@ -4,6 +4,10 @@ extends Node3D
 ## Decoupled from the rules: all decisions are made by DreadburyLogic.
 
 const Logic = preload("res://scripts/logic/DreadburyLogic.gd")
+const JournalModel = preload("res://scripts/logic/JournalState.gd")
+const JournalUI = preload("res://scripts/ui/JournalController.gd")
+
+const JOURNAL_LEVEL_ID: String = "level05"
 
 @onready var storm_light: DirectionalLight3D = $DirectionalLight3D
 @onready var world_env: WorldEnvironment = $WorldEnvironment
@@ -50,6 +54,8 @@ const CLUE_OFFSETS: Array[Vector3] = [
 ]
 
 var logic: RefCounted
+var journal_state: RefCounted
+var journal_ui: Control
 var clue_buttons: Array[Button] = []
 var suspect_buttons: Array[Button] = []
 var clue_nodes: Array[Node3D] = []
@@ -81,6 +87,8 @@ func _ready() -> void:
 	btn_reset.pressed.connect(_on_reset_pressed)
 	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.48, 0.38, 0.54, 0.65))
+	journal_state = JournalModel.new()
+	journal_ui = JournalUI.attach($UI/RootControl, journal_state, JOURNAL_LEVEL_ID, "Dreadbury Manor", Color(0.48, 0.38, 0.54, 0.70))
 	_apply_storm_lighting()
 	status_label.text = "Someone in Dreadbury Mansion killed Aunt Agatha. Examine the 8 clues and place the Dagger of Truth on the killer's bust."
 	_on_state_changed(logic.discovered_clues.duplicate(), logic.selected_clue, logic.selected_suspect)
@@ -291,6 +299,8 @@ func _on_reset_pressed() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
 	logic.reset()
+	if journal_state != null:
+		journal_state.clear_level(JOURNAL_LEVEL_ID)
 	banner.visible = false
 	suicide_note.visible = false
 	_apply_storm_lighting()
@@ -311,6 +321,8 @@ func start_auto_solve() -> void:
 	banner.visible = false
 	if logic.is_failed:
 		logic.reset()
+		if journal_state != null:
+			journal_state.clear_level(JOURNAL_LEVEL_ID)
 		suicide_note.visible = false
 		_apply_storm_lighting()
 	status_label.text = "Gathering clues and deducing the killer..."
@@ -346,6 +358,16 @@ func _on_clue_inspected(index: int, clue: Dictionary) -> void:
 		clue["text"],
 		clue["formula"],
 	]
+	if journal_state != null:
+		journal_state.add_entry(
+			JOURNAL_LEVEL_ID,
+			"clue_%d" % index,
+			"Clue %d — %s" % [index + 1, clue["title"]],
+			clue["text"],
+			clue["location"],
+			clue["formula"],
+			index
+		)
 
 func _on_state_changed(discovered: Array, selected_clue: int, selected_suspect: int) -> void:
 	var game_over: bool = logic.is_solved or logic.is_failed
