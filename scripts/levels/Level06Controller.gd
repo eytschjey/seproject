@@ -3,6 +3,8 @@ extends Node3D
 ## Level 06 Controller: Showcase exhibit for the 3D cat model (cat.glb).
 ## Features interactive turntable spin, animation playback, 3D click/pet interaction, and menu navigation.
 
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
+
 @onready var cat_pivot: Node3D = $CatPivot
 @onready var cat_instance: Node3D = $CatPivot/Cat
 @onready var anim_player: AnimationPlayer = $CatPivot/Cat/AnimationPlayer
@@ -106,6 +108,7 @@ func pet_cat() -> void:
 	hop_tween.chain().set_ease(Tween.EASE_IN).tween_property(cat_instance, "position:y", 0.0, 0.2)
 
 	if pet_count >= 5:
+		ProgressStore.record_completion("level06")
 		banner.visible = true
 		banner_label.text = "PURR-FECTION ACHIEVED!\nThe cat is thoroughly pleased and purrs in harmonic resonance."
 

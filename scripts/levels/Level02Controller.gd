@@ -5,6 +5,7 @@ extends Node3D
 ## Direct 3D interaction: Click any door or plaque in the 3D hall to select and inspect it.
 
 const Logic = preload("res://scripts/logic/NinePortalsLogic.gd")
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
 const JournalModel = preload("res://scripts/logic/JournalState.gd")
 const JournalUI = preload("res://scripts/ui/JournalController.gd")
 const PlayerScene = preload("res://scenes/player/Player.tscn")
@@ -411,6 +412,7 @@ func _on_puzzle_failed(_reason: String) -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	ProgressStore.record_completion("level02")
 	if is_first_person and player != null:
 		player.set_mouse_captured(false)
 	if is_instance_valid(btn_solve):

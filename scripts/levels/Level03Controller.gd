@@ -4,6 +4,7 @@ extends Node3D
 ## Decoupled from the rules: all decisions are made by QueensLogic.
 
 const Logic = preload("res://scripts/logic/QueensLogic.gd")
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
 
 @onready var board_origin: Marker3D = $Board/BoardOrigin
 @onready var tiles: Node3D = $Board/Tiles
@@ -268,6 +269,7 @@ func _rebuild_beams() -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	ProgressStore.record_completion("level03")
 	if is_instance_valid(btn_solve):
 		btn_solve.disabled = true
 	banner.visible = true

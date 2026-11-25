@@ -2,20 +2,25 @@ extends Control
 
 ## Main menu: lists the levels and loads the selected one.
 
+const ProgressStoreScript = preload("res://scripts/logic/ProgressStore.gd")
+
 ## Add new levels here. An empty scene path shows the level as "coming soon".
 const LEVELS: Array[Dictionary] = [
-	{"title": "Level 1: The Ferryman's Crossing", "scene": "res://scenes/levels/Level01_Tutorial.tscn"},
-	{"title": "Level 2: The Hall of Nine Portals", "scene": "res://scenes/levels/Level02_NinePortals.tscn"},
-	{"title": "Level 3: The Sun Courtyard", "scene": "res://scenes/levels/Level03_SunCourtyard.tscn"},
-	{"title": "Level 4: The Knight's Chasm", "scene": "res://scenes/levels/Level04_KnightsChasm.tscn"},
-	{"title": "Level 5: Dreadbury Manor", "scene": "res://scenes/levels/Level05_DreadburyManor.tscn"},
-	{"title": "Level 6: The Cat (Showcase)", "scene": "res://scenes/levels/Level06_Cat.tscn"},
-	{"title": "Bonus: The Midnight Bridge", "scene": "res://scenes/levels/Level07_MidnightBridge.tscn"},
+	{"id": "level01", "title": "Level 1: The Ferryman's Crossing", "scene": "res://scenes/levels/Level01_Tutorial.tscn"},
+	{"id": "level02", "title": "Level 2: The Hall of Nine Portals", "scene": "res://scenes/levels/Level02_NinePortals.tscn"},
+	{"id": "level03", "title": "Level 3: The Sun Courtyard", "scene": "res://scenes/levels/Level03_SunCourtyard.tscn"},
+	{"id": "level04", "title": "Level 4: The Knight's Chasm", "scene": "res://scenes/levels/Level04_KnightsChasm.tscn"},
+	{"id": "level05", "title": "Level 5: Dreadbury Manor", "scene": "res://scenes/levels/Level05_DreadburyManor.tscn"},
+	{"id": "level06", "title": "Level 6: The Cat (Showcase)", "scene": "res://scenes/levels/Level06_Cat.tscn"},
+	{"id": "level07", "title": "Bonus: The Midnight Bridge", "scene": "res://scenes/levels/Level07_MidnightBridge.tscn"},
 ]
 
 @onready var level_list: VBoxContainer = %LevelList
+@onready var progress_label: Label = %ProgressLabel
+@onready var btn_reset_progress: Button = %BtnResetProgress
 @onready var btn_quit: Button = %BtnQuit
 
+var progress_store: RefCounted = null
 var level_buttons: Array[Button] = []
 
 const LEVEL_ACCENTS: Array[Color] = [
@@ -48,6 +53,7 @@ func _style_button(b: Button, bg: Color, accent: Color) -> void:
 	b.add_theme_constant_override("outline_size", 1)
 
 func _ready() -> void:
+	progress_store = ProgressStoreScript.new()
 	for i in LEVELS.size():
 		var level: Dictionary = LEVELS[i]
 		var b := Button.new()
@@ -63,8 +69,38 @@ func _ready() -> void:
 			b.pressed.connect(_start_level.bind(path))
 		level_list.add_child(b)
 		level_buttons.append(b)
+	_style_button(btn_reset_progress, Color(0.15, 0.14, 0.20, 0.90), Color(0.44, 0.44, 0.58, 0.65))
+	btn_reset_progress.pressed.connect(_on_reset_progress_pressed)
 	_style_button(btn_quit, Color(0.18, 0.11, 0.14, 0.90), Color(0.54, 0.34, 0.40, 0.65))
 	btn_quit.pressed.connect(func(): get_tree().quit())
+	refresh_progress()
+
+func set_progress_store(store: RefCounted) -> void:
+	progress_store = store
+	refresh_progress()
+
+func refresh_progress() -> void:
+	if progress_store == null or not is_node_ready():
+		return
+	var done_count: int = progress_store.completed_count()
+	var total: int = LEVELS.size()
+	progress_label.text = "Progress: %d / %d Completed" % [done_count, total]
+	btn_reset_progress.disabled = done_count == 0
+	for i in LEVELS.size():
+		var level: Dictionary = LEVELS[i]
+		var b: Button = level_buttons[i]
+		if level["scene"] == "":
+			continue
+		var done: bool = progress_store.is_completed(level["id"])
+		b.text = ("✓ %s" % level["title"]) if done else level["title"]
+		var accent: Color = Color(0.38, 0.68, 0.48, 0.85) if done else LEVEL_ACCENTS[i % LEVEL_ACCENTS.size()]
+		var bg: Color = Color(0.11, 0.17, 0.14, 0.92) if done else Color(0.13, 0.13, 0.19, 0.90)
+		_style_button(b, bg, accent)
+
+func _on_reset_progress_pressed() -> void:
+	if progress_store != null:
+		progress_store.reset_progress()
+		refresh_progress()
 
 func _start_level(path: String) -> void:
 	get_tree().change_scene_to_file(path)

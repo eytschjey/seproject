@@ -5,6 +5,7 @@ extends Node3D
 ## Direct 3D interaction: Click items to load/unload; click raft or button to row across.
 
 const Logic = preload("res://scripts/logic/RiverCrossingLogic.gd")
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
 
 @onready var camera: Camera3D = $Camera3D
 @onready var raft: Node3D = $Environment/Raft
@@ -325,6 +326,7 @@ func _on_puzzle_failed(reason: String) -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	ProgressStore.record_completion("level01")
 	banner.visible = true
 	banner_label.text = "🎉 PUZZLE SOLVED!\nAll passengers safely crossed the river!"
 	banner_label.modulate = Color(0.35, 1.0, 0.45)

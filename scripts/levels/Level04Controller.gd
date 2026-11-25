@@ -4,6 +4,7 @@ extends Node3D
 ## Decoupled from the rules: all decisions are made by KnightsTourLogic.
 
 const Logic = preload("res://scripts/logic/KnightsTourLogic.gd")
+const ProgressStore = preload("res://scripts/logic/ProgressStore.gd")
 
 @onready var board_origin: Marker3D = $Board/BoardOrigin
 @onready var tiles_root: Node3D = $Board/Tiles
@@ -281,6 +282,7 @@ func _on_puzzle_failed(reason: String) -> void:
 func _on_puzzle_solved() -> void:
 	if is_auto_solving:
 		stop_auto_solve()
+	ProgressStore.record_completion("level04")
 	if is_instance_valid(btn_solve):
 		btn_solve.disabled = true
 	banner.visible = true

@@ -142,7 +142,7 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 
 | Anforderungsgruppe | Primäre Implementierungsdateien | Automatisierte Verifikation | Status |
 | :--- | :--- | :--- | :--- |
-| **FR-01** (Menü & Nav) | `scenes/ui/MainMenu.tscn`, `scripts/ui/MainMenuController.gd`, `scripts/core/BackToMenuButton.gd` | `tests/TestMainMenu.gd`, `tests/TestLevel01Transition.gd` | Implementiert |
+| **FR-01** (Menü & Nav) | `scenes/ui/MainMenu.tscn`, `scripts/ui/MainMenuController.gd`, `scripts/logic/ProgressStore.gd`, `scripts/core/BackToMenuButton.gd` | `tests/TestMainMenu.gd`, `tests/TestProgressStore.gd` (19), `tests/TestLevel01Transition.gd` | Implementiert |
 | **FR-02** (Level 1) | `scripts/logic/RiverCrossingLogic.gd`, `scenes/levels/Level01_Tutorial.tscn`, `scripts/levels/Level01Controller.gd` | `tests/TestRiverCrossing.gd` (46), `tests/TestLevel01Scene.gd` (14) | Implementiert |
 | **FR-03** (Level 2) | `scripts/logic/NinePortalsLogic.gd`, `scenes/levels/Level02_NinePortals.tscn`, `scripts/levels/Level02Controller.gd` | `tests/TestNinePortals.gd` (30), `tests/TestLevel02Scene.gd` (31) | Implementiert |
 | **FR-04** (Level 3) | `scripts/logic/QueensLogic.gd`, `scenes/levels/Level03_SunCourtyard.tscn`, `scripts/levels/Level03Controller.gd` | `tests/TestQueens.gd` (29), `tests/TestLevel03Scene.gd` (15) | Implementiert |
