@@ -66,6 +66,11 @@ func _ready() -> void:
 	btn_view_mode.pressed.connect(_on_view_mode_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.56, 0.48, 0.34, 0.65))
 	journal_state = JournalModel.new()
+	var door_rows: Array[String] = []
+	for n in range(1, Logic.DOOR_COUNT + 1):
+		door_rows.append("Door %d" % n)
+	var door_cols: Array[String] = ["Princess", "Tiger", "Empty", "Sign True"]
+	journal_state.configure_scratchpad(JOURNAL_LEVEL_ID, door_rows, door_cols)
 	journal_ui = JournalUI.attach($UI/RootControl, journal_state, JOURNAL_LEVEL_ID, "Hall of Nine Portals", Color(0.56, 0.48, 0.34, 0.70))
 	journal_ui.journal_toggled.connect(_on_journal_toggled)
 	set_first_person_mode(false)

@@ -241,7 +241,7 @@ Jede User Story folgt dem agilen Format (**Als** `<Rolle>` **möchte ich** `<Fun
 ### US-26: Deduktionen im In-Game-Logikjournal festhalten
 - **Story:** Als **Spieler** möchte ich mit `[J]` oder `[Tab]` ein In-Game-Journal öffnen können, das alle entdeckten Tafeln und Hinweise automatisch sammelt, damit ich logische Aussagen ohne Stift und Papier abgleichen kann.
 - **Zugehörige Anforderungen:** `FR-08.2`
-- **Status:** Implementiert *(Kern-Journal & automatisches Protokollieren in Level 2 & 5; optionale Deduktionsmatrix in `PBI-09`)*
+- **Status:** Implementiert *(Kern-Journal, automatisches Protokollieren & interaktive Deduktions-Scratchpad-Matrix in Level 2 & 5)*
 - **Akzeptanzkriterien:**
   - **Gegeben**, ich habe Türtafeln in Level 2 oder Hinweise in Level 5 untersucht, **Wenn** ich `J` oder `Tab` drücke, **Dann** öffnet sich das Journal-Overlay mit allen entdeckten Einträgen und einer optionalen Deduktionsmatrix.
 
