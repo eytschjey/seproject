@@ -66,6 +66,12 @@
    * **Issue & Backlog Sync:** All 14 open backlog items (`PBI-01`–`PBI-14` in [`docs/backlog.md`](docs/backlog.md)) are tracked as GitHub Issues `#1`–`#14` in `eytschjey/seproject` with standardized priority (`P1`–`P3`) and domain/type labels (`gameplay`, `ui`, `3d-assets`, `bonus`, `ci`, `enhancement`, `bug`, `documentation`).
    * **Branching & PR Policy:** [`AGENTS.md`](AGENTS.md) enforces branch-based development (`feat/`, `fix/`, `assets/`, `docs/`, `chore/`), forbids developing directly on `main`, and requires Pull Requests with headless verification before merging.
 
+11. **In-Game Logic Journal (`PBI-01` / `#1`):**
+   * **Headless Model:** [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd) stores per-level entries with deduplication, explicit ordering, reset clearing, and signals (`entry_added`, `entry_updated`, `journal_cleared`, `state_changed`).
+   * **UI Overlay:** [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn) + [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd) toggles via `[J]`/`[Tab]`, `Esc`, or the non-overlapping `Journal (N)` button at `(16, 62)` below `< Menu`.
+   * **Level Integration:** Wired into [`Level02Controller.gd`](scripts/levels/Level02Controller.gd) (auto-logs discovered door inscriptions, clears on randomized reset) and [`Level05Controller.gd`](scripts/levels/Level05Controller.gd) (auto-logs discovered clues with locations & FOL formulas, clears on case reset).
+   * **Automated Test:** [`tests/TestJournal.gd`](tests/TestJournal.gd) (36 checks passing) verifying headless model, UI toggle/rendering, and Level 2/5 integration.
+
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
@@ -92,11 +98,9 @@
      - When the player looks at an interactable object, display a prompt (e.g. `"[E] Inspect Plaque"` or `"[E] Pull Lever"`).
      - Pressing `interact` emits an `interacted(player)` signal.
 
-### Task 3: In-Game Logic Journal UI (Medium Priority)
-* **Goal:** A clean notebook UI (`scenes/ui/Journal.tscn`) toggled by pressing `[J]` or `[Tab]`.
-* **Sub-tasks:**
-  - Automatically logs discovered door inscriptions and NPC dialogue clues.
-  - Optional: A grid/matrix scratchpad so players can manually cross off deductions without pen and paper.
+### ~~Task 3: In-Game Logic Journal UI (Medium Priority)~~ ✅ DONE (`PBI-01` / `#1`)
+* Implemented in [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd), [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn), and [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd), integrated into Level 2 and Level 5, and verified by [`tests/TestJournal.gd`](tests/TestJournal.gd) (36 checks).
+* Follow-up: Optional deduction scratchpad matrix (`PBI-09` / `#9`).
 
 ### ~~Task 4: Level 5 — Dreadbury Manor (Narrative Murder Mystery)~~ ✅ DONE
 * Implemented in [`scripts/logic/DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), [`scripts/levels/Level05Controller.gd`](scripts/levels/Level05Controller.gd), and [`scenes/levels/Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn), connected from Level 4 and enabled in `MainMenuController.gd`.
@@ -177,9 +181,11 @@ godot --headless -s res://tests/TestLevel06Scene.gd
 
 # 7. Global Navigation & UI
 godot --headless -s res://tests/TestMainMenu.gd
+godot --headless -s res://tests/TestJournal.gd
 
 # 8. Validate scene syntax without opening GUI
 godot --headless --validate --quit scenes/ui/MainMenu.tscn
+godot --headless --validate --quit scenes/ui/Journal.tscn
 godot --headless --validate --quit scenes/props/Cat.tscn
 godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
 godot --headless --validate --quit scenes/levels/Level02_NinePortals.tscn

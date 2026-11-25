@@ -28,7 +28,7 @@ Sortiert von höchster zu niedrigster Priorität:
 
 | Rang | PBI-ID | GitHub Issue | Titel | Epic | Verknüpfte US / Req | Priorität | Story Points | Abhängigkeiten | Status |
 | :---: | :--- | :---: | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
-| **1** | **PBI-01** | `#1` | **In-Game-Logikjournal (UI & automatisches Protokollieren)** | Epic 9 | `US-26`, `FR-08.2` | **P1 (Soll)** | **5** | — | Offen |
+| **1** | **PBI-01** | `#1` | **In-Game-Logikjournal (UI & automatisches Protokollieren)** | Epic 9 | `US-26`, `FR-08.2` | **P1 (Soll)** | **5** | — | Erledigt |
 | **2** | **PBI-02** | `#2` | **First-Person-3D-Spielersteuerung (`Player.tscn`) & `Interactable3D`** | Epic 9 | `US-25`, `FR-08.1` | **P1 (Soll)** | **8** | — | Offen |
 | **3** | **PBI-03** | `#3` | **3D-Asset-Austausch Level 1 (Wolf, Ziege, Kohlkopf, Floß & Flussufer)** | Epic 7 | `US-22`, `FR-08.4`, `NFR-05` | **P1 (Soll)** | **5** | — | Offen |
 | **4** | **PBI-04** | `#4` | **Integration First-Person & Journal in Level 2 (Tafelinspektion in 3D)** | Epic 3 / 9 | `US-25`, `US-26`, `FR-08.1` | **P2 (Soll)** | **5** | `PBI-01`, `PBI-02` | Offen |
@@ -43,19 +43,14 @@ Sortiert von höchster zu niedrigster Priorität:
 | **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
 | **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
 
-**Summe offener Aufwand:** `65 Story Points`
+**Summe offener Aufwand:** `60 Story Points`
 
 ---
 
 ## 3. Detaillierte Beschreibung der Top-Prioritäten (Next Up)
 
-### PBI-01: In-Game-Logikjournal (`P1`, 5 SP)
-- **Ziel:** Spieler können jederzeit mit `[J]` oder `[Tab]` ein übersichtliches Journal (`scenes/ui/Journal.tscn`) öffnen, das bereits gelesene Türinschriften aus Level 2 und Hinweise aus Level 5 automatisch sammelt.
-- **Teilaufgaben:**
-  1. Datenmodell `scripts/logic/JournalState.gd` (Headless) für Einträge pro Level.
-  2. UI-Szene `scenes/ui/Journal.tscn` mit dezenter Farbgebung und Tastatur-Toggle (`journal`-Input-Action).
-  3. Anbindung an `Level02Controller.gd` und `Level05Controller.gd`.
-  4. Automatisierter Test `tests/TestJournal.gd`.
+### ~~PBI-01: In-Game-Logikjournal (`P1`, 5 SP)~~ ✅ Erledigt (`#1`)
+- **Umgesetzt:** Headless-Modell `scripts/logic/JournalState.gd`, UI-Overlay `scenes/ui/Journal.tscn` + `scripts/ui/JournalController.gd` (Toggle über `[J]`/`[Tab]`, `Esc` oder HUD-Button), automatisches Protokollieren + Reset-Bereinigung in Level 2 & Level 5, verifiziert durch `tests/TestJournal.gd` (36 Checks).
 
 ### PBI-02: First-Person-3D-Spielersteuerung & `Interactable3D` (`P1`, 8 SP)
 - **Ziel:** Schrittweiser Übergang von fester Kamera zu freier 3D-Bewegung in den Kammern.
@@ -101,6 +96,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-08** | Level 6 (*The Cat Sanctuary*) als `.glb`-Prefab-Showcase mit Animation & Picking | `TestLevel06Scene.gd` (17) |
 | **DONE-09** | Überlappungsfreies HUD-Layout, dezente Farbschemata pro Szene & SRS/User-Stories | Alle 6 Szenen validiert, `docs/requirements.md`, `docs/user_stories.md` |
 | **DONE-10** | GitHub-Issues (`#1`–`#14`), Standard-Labels & Git-Branching-/PR-Workflow | `AGENTS.md`, `gh issue list -R eytschjey/seproject` |
+| **DONE-11** | In-Game-Logikjournal (`PBI-01` / `#1`) mit Headless-`JournalState`, `[J]`/`[Tab]`-Overlay & Auto-Logging in Level 2 & 5 | `tests/TestJournal.gd` (36), `scenes/ui/Journal.tscn` validiert |
 
 ---
 

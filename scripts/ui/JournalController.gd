@@ -1,0 +1,189 @@
+class_name JournalController
+extends Control
+
+## UI Controller for the In-Game Logic Journal (scenes/ui/Journal.tscn).
+## Decoupled from data storage: renders entries from a headless JournalState instance.
+## Toggled via the `journal` input action (J / Tab) or the non-overlapping HUD button.
+
+const JOURNAL_SCENE_PATH: String = "res://scenes/ui/Journal.tscn"
+
+@onready var btn_toggle: Button = %BtnToggleJournal
+@onready var overlay: ColorRect = %Overlay
+@onready var journal_panel: PanelContainer = %JournalPanel
+@onready var title_label: Label = %TitleLabel
+@onready var count_label: Label = %CountLabel
+@onready var subtitle_label: Label = %SubtitleLabel
+@onready var btn_close: Button = %BtnClose
+@onready var entries_list: VBoxContainer = %EntriesList
+@onready var empty_label: Label = %EmptyLabel
+
+var state: RefCounted = null
+var active_level_id: String = ""
+var active_level_title: String = "Logic Journal"
+var accent_color: Color = Color(0.46, 0.50, 0.62, 0.70)
+var is_open: bool = false
+
+## Instantiate and attach a Logic Journal overlay to a level's UI root.
+static func attach(
+	parent: Control,
+	journal_state: RefCounted,
+	level_id: String,
+	level_title: String,
+	accent: Color = Color(0.46, 0.50, 0.62, 0.70)
+) -> Control:
+	var scene: PackedScene = load(JOURNAL_SCENE_PATH)
+	var instance: Control = scene.instantiate()
+	parent.add_child(instance)
+	instance.setup(journal_state, level_id, level_title, accent)
+	return instance
+
+func _ready() -> void:
+	btn_toggle.pressed.connect(toggle)
+	btn_close.pressed.connect(close)
+	overlay.visible = false
+	_apply_theme()
+	_refresh_view()
+
+func setup(
+	journal_state: RefCounted,
+	level_id: String,
+	level_title: String,
+	accent: Color = Color(0.46, 0.50, 0.62, 0.70)
+) -> void:
+	if state != null and state.state_changed.is_connected(_on_state_changed):
+		state.state_changed.disconnect(_on_state_changed)
+	state = journal_state
+	active_level_id = level_id
+	active_level_title = level_title
+	accent_color = accent
+	if state != null:
+		state.state_changed.connect(_on_state_changed)
+	if is_node_ready():
+		_apply_theme()
+		_refresh_view()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("journal"):
+		toggle()
+		get_viewport().set_input_as_handled()
+	elif is_open and event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_ESCAPE:
+		close()
+		get_viewport().set_input_as_handled()
+
+func open() -> void:
+	is_open = true
+	overlay.visible = true
+	_refresh_view()
+
+func close() -> void:
+	is_open = false
+	overlay.visible = false
+
+func toggle() -> void:
+	if is_open:
+		close()
+	else:
+		open()
+
+func _on_state_changed(level_id: String, _entries: Array) -> void:
+	if level_id == active_level_id:
+		_refresh_view()
+
+func _refresh_view() -> void:
+	if not is_node_ready():
+		return
+	var entries: Array = state.get_entries(active_level_id) if state != null else []
+	title_label.text = "Logic Journal — %s" % active_level_title
+	var count: int = entries.size()
+	count_label.text = "%d %s" % [count, "entry" if count == 1 else "entries"]
+	btn_toggle.text = "Journal (%d)" % count
+	btn_toggle.tooltip_text = "Open Logic Journal [J / Tab] (%d logged)" % count
+
+	for child in entries_list.get_children():
+		entries_list.remove_child(child)
+		child.queue_free()
+
+	empty_label.visible = entries.is_empty()
+	for entry in entries:
+		entries_list.add_child(_build_entry_card(entry))
+
+func _build_entry_card(entry: Dictionary) -> PanelContainer:
+	var card := PanelContainer.new()
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var card_sb := _make_box_style(Color(0.12, 0.13, 0.17, 0.92), accent_color.darkened(0.15), 1, 6, 12.0, 8.0)
+	card.add_theme_stylebox_override("panel", card_sb)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 4)
+	card.add_child(vbox)
+
+	var header := HBoxContainer.new()
+	vbox.add_child(header)
+
+	var lbl_title := Label.new()
+	lbl_title.text = str(entry.get("title", ""))
+	lbl_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl_title.add_theme_font_size_override("font_size", 15)
+	lbl_title.add_theme_color_override("font_color", Color(0.95, 0.92, 0.84))
+	header.add_child(lbl_title)
+
+	var subtitle_text: String = str(entry.get("subtitle", ""))
+	if not subtitle_text.is_empty():
+		var lbl_sub := Label.new()
+		lbl_sub.text = subtitle_text
+		lbl_sub.add_theme_font_size_override("font_size", 12)
+		lbl_sub.add_theme_color_override("font_color", Color(0.70, 0.72, 0.78))
+		header.add_child(lbl_sub)
+
+	var lbl_body := Label.new()
+	lbl_body.text = "\"%s\"" % str(entry.get("body", ""))
+	lbl_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl_body.add_theme_font_size_override("font_size", 14)
+	lbl_body.add_theme_color_override("font_color", Color(0.86, 0.87, 0.90))
+	vbox.add_child(lbl_body)
+
+	var formula_text: String = str(entry.get("formula", ""))
+	if not formula_text.is_empty():
+		var lbl_formula := Label.new()
+		lbl_formula.text = "Logic: %s" % formula_text
+		lbl_formula.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl_formula.add_theme_font_size_override("font_size", 13)
+		lbl_formula.add_theme_color_override("font_color", accent_color.lightened(0.32))
+		vbox.add_child(lbl_formula)
+
+	return card
+
+func _make_box_style(
+	bg: Color,
+	border: Color,
+	border_w: int = 1,
+	radius: int = 6,
+	pad_x: float = 14.0,
+	pad_y: float = 8.0
+) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(border_w)
+	sb.set_corner_radius_all(radius)
+	sb.content_margin_left = pad_x
+	sb.content_margin_right = pad_x
+	sb.content_margin_top = pad_y
+	sb.content_margin_bottom = pad_y
+	return sb
+
+func _apply_theme() -> void:
+	var panel_sb := _make_box_style(Color(0.08, 0.09, 0.12, 0.96), accent_color, 1, 10, 20.0, 16.0)
+	journal_panel.add_theme_stylebox_override("panel", panel_sb)
+
+	var toggle_normal := _make_box_style(Color(0.10, 0.11, 0.14, 0.86), accent_color, 1, 6, 6.0, 4.0)
+	var toggle_hover := _make_box_style(Color(0.15, 0.17, 0.21, 0.92), accent_color.lightened(0.15), 1, 6, 6.0, 4.0)
+	var toggle_pressed := _make_box_style(Color(0.19, 0.22, 0.27, 0.95), accent_color.lightened(0.25), 1, 6, 6.0, 4.0)
+	for btn in [btn_toggle, btn_close]:
+		btn.add_theme_stylebox_override("normal", toggle_normal)
+		btn.add_theme_stylebox_override("hover", toggle_hover)
+		btn.add_theme_stylebox_override("pressed", toggle_pressed)
+		btn.add_theme_color_override("font_color", Color(0.86, 0.88, 0.91))
+		btn.add_theme_color_override("font_hover_color", Color(0.95, 0.96, 0.98))
+		btn.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.65))
+		btn.add_theme_constant_override("outline_size", 1)
