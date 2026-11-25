@@ -88,6 +88,9 @@ func _ready() -> void:
 	btn_solve.pressed.connect(_on_solve_pressed)
 	BackToMenuButton.attach($UI/RootControl, Color(0.48, 0.38, 0.54, 0.65))
 	journal_state = JournalModel.new()
+	var suspect_rows: Array[String] = ["Aunt Agatha", "The Butler", "Charles"]
+	var suspect_cols: Array[String] = ["Killer", "Hates Agatha", "Richer > Agatha", "Innocent"]
+	journal_state.configure_scratchpad(JOURNAL_LEVEL_ID, suspect_rows, suspect_cols)
 	journal_ui = JournalUI.attach($UI/RootControl, journal_state, JOURNAL_LEVEL_ID, "Dreadbury Manor", Color(0.48, 0.38, 0.54, 0.70))
 	_apply_storm_lighting()
 	status_label.text = "Someone in Dreadbury Mansion killed Aunt Agatha. Examine the 8 clues and place the Dagger of Truth on the killer's bust."

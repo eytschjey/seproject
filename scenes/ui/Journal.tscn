@@ -86,7 +86,42 @@ autowrap_mode = 3
 [node name="HSeparator" type="HSeparator" parent="Overlay/Center/JournalPanel/VBox"]
 layout_mode = 2
 
-[node name="EmptyLabel" type="Label" parent="Overlay/Center/JournalPanel/VBox"]
+[node name="TabRow" type="HBoxContainer" parent="Overlay/Center/JournalPanel/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnTabNotes" type="Button" parent="Overlay/Center/JournalPanel/VBox/TabRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 32)
+layout_mode = 2
+text = "Clues & Notes"
+
+[node name="BtnTabScratchpad" type="Button" parent="Overlay/Center/JournalPanel/VBox/TabRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
+text = "Deduction Matrix"
+
+[node name="Spacer" type="Control" parent="Overlay/Center/JournalPanel/VBox/TabRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnClearScratchpad" type="Button" parent="Overlay/Center/JournalPanel/VBox/TabRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(115, 32)
+layout_mode = 2
+text = "Clear Matrix"
+
+[node name="NotesView" type="VBoxContainer" parent="Overlay/Center/JournalPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="EmptyLabel" type="Label" parent="Overlay/Center/JournalPanel/VBox/NotesView"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.67, 0.73, 1)
@@ -95,14 +130,40 @@ text = "No entries recorded yet. Inspect plaques or clues in the chamber to log 
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Scroll" type="ScrollContainer" parent="Overlay/Center/JournalPanel/VBox"]
-custom_minimum_size = Vector2(0, 340)
+[node name="Scroll" type="ScrollContainer" parent="Overlay/Center/JournalPanel/VBox/NotesView"]
+custom_minimum_size = Vector2(0, 310)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="EntriesList" type="VBoxContainer" parent="Overlay/Center/JournalPanel/VBox/Scroll"]
+[node name="EntriesList" type="VBoxContainer" parent="Overlay/Center/JournalPanel/VBox/NotesView/Scroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
+
+[node name="ScratchpadView" type="VBoxContainer" parent="Overlay/Center/JournalPanel/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="ScratchpadHint" type="Label" parent="Overlay/Center/JournalPanel/VBox/ScratchpadView"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.74, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Click any cell to cycle: [blank] → ✓ (Confirmed) → ✗ (Ruled Out)"
+horizontal_alignment = 1
+
+[node name="ScratchpadScroll" type="ScrollContainer" parent="Overlay/Center/JournalPanel/VBox/ScratchpadView"]
+custom_minimum_size = Vector2(0, 310)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScratchpadGrid" type="GridContainer" parent="Overlay/Center/JournalPanel/VBox/ScratchpadView/ScratchpadScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6

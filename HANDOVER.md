@@ -66,11 +66,11 @@
    * **Issue & Backlog Sync:** All 14 open backlog items (`PBI-01`–`PBI-14` in [`docs/backlog.md`](docs/backlog.md)) are tracked as GitHub Issues `#1`–`#14` in `eytschjey/seproject` with standardized priority (`P1`–`P3`) and domain/type labels (`gameplay`, `ui`, `3d-assets`, `bonus`, `ci`, `enhancement`, `bug`, `documentation`).
    * **Branching & PR Policy:** [`AGENTS.md`](AGENTS.md) enforces branch-based development (`feat/`, `fix/`, `assets/`, `docs/`, `chore/`), forbids developing directly on `main`, and requires Pull Requests with headless verification before merging.
 
-11. **In-Game Logic Journal (`PBI-01` / `#1`):**
-   * **Headless Model:** [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd) stores per-level entries with deduplication, explicit ordering, reset clearing, and signals (`entry_added`, `entry_updated`, `journal_cleared`, `state_changed`).
-   * **UI Overlay:** [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn) + [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd) toggles via `[J]`/`[Tab]`, `Esc`, or the non-overlapping `Journal (N)` button at `(16, 62)` below `< Menu`.
-   * **Level Integration:** Wired into [`Level02Controller.gd`](scripts/levels/Level02Controller.gd) (auto-logs discovered door inscriptions, clears on randomized reset) and [`Level05Controller.gd`](scripts/levels/Level05Controller.gd) (auto-logs discovered clues with locations & FOL formulas, clears on case reset).
-   * **Automated Test:** [`tests/TestJournal.gd`](tests/TestJournal.gd) (36 checks passing) verifying headless model, UI toggle/rendering, and Level 2/5 integration.
+11. **In-Game Logic Journal & Deduction Matrix (`PBI-01` / `#1` & `PBI-09` / `#9`):**
+   * **Headless Model:** [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd) stores per-level entries with deduplication, explicit ordering, reset clearing, signals (`entry_added`, `entry_updated`, `journal_cleared`, `state_changed`, `scratchpad_changed`), and a per-level deduction scratchpad matrix (`UNKNOWN` / `YES` `✓` / `NO` `✗`).
+   * **UI Overlay:** [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn) + [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd) toggles via `[J]`/`[Tab]`, `Esc`, or the non-overlapping `Journal (N)` button at `(16, 62)` below `< Menu`, with tabs for **Clues & Notes** and **Deduction Matrix** (plus `Clear Matrix`).
+   * **Level Integration:** Wired into [`Level02Controller.gd`](scripts/levels/Level02Controller.gd) (auto-logs discovered door inscriptions + 9×4 Door/Role deduction matrix) and [`Level05Controller.gd`](scripts/levels/Level05Controller.gd) (auto-logs discovered clues/FOL formulas + 3×4 Suspect deduction matrix), clearing stale entries and marks on reset.
+   * **Automated Test:** [`tests/TestJournal.gd`](tests/TestJournal.gd) (53 checks passing) verifying headless model, scratchpad matrix, UI tabs/toggling, and Level 2/5 integration.
 
 12. **First-Person 3D Player Controller & `Interactable3D` (`PBI-02` / `#2`):**
    * **Reusable Interaction Component:** [`scripts/core/Interactable3D.gd`](scripts/core/Interactable3D.gd) (`Area3D`) with configurable `prompt_text`, `action_hint`, `interaction_enabled`, and signals (`interacted(player)`, `focused(player)`, `unfocused(player)`).
@@ -93,9 +93,8 @@
 ### ~~Task 2: 3D First-Person Player Controller (Medium Priority)~~ ✅ DONE (`PBI-02` / `#2` & `PBI-04` / `#4`)
 * Implemented in [`scenes/player/Player.tscn`](scenes/player/Player.tscn), [`scripts/player/PlayerController.gd`](scripts/player/PlayerController.gd), and [`scripts/core/Interactable3D.gd`](scripts/core/Interactable3D.gd), verified by [`tests/TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks), and integrated into Level 2 (`Level02_NinePortals.tscn`, `[V]` toggle + `[E]` `Interactable3D` door plaques + Journal mouse-capture sync, verified by [`tests/TestLevel02Scene.gd`](tests/TestLevel02Scene.gd), 31 checks).
 
-### ~~Task 3: In-Game Logic Journal UI (Medium Priority)~~ ✅ DONE (`PBI-01` / `#1`)
-* Implemented in [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd), [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn), and [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd), integrated into Level 2 and Level 5, and verified by [`tests/TestJournal.gd`](tests/TestJournal.gd) (36 checks).
-* Follow-up: Optional deduction scratchpad matrix (`PBI-09` / `#9`).
+### ~~Task 3: In-Game Logic Journal UI (Medium Priority)~~ ✅ DONE (`PBI-01` / `#1` & `PBI-09` / `#9`)
+* Implemented in [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd), [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn), and [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd) (including the interactive Deduction Matrix scratchpad for Level 2 and Level 5), verified by [`tests/TestJournal.gd`](tests/TestJournal.gd) (53 checks).
 
 ### ~~Task 4: Level 5 — Dreadbury Manor (Narrative Murder Mystery)~~ ✅ DONE
 * Implemented in [`scripts/logic/DreadburyLogic.gd`](scripts/logic/DreadburyLogic.gd), [`scripts/levels/Level05Controller.gd`](scripts/levels/Level05Controller.gd), and [`scenes/levels/Level05_DreadburyManor.tscn`](scenes/levels/Level05_DreadburyManor.tscn), connected from Level 4 and enabled in `MainMenuController.gd`.

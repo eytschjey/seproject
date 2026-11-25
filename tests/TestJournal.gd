@@ -63,6 +63,23 @@ func _test_headless_model() -> void:
 	js.clear_all()
 	check(js.total_count() == 0, "clear_all removes entries across all levels")
 
+	# Scratchpad matrix headless model checks (PBI-09)
+	var pad_events := {"changes": 0}
+	js.scratchpad_changed.connect(func(_lvl: String, _r: String, _c: String, _m: int): pad_events["changes"] += 1)
+	var rows: Array[String] = ["Door 1", "Door 2"]
+	var cols: Array[String] = ["Princess", "Tiger"]
+	js.configure_scratchpad("level02", rows, cols)
+	check(js.has_scratchpad("level02") and not js.has_scratchpad("unknown"), "Scratchpad schema configured per level")
+	check(js.get_mark("level02", "Door 1", "Princess") == JournalModel.Mark.UNKNOWN, "Scratchpad cells default to UNKNOWN")
+	check(not js.set_mark("level02", "Door 99", "Princess", JournalModel.Mark.YES), "Rejects out-of-schema row")
+	check(js.cycle_mark("level02", "Door 1", "Princess") == JournalModel.Mark.YES, "First cycle sets YES")
+	check(js.cycle_mark("level02", "Door 1", "Princess") == JournalModel.Mark.NO, "Second cycle sets NO")
+	check(js.cycle_mark("level02", "Door 1", "Princess") == JournalModel.Mark.UNKNOWN, "Third cycle resets to UNKNOWN")
+	check(js.set_mark("level02", "Door 2", "Tiger", JournalModel.Mark.NO), "set_mark updates cell")
+	js.clear_level("level02")
+	check(js.has_scratchpad("level02") and js.get_mark("level02", "Door 2", "Tiger") == JournalModel.Mark.UNKNOWN, "clear_level wipes marks while preserving schema")
+	check(pad_events["changes"] >= 5, "scratchpad_changed signal fires on updates and clears")
+
 func _test_journal_ui() -> void:
 	var host := Control.new()
 	root.add_child(host)
@@ -99,6 +116,28 @@ func _test_journal_ui() -> void:
 	await process_frame
 	check(not ui.is_open and not ui.overlay.visible, "Close button closes overlay")
 
+	# Scratchpad tab & cell clicking UI checks (PBI-09)
+	check(not ui.tab_row.visible, "Tab row hidden when no scratchpad configured")
+	var ui_rows: Array[String] = ["Suspect A", "Suspect B"]
+	var ui_cols: Array[String] = ["Killer", "Innocent"]
+	js.configure_scratchpad("test_lvl", ui_rows, ui_cols)
+	ui.open()
+	await process_frame
+	check(ui.tab_row.visible and ui.scratchpad_buttons.size() == 4, "Tab row visible and 2x2 scratchpad grid built")
+	ui.btn_tab_scratchpad.pressed.emit()
+	await process_frame
+	check(ui.scratchpad_view.visible and not ui.notes_view.visible, "Deduction Matrix tab switches to scratchpad view")
+	var cell_btn: Button = ui.scratchpad_buttons["Suspect A|Killer"]
+	cell_btn.pressed.emit()
+	await process_frame
+	check(js.get_mark("test_lvl", "Suspect A", "Killer") == JournalModel.Mark.YES and ui.scratchpad_buttons["Suspect A|Killer"].text == "✓", "Clicking matrix cell marks ✓")
+	ui.scratchpad_buttons["Suspect A|Killer"].pressed.emit()
+	await process_frame
+	check(js.get_mark("test_lvl", "Suspect A", "Killer") == JournalModel.Mark.NO and ui.scratchpad_buttons["Suspect A|Killer"].text == "✗", "Second click marks ✗")
+	ui.btn_clear_scratchpad.pressed.emit()
+	await process_frame
+	check(js.get_mark("test_lvl", "Suspect A", "Killer") == JournalModel.Mark.UNKNOWN, "Clear Matrix button resets all marks")
+
 	host.queue_free()
 	await process_frame
 
@@ -110,6 +149,8 @@ func _test_level02_integration() -> void:
 
 	check(s.journal_state != null and s.journal_ui != null, "Level 2 initializes JournalState and Journal UI")
 	check(s.journal_state.entry_count("level02") == 0, "Level 2 journal starts empty")
+	check(s.journal_state.has_scratchpad("level02") and s.journal_ui.scratchpad_buttons.size() == 36, "Level 2 configures 9x4 deduction matrix")
+	s.journal_state.set_mark("level02", "Door 1", "Tiger", JournalModel.Mark.YES)
 
 	s.click_door(4)
 	s.click_door(2)
@@ -121,7 +162,7 @@ func _test_level02_integration() -> void:
 
 	s.btn_reset.pressed.emit()
 	await process_frame
-	check(s.journal_state.entry_count("level02") == 0, "Resetting Level 2 clears stale randomized door entries")
+	check(s.journal_state.entry_count("level02") == 0 and s.journal_state.get_mark("level02", "Door 1", "Tiger") == JournalModel.Mark.UNKNOWN, "Resetting Level 2 clears stale randomized door entries and scratchpad marks")
 
 	s.queue_free()
 	await process_frame
@@ -133,6 +174,8 @@ func _test_level05_integration() -> void:
 
 	check(s.journal_state != null and s.journal_ui != null, "Level 5 initializes JournalState and Journal UI")
 	check(s.journal_state.entry_count("level05") == 0, "Level 5 journal starts empty")
+	check(s.journal_state.has_scratchpad("level05") and s.journal_ui.scratchpad_buttons.size() == 12, "Level 5 configures 3x4 deduction matrix")
+	s.journal_state.set_mark("level05", "Charles", "Killer", JournalModel.Mark.NO)
 
 	s.clue_buttons[2].pressed.emit()
 	s.clue_buttons[0].pressed.emit()
@@ -144,7 +187,7 @@ func _test_level05_integration() -> void:
 
 	s.btn_reset.pressed.emit()
 	await process_frame
-	check(s.journal_state.entry_count("level05") == 0, "Resetting Level 5 clears clues from previous case")
+	check(s.journal_state.entry_count("level05") == 0 and s.journal_state.get_mark("level05", "Charles", "Killer") == JournalModel.Mark.UNKNOWN, "Resetting Level 5 clears clues and scratchpad marks from previous case")
 
 	s.queue_free()
 	await process_frame

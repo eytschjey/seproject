@@ -36,14 +36,14 @@ Sortiert von höchster zu niedrigster Priorität:
 | **6** | **PBI-06** | `#6` | **3D-Asset-Austausch Level 3 (Damenstatuen-Prefab, Marmor & Sonnenkristall)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
 | **7** | **PBI-07** | `#7` | **3D-Asset-Austausch Level 4 (Springer-Prefab, Runensteine & Lava-Shader)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
 | **8** | **PBI-08** | `#8` | **3D-Asset-Austausch Level 5 (Büsten, Dolch der Wahrheit & Bibliothek)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
-| **9** | **PBI-09** | `#9` | **Deduktions-Scratchpad-Matrix im Logikjournal** | Epic 9 | `US-26`, `FR-08.2` | **P2 (Kann)** | **3** | `PBI-01` | Offen |
+| **9** | **PBI-09** | `#9` | **Deduktions-Scratchpad-Matrix im Logikjournal** | Epic 9 | `US-26`, `FR-08.2` | **P2 (Kann)** | **3** | `PBI-01` | Erledigt |
 | **10** | **PBI-10** | `#10` | **Bonuskammer: The Midnight Bridge (*Brücke & Fackel*, Headless-Logik + Tests)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-01` | **P2 (Kann)** | **5** | — | Offen |
 | **11** | **PBI-11** | `#11` | **Bonuskammer: The Midnight Bridge (3D-Szene, Fackel-Timer & Integrationstest)** | Epic 9 | `US-27`, `FR-08.3`, `NFR-02` | **P2 (Kann)** | **8** | `PBI-10` | Offen |
 | **12** | **PBI-12** | `#12` | **Audio & Atmosphäre (Soundeffekte für Züge, Türen, Lava, Gewitter & Sieg)** | Polish | `NFR-03` | **P3 (Kann)** | **5** | — | Offen |
 | **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
 | **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
 
-**Summe offener Aufwand:** `47 Story Points`
+**Summe offener Aufwand:** `44 Story Points`
 
 ---
 
@@ -94,6 +94,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-11** | In-Game-Logikjournal (`PBI-01` / `#1`) mit Headless-`JournalState`, `[J]`/`[Tab]`-Overlay & Auto-Logging in Level 2 & 5 | `tests/TestJournal.gd` (36), `scenes/ui/Journal.tscn` validiert |
 | **DONE-12** | First-Person-3D-Spielersteuerung (`Player.tscn`, `PlayerController.gd`) & `Interactable3D` (`PBI-02` / `#2`) | `tests/TestPlayerController.gd` (21), `scenes/player/Player.tscn` validiert |
 | **DONE-13** | Integration First-Person (`Player.tscn` + `Interactable3D`-Türen) & Journal-Maus-Sync in Level 2 (`PBI-04` / `#4`) | `tests/TestLevel02Scene.gd` (31), `Level02_NinePortals.tscn` validiert |
+| **DONE-14** | Deduktions-Scratchpad-Matrix (`✓`/`✗`) im Logikjournal für Level 2 (9×4) & Level 5 (3×4) (`PBI-09` / `#9`) | `tests/TestJournal.gd` (53), `scenes/ui/Journal.tscn` validiert |
 
 ---
 
