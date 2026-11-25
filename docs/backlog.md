@@ -29,7 +29,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | Rang | PBI-ID | GitHub Issue | Titel | Epic | Verknüpfte US / Req | Priorität | Story Points | Abhängigkeiten | Status |
 | :---: | :--- | :---: | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
 | **1** | **PBI-01** | `#1` | **In-Game-Logikjournal (UI & automatisches Protokollieren)** | Epic 9 | `US-26`, `FR-08.2` | **P1 (Soll)** | **5** | — | Erledigt |
-| **2** | **PBI-02** | `#2` | **First-Person-3D-Spielersteuerung (`Player.tscn`) & `Interactable3D`** | Epic 9 | `US-25`, `FR-08.1` | **P1 (Soll)** | **8** | — | Offen |
+| **2** | **PBI-02** | `#2` | **First-Person-3D-Spielersteuerung (`Player.tscn`) & `Interactable3D`** | Epic 9 | `US-25`, `FR-08.1` | **P1 (Soll)** | **8** | — | Erledigt |
 | **3** | **PBI-03** | `#3` | **3D-Asset-Austausch Level 1 (Wolf, Ziege, Kohlkopf, Floß & Flussufer)** | Epic 7 | `US-22`, `FR-08.4`, `NFR-05` | **P1 (Soll)** | **5** | — | Offen |
 | **4** | **PBI-04** | `#4` | **Integration First-Person & Journal in Level 2 (Tafelinspektion in 3D)** | Epic 3 / 9 | `US-25`, `US-26`, `FR-08.1` | **P2 (Soll)** | **5** | `PBI-01`, `PBI-02` | Offen |
 | **5** | **PBI-05** | `#5` | **3D-Asset-Austausch Level 2 (Türen, Rahmen, Tiger- & Prinzessinnen-Modelle)** | Epic 7 | `US-22`, `FR-08.4` | **P2 (Soll)** | **5** | — | Offen |
@@ -43,7 +43,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **13** | **PBI-13** | `#13` | **Speicherstand & Fortschrittsfreischaltung im Hauptmenü** | Epic 1 | `US-01`, `FR-01.1` | **P3 (Kann)** | **3** | — | Offen |
 | **14** | **PBI-14** | `#14` | **CI-Pipeline (GitHub Actions für Headless-Tests & Szenenvalidierung)** | Epic 8 | `US-23`, `US-24`, `NFR-02` | **P3 (Kann)** | **3** | — | Offen |
 
-**Summe offener Aufwand:** `60 Story Points`
+**Summe offener Aufwand:** `52 Story Points`
 
 ---
 
@@ -52,13 +52,8 @@ Sortiert von höchster zu niedrigster Priorität:
 ### ~~PBI-01: In-Game-Logikjournal (`P1`, 5 SP)~~ ✅ Erledigt (`#1`)
 - **Umgesetzt:** Headless-Modell `scripts/logic/JournalState.gd`, UI-Overlay `scenes/ui/Journal.tscn` + `scripts/ui/JournalController.gd` (Toggle über `[J]`/`[Tab]`, `Esc` oder HUD-Button), automatisches Protokollieren + Reset-Bereinigung in Level 2 & Level 5, verifiziert durch `tests/TestJournal.gd` (36 Checks).
 
-### PBI-02: First-Person-3D-Spielersteuerung & `Interactable3D` (`P1`, 8 SP)
-- **Ziel:** Schrittweiser Übergang von fester Kamera zu freier 3D-Bewegung in den Kammern.
-- **Teilaufgaben:**
-  1. `scenes/player/Player.tscn` (`CharacterBody3D`, Kollisionskapsel, Kamera-Pivot, zentrierter `RayCast3D`).
-  2. `scripts/player/PlayerController.gd` (WASD, Sprung, Mausblick mit `Esc`-Toggle).
-  3. Wiederverwendbare Komponente `scripts/core/Interactable3D.gd` mit Kontext-Hinweis (`[E] ...`) und Signal `interacted(player)`.
-  4. Automatisierter Test für Raycast-Erkennung und Signalauslösung.
+### ~~PBI-02: First-Person-3D-Spielersteuerung & `Interactable3D` (`P1`, 8 SP)~~ ✅ Erledigt (`#2`)
+- **Umgesetzt:** `scenes/player/Player.tscn`, `scripts/player/PlayerController.gd` (WASD, Sprint, Sprung, Mausblick mit `Esc`-Toggle, zentrierter `InteractionRay` & Kontext-HUD) und wiederverwendbare Komponente `scripts/core/Interactable3D.gd` (`[E] ...`, `interacted(player)`), verifiziert durch `tests/TestPlayerController.gd` (21 Checks).
 
 ### PBI-03 bis PBI-08: 3D-Asset-Austausch für Level 1–5 (`P1–P2`, je 5 SP)
 - **Ziel:** Schrittweiser Ersatz der CSG-Greyboxen durch selbstenthaltene `.glb`-Modelle als vererbte `.tscn`-Prefabs unter `scenes/props/` (analog zu `scenes/props/Cat.tscn`).
@@ -97,6 +92,7 @@ Sortiert von höchster zu niedrigster Priorität:
 | **DONE-09** | Überlappungsfreies HUD-Layout, dezente Farbschemata pro Szene & SRS/User-Stories | Alle 6 Szenen validiert, `docs/requirements.md`, `docs/user_stories.md` |
 | **DONE-10** | GitHub-Issues (`#1`–`#14`), Standard-Labels & Git-Branching-/PR-Workflow | `AGENTS.md`, `gh issue list -R eytschjey/seproject` |
 | **DONE-11** | In-Game-Logikjournal (`PBI-01` / `#1`) mit Headless-`JournalState`, `[J]`/`[Tab]`-Overlay & Auto-Logging in Level 2 & 5 | `tests/TestJournal.gd` (36), `scenes/ui/Journal.tscn` validiert |
+| **DONE-12** | First-Person-3D-Spielersteuerung (`Player.tscn`, `PlayerController.gd`) & `Interactable3D` (`PBI-02` / `#2`) | `tests/TestPlayerController.gd` (21), `scenes/player/Player.tscn` validiert |
 
 ---
 

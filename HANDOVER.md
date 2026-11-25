@@ -72,6 +72,11 @@
    * **Level Integration:** Wired into [`Level02Controller.gd`](scripts/levels/Level02Controller.gd) (auto-logs discovered door inscriptions, clears on randomized reset) and [`Level05Controller.gd`](scripts/levels/Level05Controller.gd) (auto-logs discovered clues with locations & FOL formulas, clears on case reset).
    * **Automated Test:** [`tests/TestJournal.gd`](tests/TestJournal.gd) (36 checks passing) verifying headless model, UI toggle/rendering, and Level 2/5 integration.
 
+12. **First-Person 3D Player Controller & `Interactable3D` (`PBI-02` / `#2`):**
+   * **Reusable Interaction Component:** [`scripts/core/Interactable3D.gd`](scripts/core/Interactable3D.gd) (`Area3D`) with configurable `prompt_text`, `action_hint`, `interaction_enabled`, and signals (`interacted(player)`, `focused(player)`, `unfocused(player)`).
+   * **Player Scene & Controller:** [`scenes/player/Player.tscn`](scenes/player/Player.tscn) + [`scripts/player/PlayerController.gd`](scripts/player/PlayerController.gd) (`CharacterBody3D`, capsule collider, `CameraPivot`, `Camera3D`, centered `InteractionRay`, WASD/Shift/Space movement, clamped mouse look with `Esc` capture toggle, crosshair & contextual `[E] ...` prompt HUD).
+   * **Automated Test:** [`tests/TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks passing) verifying `Interactable3D` signals, 3D raycast detection/range/prompting, mouse look clamping, `Esc` capture toggle, and walk/sprint velocities.
+
 ---
 
 ## 🚀 Immediate Next Tasks (Prioritized Backlog)
@@ -85,18 +90,9 @@
 ### ✅ Main Menu (done)
 * [`scenes/ui/MainMenu.tscn`](scenes/ui/MainMenu.tscn) + [`scripts/ui/MainMenuController.gd`](scripts/ui/MainMenuController.gd): level select. To add a level, append an entry to `LEVELS` (empty `scene` = "coming soon"). Levels have a "< Menu" button via [`BackToMenuButton`](scripts/core/BackToMenuButton.gd). Test: `tests/TestMainMenu.gd`.
 
-### Task 2: 3D First-Person Player Controller (Medium Priority)
-* **Goal:** Transition from clicking HUD buttons to physically walking through the chambers in 3D.
-* **Sub-tasks:**
-  1. Create `scenes/player/Player.tscn`:
-     - `CharacterBody3D` with collision capsule, camera pivot, and `Camera3D`.
-     - `RayCast3D` projecting from the center of the screen to detect interactable objects.
-  2. Create `scripts/player/PlayerController.gd`:
-     - Mouse look (captured cursor, toggleable with Esc).
-     - WASD movement, sprint, and jump using Godot's configured input actions.
-  3. Create an `Interactable3D` component (`scripts/core/Interactable3D.gd`):
-     - When the player looks at an interactable object, display a prompt (e.g. `"[E] Inspect Plaque"` or `"[E] Pull Lever"`).
-     - Pressing `interact` emits an `interacted(player)` signal.
+### ~~Task 2: 3D First-Person Player Controller (Medium Priority)~~ ✅ DONE (`PBI-02` / `#2`)
+* Implemented in [`scenes/player/Player.tscn`](scenes/player/Player.tscn), [`scripts/player/PlayerController.gd`](scripts/player/PlayerController.gd), and [`scripts/core/Interactable3D.gd`](scripts/core/Interactable3D.gd), verified by [`tests/TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks).
+* Follow-up: Integrate `Player.tscn` + `Interactable3D` into Level 2 (`PBI-04` / `#4`).
 
 ### ~~Task 3: In-Game Logic Journal UI (Medium Priority)~~ ✅ DONE (`PBI-01` / `#1`)
 * Implemented in [`scripts/logic/JournalState.gd`](scripts/logic/JournalState.gd), [`scenes/ui/Journal.tscn`](scenes/ui/Journal.tscn), and [`scripts/ui/JournalController.gd`](scripts/ui/JournalController.gd), integrated into Level 2 and Level 5, and verified by [`tests/TestJournal.gd`](tests/TestJournal.gd) (36 checks).
@@ -179,13 +175,15 @@ godot --headless -s res://tests/TestLevel05Scene.gd
 # 6. Level 6: The Cat (3D Model Showcase)
 godot --headless -s res://tests/TestLevel06Scene.gd
 
-# 7. Global Navigation & UI
+# 7. Global Navigation, UI & Player
 godot --headless -s res://tests/TestMainMenu.gd
 godot --headless -s res://tests/TestJournal.gd
+godot --headless -s res://tests/TestPlayerController.gd
 
 # 8. Validate scene syntax without opening GUI
 godot --headless --validate --quit scenes/ui/MainMenu.tscn
 godot --headless --validate --quit scenes/ui/Journal.tscn
+godot --headless --validate --quit scenes/player/Player.tscn
 godot --headless --validate --quit scenes/props/Cat.tscn
 godot --headless --validate --quit scenes/levels/Level01_Tutorial.tscn
 godot --headless --validate --quit scenes/levels/Level02_NinePortals.tscn

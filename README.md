@@ -18,8 +18,9 @@ A first-person / third-person 3D puzzle-adventure game built with **Godot 4**, w
 - [x] **Level 6 (The Cat Sanctuary):** 3D model showcase scene ([`Level06_Cat.tscn`](scenes/levels/Level06_Cat.tscn)) presenting the imported [`cat.glb`](assets/models/characters/cat.glb) asset and prefab ([`Cat.tscn`](scenes/props/Cat.tscn)) with turntable spin, skeletal animation playback, 3D mouse picking, subtle Warm Taupe & Dusty Rose HUD theme, and [`TestLevel06Scene.gd`](tests/TestLevel06Scene.gd).
 - [x] **Main Menu:** Level select screen ([`MainMenu.tscn`](scenes/ui/MainMenu.tscn), now the startup scene) with subtle Slate-Indigo styling, muted per-level accent borders, Levels 1–6 unlocked, and a non-overlapping `< Menu` button in each level.
 - [x] **In-Game Logic Journal:** Headless [`JournalState.gd`](scripts/logic/JournalState.gd) + toggleable overlay ([`Journal.tscn`](scenes/ui/Journal.tscn) via `[J]`/`[Tab]` or HUD button) automatically logging discovered door inscriptions in Level 2 and clues/FOL formulas in Level 5, verified by [`TestJournal.gd`](tests/TestJournal.gd) (36 checks).
-- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-02`–`PBI-14`) tracked as GitHub Issues (`#2`–`#14`) with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
-- [ ] **Next Up:** First-person character navigation (`#2`), 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), Journal deduction scratchpad (`#9`), and Bonus Chamber (*The Midnight Bridge*, `#10`–`#11`).
+- [x] **First-Person 3D Player Controller:** Reusable [`Player.tscn`](scenes/player/Player.tscn), [`PlayerController.gd`](scripts/player/PlayerController.gd) (WASD, Sprint, Jump, mouse look with `Esc` toggle, centered `RayCast3D` & `[E]` prompt HUD), and [`Interactable3D.gd`](scripts/core/Interactable3D.gd), verified by [`TestPlayerController.gd`](tests/TestPlayerController.gd) (21 checks).
+- [x] **Project Tracking & Workflow:** Open PBIs (`PBI-03`–`PBI-14`) tracked as GitHub Issues (`#3`–`#14`) with standard priority/domain labels, and branch/PR development rules defined in [`AGENTS.md`](AGENTS.md).
+- [ ] **Next Up:** 3D asset integration replacing CSG greyboxes with glTF models (`#3`, `#5`–`#8`), First-Person + Journal integration in Level 2 (`#4`), Journal deduction scratchpad (`#9`), and Bonus Chamber (*The Midnight Bridge*, `#10`–`#11`).
 
 ---
 
@@ -66,6 +67,8 @@ seproject/
 │           └── cat_0.png          # PBR texture
 │
 ├── scenes/
+│   ├── player/
+│   │   └── Player.tscn            # First-person CharacterBody3D with RayCast3D & prompt HUD
 │   ├── ui/
 │   │   ├── MainMenu.tscn          # Level select (startup scene)
 │   │   └── Journal.tscn           # In-game Logic Journal overlay ([J]/[Tab])
@@ -81,7 +84,10 @@ seproject/
 │
 ├── scripts/
 │   ├── core/
-│   │   └── BackToMenuButton.gd    # "< Menu" HUD button
+│   │   ├── BackToMenuButton.gd    # "< Menu" HUD button
+│   │   └── Interactable3D.gd      # Reusable 3D raycast interactable component
+│   ├── player/
+│   │   └── PlayerController.gd    # First-person movement, mouse look & interaction raycast
 │   ├── ui/
 │   │   ├── MainMenuController.gd  # Level select logic
 │   │   └── JournalController.gd   # Logic Journal overlay controller
@@ -114,7 +120,8 @@ seproject/
 │   ├── TestDreadbury.gd           # Unit tests for Dreadbury Manor logic (62 assertions)
 │   ├── TestLevel05Scene.gd        # Integration test for Level 5 UI
 │   ├── TestLevel06Scene.gd        # Integration test for Level 6 Cat Showcase UI
-│   └── TestJournal.gd             # Unit & integration tests for the Logic Journal (36 checks)
+│   ├── TestJournal.gd             # Unit & integration tests for the Logic Journal (36 checks)
+│   └── TestPlayerController.gd    # Unit & physics tests for Player.tscn & Interactable3D (21 checks)
 │
 ├── project.godot                  # Godot 4.x project configuration & input maps
 ├── icon.svg                       # Default project icon
@@ -163,6 +170,7 @@ godot --headless -s res://tests/TestLevel05Scene.gd      # Level 5 UI & Auto-Sol
 godot --headless -s res://tests/TestLevel06Scene.gd      # Level 6 Cat Showcase UI & Petting
 godot --headless -s res://tests/TestMainMenu.gd          # Level Select & Navigation
 godot --headless -s res://tests/TestJournal.gd           # Logic Journal Model, UI & Level 2/5 Integration
+godot --headless -s res://tests/TestPlayerController.gd  # First-Person Player & Interactable3D Physics Tests
 ```
 
 ---

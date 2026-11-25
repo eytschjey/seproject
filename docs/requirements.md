@@ -118,7 +118,7 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 
 | ID | Anforderung | Priorität | Status |
 | :--- | :--- | :--- | :--- |
-| **FR-08.1** | **First-Person-3D-Spielersteuerung:** Implementierung eines `CharacterBody3D`-Spielers (`Player.tscn`) mit WASD-Bewegung, Mausblick, Sprung und zentriertem `RayCast3D` zur Interaktion mit `Interactable3D`-Komponenten über `[E]`. | Soll | Geplant |
+| **FR-08.1** | **First-Person-3D-Spielersteuerung:** Implementierung eines `CharacterBody3D`-Spielers (`Player.tscn`) mit WASD-Bewegung, Sprint, Mausblick (`Esc`-Toggle), Sprung und zentriertem `RayCast3D` zur Interaktion mit `Interactable3D`-Komponenten über `[E]`. | Soll | Implementiert |
 | **FR-08.2** | **In-Game-Logikjournal:** Implementierung eines umschaltbaren Notizbuchs (`[J]` / `[Tab]`), das entdeckte Türinschriften (Level 2) und Hinweise (Level 5) automatisch protokolliert; optionale Deduktionsmatrix als `PBI-09`. | Soll | Implementiert |
 | **FR-08.3** | **Bonuskammer — The Midnight Bridge:** Implementierung des *Brücken-und-Fackel-Problems* (4 Reisende mit Geschwindigkeiten 1, 2, 5 und 8 Minuten; max. 2 Personen gleichzeitig auf der Brücke; striktes 15-Minuten-Fackellimit) mit Headless-Logik, 3D-Szene und Tests. | Kann | Geplant |
 | **FR-08.4** | **3D-Asset-Austausch:** Schrittweiser Ersatz der CSG-Greybox-Geometrie in Level 1–5 durch vererbte `.glb`-Prefabs unter Beibehaltung von Knotenpfaden, Kollisions-Pickern und Animations-Pivots. | Kann | Geplant |
@@ -149,5 +149,6 @@ SEProject übersetzt klassische Rätsel der theoretischen Informatik — Zustand
 | **FR-05** (Level 4) | `scripts/logic/KnightsTourLogic.gd`, `scenes/levels/Level04_KnightsChasm.tscn`, `scripts/levels/Level04Controller.gd` | `tests/TestKnightsTour.gd` (26), `tests/TestLevel04Scene.gd` (18) | Implementiert |
 | **FR-06** (Level 5) | `scripts/logic/DreadburyLogic.gd`, `scenes/levels/Level05_DreadburyManor.tscn`, `scripts/levels/Level05Controller.gd` | `tests/TestDreadbury.gd` (62), `tests/TestLevel05Scene.gd` (22) | Implementiert |
 | **FR-07** (Level 6) | `scenes/props/Cat.tscn`, `scenes/levels/Level06_Cat.tscn`, `scripts/levels/Level06Controller.gd` | `tests/TestLevel06Scene.gd` (17) | Implementiert |
+| **FR-08.1** (Player) | `scenes/player/Player.tscn`, `scripts/player/PlayerController.gd`, `scripts/core/Interactable3D.gd` | `tests/TestPlayerController.gd` (21) | Implementiert |
 | **FR-08.2** (Journal) | `scripts/logic/JournalState.gd`, `scenes/ui/Journal.tscn`, `scripts/ui/JournalController.gd` | `tests/TestJournal.gd` (36) | Implementiert |
 | **FR-08** (Übriges Backlog) | `story/level_progression.md`, `HANDOVER.md`, `docs/backlog.md` | Geplant | Geplant |
